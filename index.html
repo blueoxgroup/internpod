@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Ox Jobs — Intern Pods for Startups | EU, US & Gulf</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#1a1a1a;--white:#ffffff;--cream:#f8f6f2;
+  --coral:#e05a3a;--coral-hover:#c94e30;--coral-light:rgba(224,90,58,.06);--coral-pale:#fef5f3;
+  --gray-100:#f5f5f5;--gray-200:#ebebeb;--gray-300:#d4d4d4;--gray-400:#aaa;--gray-500:#888;--gray-600:#666;--gray-700:#444;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',-apple-system,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
+  --max-w:1100px;--transition:.35s cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+::selection{background:var(--coral);color:var(--white)}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--black);background:var(--white);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.7}
+a{text-decoration:none;color:inherit}
+
+/* ═══ NAV — center logo, split links, uppercase mono ═══ */
+.nav{display:flex;align-items:center;justify-content:center;padding:24px 48px;position:relative;z-index:100}
+.nav-left,.nav-right{display:flex;gap:32px;align-items:center}
+.nav-left{margin-right:auto}
+.nav-right{margin-left:auto}
+.nav-a{font-family:var(--mono);font-size:.7rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--black);transition:color .25s}
+.nav-a:hover{color:var(--coral)}
+.nav-center{display:flex;align-items:center;gap:10px;position:absolute;left:50%;transform:translateX(-50%)}
+.nav-icon{width:36px;height:36px;background:var(--black);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:14px;color:var(--white);position:relative}
+.nav-icon::after{content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--coral);border-radius:50%}
+.nav-wm{display:flex;align-items:baseline;gap:3px}
+.nav-wm .wm-serif{font-family:var(--serif);font-style:italic;font-size:20px;font-weight:600;color:var(--black)}
+.nav-wm .wm-mono{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--gray-500)}
+@media(max-width:800px){.nav-left,.nav-right{display:none}.nav{padding:20px 24px}}
+
+/* ═══ TICKER — scrolling coral bar ═══ */
+.ticker{background:var(--white);border-top:1px solid var(--gray-200);border-bottom:1px solid var(--gray-200);overflow:hidden;white-space:nowrap;padding:10px 0}
+.ticker-track{display:inline-flex;animation:ticker 30s linear infinite}
+.ticker-item{font-family:var(--mono);font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--coral);padding:0 24px}
+.ticker-item::after{content:'•';margin-left:24px;color:var(--coral)}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ═══ HERO — massive centered headline ═══ */
+.hero{padding:100px 48px 80px;text-align:center}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,7.5vw,6.5rem);font-weight:400;line-height:1.05;letter-spacing:-.03em;color:var(--black);margin-bottom:28px}
+.hero h1 em{font-style:italic;color:var(--coral)}
+.hero-sub{font-size:1.15rem;color:var(--gray-500);max-width:560px;margin:0 auto 40px;line-height:1.8}
+.hero-sub strong{color:var(--black);font-weight:500}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+@media(max-width:600px){.hero{padding:60px 24px 60px}}
+
+/* ═══ BUTTONS ═══ */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:8px;font-family:var(--sans);font-weight:600;font-size:.9rem;transition:all var(--transition);border:none;cursor:pointer}
+.btn svg{width:14px;height:14px}
+.btn-coral{background:var(--coral);color:var(--white)}.btn-coral:hover{background:var(--coral-hover);transform:translateY(-2px);box-shadow:0 8px 24px rgba(224,90,58,.15)}
+.btn-dark{background:var(--black);color:var(--white)}.btn-dark:hover{background:var(--gray-700);transform:translateY(-2px)}
+.btn-outline{border:1.5px solid var(--gray-300);color:var(--gray-700);background:transparent}.btn-outline:hover{border-color:var(--black);color:var(--black)}
+.btn-white{background:var(--white);color:var(--black)}.btn-white:hover{background:var(--gray-100)}
+.btn-ghost{background:transparent;color:var(--coral);padding:14px 0}.btn-ghost:hover{color:var(--coral-hover)}
+.btn-purple{background:#7c3aed;color:var(--white)}.btn-purple:hover{background:#6d28d9;transform:translateY(-2px)}
+
+/* ═══ AUDIENCE CARDS — below hero ═══ */
+.audience{padding:0 48px 100px}
+.audience-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:var(--max-w);margin:0 auto}
+@media(max-width:700px){.audience-grid{grid-template-columns:1fr}}
+.au-card{border:1.5px solid var(--gray-200);border-radius:12px;padding:32px 28px;transition:all var(--transition);cursor:pointer;position:relative}
+.au-card:hover{border-color:var(--coral);box-shadow:0 16px 48px rgba(224,90,58,.06);transform:translateY(-4px)}
+.au-icon{font-size:1.6rem;margin-bottom:14px}
+.au-title{font-family:var(--serif);font-size:1.2rem;font-weight:600;margin-bottom:6px}
+.au-desc{font-size:.88rem;color:var(--gray-600);line-height:1.6;margin-bottom:14px}
+.au-link{font-family:var(--mono);font-size:.65rem;font-weight:600;letter-spacing:.1em;color:var(--coral);text-transform:uppercase;display:flex;align-items:center;gap:4px}
+.au-link svg{width:12px;height:12px;transition:transform .2s}
+.au-card:hover .au-link svg{transform:translateX(4px)}
+
+/* ═══ SECTION SYSTEM ═══ */
+.section{padding:100px 48px}
+.section-cream{background:var(--cream)}
+.section-dark{background:var(--black);color:var(--white)}
+.section-uni{background:#1a0a2e;color:rgba(255,255,255,.85)}
+.section-coral{background:var(--coral);color:var(--white)}
+.si{max-width:var(--max-w);margin:0 auto}
+@media(max-width:600px){.section{padding:70px 24px}}
+
+/* SECTION HEADER */
+.sl{font-family:var(--mono);font-size:.65rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);margin-bottom:16px}
+.section-dark .sl{color:var(--coral)}.section-uni .sl{color:#a78bfa}
+.st{font-family:var(--serif);font-size:clamp(2rem,4vw,3rem);font-weight:400;line-height:1.12;letter-spacing:-.02em;margin-bottom:16px}
+.st em{font-style:italic;color:var(--coral)}
+.section-dark .st,.section-uni .st{color:var(--white)}
+.ss{font-size:1.05rem;color:var(--gray-500);max-width:520px;line-height:1.8;margin-bottom:52px}
+.ss strong{color:var(--black);font-weight:600}
+.section-dark .ss{color:var(--gray-400)}.section-dark .ss strong{color:var(--white)}
+.section-uni .ss{color:rgba(255,255,255,.45)}.section-uni .ss strong{color:var(--white)}
+
+/* HOW — numbered */
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+@media(max-width:700px){.how-grid{grid-template-columns:1fr}}
+.how-step{position:relative;padding-top:16px}
+.how-num{font-family:var(--serif);font-size:4.5rem;font-weight:700;color:var(--gray-200);line-height:1;margin-bottom:-20px}
+.how-step h3{font-family:var(--serif);font-size:1.15rem;font-weight:600;margin-bottom:8px;position:relative}
+.how-step p{font-size:.88rem;color:var(--gray-600);line-height:1.7}
+
+/* SPLIT */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+@media(max-width:800px){.split{grid-template-columns:1fr;gap:32px}}
+.split h3{font-family:var(--serif);font-size:1.1rem;font-weight:600;margin-bottom:16px}
+.xlist,.vlist{list-style:none;display:flex;flex-direction:column;gap:12px}
+.xlist li,.vlist li{font-size:.9rem;line-height:1.6;display:flex;align-items:flex-start;gap:10px}
+.xlist li::before{content:'✕';color:var(--coral);font-weight:700;flex-shrink:0;font-size:.75rem;margin-top:3px}
+.vlist li::before{content:'→';color:var(--coral);font-weight:700;flex-shrink:0;margin-top:1px}
+.section-dark .xlist li,.section-dark .vlist li{color:var(--gray-400)}
+.section-uni .xlist li,.section-uni .vlist li{color:rgba(255,255,255,.45)}
+.section-uni .vlist li::before{color:#a78bfa}
+
+/* CATEGORY CARDS */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+@media(max-width:700px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.cat-grid{grid-template-columns:1fr}}
+.cat{border:1.5px solid var(--gray-200);border-radius:10px;padding:24px 20px;transition:all var(--transition)}
+.cat:hover{border-color:var(--coral);transform:translateY(-3px)}
+.cat-icon{font-size:1.4rem;margin-bottom:10px}
+.cat h4{font-family:var(--serif);font-size:.95rem;font-weight:600;margin-bottom:4px}
+.cat p{font-size:.78rem;color:var(--gray-600);line-height:1.5}
+.cat-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.cat-tag{font-family:var(--mono);font-size:.55rem;font-weight:500;padding:2px 7px;border-radius:100px;background:var(--gray-100);color:var(--gray-500);letter-spacing:.03em}
+
+/* PRICING */
+.p-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:660px;margin-top:48px}
+@media(max-width:600px){.p-grid{grid-template-columns:1fr}}
+.pc{border:1.5px solid var(--gray-200);border-radius:12px;padding:36px 28px;position:relative;transition:all var(--transition)}
+.pc:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.04)}
+.pc.feat{border-color:var(--coral)}
+.pc.feat::before{content:'BEST VALUE';position:absolute;top:-10px;left:28px;background:var(--coral);color:var(--white);font-family:var(--mono);font-size:.5rem;font-weight:700;letter-spacing:.14em;padding:3px 10px;border-radius:100px}
+.p-tier{font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--coral);margin-bottom:10px}
+.p-price{font-family:var(--serif);font-size:2.6rem;font-weight:500;line-height:1;margin-bottom:4px}
+.p-scope{font-size:.82rem;color:var(--gray-500);margin-bottom:20px}
+.p-div{height:1px;background:var(--gray-200);margin:0 -28px 16px}
+.p-feat{font-size:.85rem;line-height:2.2;color:var(--gray-700)}
+.p-feat .ck{color:var(--coral);margin-right:6px}
+.p-weekly{margin-top:16px;padding-top:14px;border-top:1px solid var(--gray-200);font-family:var(--mono);font-size:.82rem;font-weight:700;color:var(--coral)}
+
+/* FEATURE CARDS dark */
+.fg-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px}
+@media(max-width:700px){.fg-grid{grid-template-columns:1fr}}
+.fc{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:28px 24px;transition:all var(--transition)}
+.fc:hover{border-color:rgba(224,90,58,.25);background:rgba(255,255,255,.05)}
+.fc-icon{font-size:1.3rem;margin-bottom:12px}
+.fc h4{font-family:var(--serif);font-size:.95rem;font-weight:600;color:var(--white);margin-bottom:6px}
+.fc p{font-size:.8rem;color:var(--gray-500);line-height:1.6}
+/* uni cards */
+.uc{background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.1);border-radius:10px;padding:28px 24px;transition:all var(--transition)}
+.uc:hover{border-color:rgba(167,139,250,.25)}
+.uc h4{font-family:var(--serif);font-size:.95rem;font-weight:600;color:var(--white);margin-bottom:6px}
+.uc p{font-size:.8rem;color:rgba(255,255,255,.4);line-height:1.6}
+
+.scta{display:flex;gap:14px;flex-wrap:wrap;margin-top:48px}
+
+/* STATS BAR */
+.stats{background:var(--black);padding:32px 48px;border-bottom:1px solid rgba(255,255,255,.06)}
+.stats-inner{max-width:var(--max-w);margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.stat{text-align:center;flex:1;min-width:100px}
+.stat-n{font-family:var(--serif);font-size:1.8rem;font-weight:500;color:var(--white);line-height:1}
+.stat-l{font-family:var(--mono);font-size:.55rem;font-weight:500;letter-spacing:.16em;color:var(--gray-500);text-transform:uppercase;margin-top:4px}
+
+/* MARKETS */
+.markets{padding:16px 48px;border-bottom:1px solid var(--gray-200);background:var(--cream)}
+.markets-inner{max-width:var(--max-w);margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.markets-label{font-family:var(--mono);font-size:.55rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gray-400);flex-shrink:0}
+.mkt{font-size:.78rem;color:var(--gray-600);display:flex;align-items:center;gap:3px}.mkt-flag{font-size:.9rem}
+.mkt-sep{color:var(--gray-300);font-size:.6rem}
+
+/* FAQ */
+.faq-i{border-bottom:1px solid var(--gray-200);padding:24px 0}
+.faq-q{font-family:var(--serif);font-size:1.05rem;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;transition:color .2s}
+.faq-q:hover{color:var(--coral)}
+.faq-q .tog{font-size:1.1rem;color:var(--gray-400);transition:transform .3s;flex-shrink:0;margin-left:16px}
+.faq-a{font-size:.88rem;color:var(--gray-600);line-height:1.8;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease}
+.faq-i.open .faq-a{max-height:200px;padding-top:12px}
+.faq-i.open .tog{transform:rotate(45deg);color:var(--coral)}
+
+/* CTA */
+.cta-f{text-align:center;background:var(--coral);padding:100px 48px;position:relative;overflow:hidden}
+.cta-f::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.07) 0%,transparent 60%);pointer-events:none}
+.cta-f>*{position:relative;z-index:1}
+.cta-h{font-family:var(--serif);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:400;font-style:italic;color:var(--white);margin-bottom:14px}
+.cta-p{font-size:1rem;color:rgba(255,255,255,.7);max-width:400px;margin:0 auto 32px}
+.cta-row{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+
+/* FOOTER */
+.footer{background:var(--black);padding:40px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-wm{display:flex;align-items:baseline;gap:3px}
+.footer-wm .fws{font-family:var(--serif);font-style:italic;font-size:14px;font-weight:600;color:var(--white)}
+.footer-wm .fwm{font-family:var(--mono);font-size:11px;color:var(--gray-500)}
+.footer-wm .fwd{color:var(--coral)}
+.footer-r{font-family:var(--mono);font-size:.55rem;color:var(--gray-500);letter-spacing:.06em;text-align:right;line-height:1.9}
+.footer-r a{color:var(--coral);transition:color .2s}.footer-r a:hover{color:var(--white)}
+
+/* MODAL */
+.mo{display:none;position:fixed;inset:0;z-index:200;background:rgba(26,26,26,.65);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px}
+.mo.active{display:flex}
+.modal{background:var(--white);border-radius:14px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 40px 80px rgba(0,0,0,.2);position:relative;animation:mIn .3s ease-out}
+@keyframes mIn{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.mx{position:absolute;top:16px;right:16px;width:32px;height:32px;border:none;background:var(--gray-100);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--gray-600);transition:all .2s;z-index:1}.mx:hover{background:var(--coral-pale);color:var(--coral)}
+.mh{padding:36px 36px 0;text-align:center}
+.mhi{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto 14px}
+.mhi-c{background:var(--coral-pale)}.mhi-d{background:var(--gray-100)}.mhi-p{background:#f3eeff}
+.mh h2{font-family:var(--serif);font-size:1.5rem;font-weight:500;margin-bottom:4px}
+.mh p{font-size:.88rem;color:var(--gray-500)}
+.mb{padding:24px 36px 36px}
+.fg{margin-bottom:16px}
+.fl{display:block;font-size:.78rem;font-weight:600;color:var(--black);margin-bottom:5px}.fl .rq{color:var(--coral);margin-left:2px}
+.fi,.fsel,.fta{width:100%;padding:11px 14px;border:1.5px solid var(--gray-200);border-radius:8px;font-family:var(--sans);font-size:.88rem;color:var(--black);background:var(--white);transition:all .2s;outline:none}
+.fi:focus,.fsel:focus,.fta:focus{border-color:var(--coral);box-shadow:0 0 0 3px var(--coral-light)}
+.fi::placeholder,.fta::placeholder{color:var(--gray-400)}
+.fta{resize:vertical;min-height:72px}
+.fsel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:500px){.fr{grid-template-columns:1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{display:inline-flex;padding:5px 11px;border-radius:100px;font-family:var(--mono);font-size:.6rem;font-weight:500;letter-spacing:.02em;border:1.5px solid var(--gray-200);color:var(--gray-600);background:var(--white);cursor:pointer;transition:all .2s;user-select:none}
+.chip:hover{border-color:var(--coral);color:var(--coral)}
+.chip.sel{background:var(--coral-pale);border-color:var(--coral);color:var(--coral);font-weight:600}
+.chip input{display:none}
+.fsub{width:100%;padding:13px;border:none;border-radius:8px;font-family:var(--sans);font-size:.92rem;font-weight:700;color:var(--white);cursor:pointer;transition:all .25s;margin-top:6px}
+.fsub-c{background:var(--coral)}.fsub-c:hover{background:var(--coral-hover)}
+.fsub-d{background:var(--black)}.fsub-d:hover{background:var(--gray-700)}
+.fsub-p{background:#7c3aed}.fsub-p:hover{background:#6d28d9}
+.fok{display:none;text-align:center;padding:48px 36px}.fok.active{display:block}
+.fok-i{font-size:2.5rem;margin-bottom:14px}
+.fok h3{font-family:var(--serif);font-size:1.3rem;font-weight:500;margin-bottom:8px}
+.fok p{font-size:.88rem;color:var(--gray-600);line-height:1.7}
+.fnote{font-family:var(--mono);font-size:.55rem;color:var(--gray-400);text-align:center;margin-top:14px;letter-spacing:.05em}
+
+.reveal{opacity:0;transform:translateY(24px);transition:all .6s cubic-bezier(.22,1,.36,1)}.reveal.vis{opacity:1;transform:translateY(0)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+</style>
+</head>
+<body>
+
+<!-- NAV — center logo, split links -->
+<nav class="nav">
+<div class="nav-left">
+<a href="#startups" class="nav-a">For Startups</a>
+<a href="#talent" class="nav-a">For Talent</a>
+<a href="#universities" class="nav-a">Universities</a>
+</div>
+<div class="nav-center">
+<div class="nav-icon">BO</div>
+<div class="nav-wm"><span class="wm-serif">Blue Ox</span><span class="wm-mono"> Jobs</span></div>
+</div>
+<div class="nav-right">
+<a href="#how" class="nav-a">How It Works</a>
+<a href="#faq" class="nav-a">FAQ</a>
+<button onclick="openM('co')" class="nav-a" style="color:var(--coral);cursor:pointer;border:none;background:none;font-family:var(--mono);font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase">Request a Pod</button>
+</div>
+</nav>
+
+<!-- TICKER — scrolling coral bar -->
+<div class="ticker">
+<div class="ticker-track">
+<span class="ticker-item">300+ talent trained</span>
+<span class="ticker-item">15+ projects shipped</span>
+<span class="ticker-item">7 days to kickoff</span>
+<span class="ticker-item">€200/week per pod member</span>
+<span class="ticker-item">campus-supervised</span>
+<span class="ticker-item">EU · US · Gulf markets</span>
+<span class="ticker-item">weekly pod reports</span>
+<span class="ticker-item">competition-ranked talent</span>
+<!-- duplicate for seamless loop -->
+<span class="ticker-item">300+ talent trained</span>
+<span class="ticker-item">15+ projects shipped</span>
+<span class="ticker-item">7 days to kickoff</span>
+<span class="ticker-item">€200/week per pod member</span>
+<span class="ticker-item">campus-supervised</span>
+<span class="ticker-item">EU · US · Gulf markets</span>
+<span class="ticker-item">weekly pod reports</span>
+<span class="ticker-item">competition-ranked talent</span>
+</div>
+</div>
+
+<!-- HERO — massive centered headline -->
+<section class="hero">
+<h1>Intern Pods for<br>startups <em>that ship.</em></h1>
+<p class="hero-sub">Campus-supervised teams of interns and graduates that plug into your sprint and deliver weekly. <strong>Devs, designers, marketers, support.</strong></p>
+<div class="hero-btns">
+<button onclick="openM('co')" class="btn btn-coral">Request a Pod <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></button>
+<a href="https://forms.gle/31duiBY8mBERwMrTA" target="_blank" rel="noopener noreferrer" class="btn btn-dark">Join a Pod</a>
+<a href="#universities" class="btn btn-outline">Universities →</a>
+</div>
+</section>
+
+<!-- AUDIENCE CARDS -->
+<div class="audience">
+<div class="audience-grid">
+<div class="au-card" onclick="openM('co')"><div class="au-icon">🚀</div><div class="au-title">For Startups</div><div class="au-desc">Add a Pod to your sprint without hiring. Devs, designers, marketers, ops — shipping weekly from €200/wk.</div><div class="au-link">Request a Pod <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></div></div>
+<div class="au-card" onclick="window.open('https://forms.gle/31duiBY8mBERwMrTA','_blank')"><div class="au-icon">💼</div><div class="au-title">For Talent</div><div class="au-desc">Join a Pod. Ship real work for international startups. Build your career from Blue Ox Kampus. Free.</div><div class="au-link">Join the Pool <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></div></div>
+<div class="au-card" onclick="openM('uni')"><div class="au-icon">🎓</div><div class="au-title">For Universities</div><div class="au-desc">Place your students in supervised Pods with international startups. Weekly reports. Tracked outcomes.</div><div class="au-link">Partner with us <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></div></div>
+</div>
+</div>
+
+<!-- STATS -->
+<div class="stats"><div class="stats-inner"><div class="stat"><div class="stat-n">300+</div><div class="stat-l">Talent Trained</div></div><div class="stat"><div class="stat-n">15+</div><div class="stat-l">Projects Shipped</div></div><div class="stat"><div class="stat-n">7 days</div><div class="stat-l">To Kickoff</div></div><div class="stat"><div class="stat-n">4</div><div class="stat-l">Markets</div></div></div></div>
+
+<!-- MARKETS -->
+<div class="markets"><div class="markets-inner"><div class="markets-label">Where Startups Hire Pods</div><div class="mkt"><span class="mkt-flag">🇵🇱</span> Poland</div><span class="mkt-sep">·</span><div class="mkt"><span class="mkt-flag">🇳🇱</span> NL</div><span class="mkt-sep">·</span><div class="mkt"><span class="mkt-flag">🇨🇿</span> CZ</div><span class="mkt-sep">·</span><div class="mkt"><span class="mkt-flag">🇩🇪</span> DE</div><span class="mkt-sep">·</span><div class="mkt"><span class="mkt-flag">🇺🇸</span> US</div><span class="mkt-sep">·</span><div class="mkt"><span class="mkt-flag">🇦🇪</span> UAE</div><span class="mkt-sep">·</span><div class="mkt"><span class="mkt-flag">🇸🇦</span> SA</div><span class="mkt-sep">·</span><div class="mkt"><span class="mkt-flag">🇶🇦</span> QA</div></div></div>
+
+<!-- HOW IT WORKS -->
+<section class="section section-cream" id="how"><div class="si reveal"><div class="sl">How It Works</div><div class="st">From Slack message to shipping <em>in 7 days.</em></div><div class="ss">You tell us what's piling up. We match a Pod. They ship from campus while you build product.</div><div class="how-grid"><div class="how-step"><div class="how-num">01</div><h3>Send your stack + top tasks</h3><p>We give you a template. Tech stack, 3–5 tasks from your backlog, timeline. Takes 60 seconds.</p></div><div class="how-step"><div class="how-num">02</div><h3>Pick from ranked profiles</h3><p>3–5 competition-ranked candidates with portfolios and performance data. You interview. You approve.</p></div><div class="how-step"><div class="how-num">03</div><h3>Pod ships from campus</h3><p>Kickoff call. Weekly cadence set. Pod Coordinator runs everything. Pod Report every Friday.</p></div></div></div></section>
+
+<!-- FOR STARTUPS -->
+<section class="section" id="startups"><div class="si reveal"><div class="sl">For Startups</div><div class="st">Your backlog is growing. Your team is maxed. <em>Add a Pod.</em></div><div class="ss">You don't need another full-time hire. You need an <strong>Intern Pod</strong>: 1–3 competition-ranked interns or graduates + a Pod Coordinator, clearing your backlog weekly. From €200/week per person.</div>
+<div class="split"><div><h3>😤 Your challenges</h3><ul class="xlist"><li>You're a 5-person startup paying agency rates for a junior dev</li><li>Upwork freelancers ghost after week 2. No accountability.</li><li>You don't have 6 weeks for a recruiting funnel. You need output now.</li><li>Last time you hired an intern, YOU became the manager</li><li>"Remote interns" means someone in a bedroom with spotty wifi</li></ul></div><div><h3>→ How Blue Ox solves it</h3><ul class="vlist"><li>€200/week per Pod member. Your Berlin contractor charges that for 4 hours. A Pod gives you 40.</li><li>Competition-ranked every Saturday. You pick from the top 10% or 20%.</li><li>Campus-based: 100 Mbps fibre, generators, Pod Coordinator on-site.</li><li>Pod Coordinator handles blockers before they hit your Slack.</li><li>Every Friday: Pod Report. Tasks shipped. Blockers. Next week.</li></ul></div></div>
+<div class="cat-grid"><div class="cat"><div class="cat-icon">⚛️</div><h4>Software Dev</h4><p>MVP backlog, components, APIs, QA, bug fixes</p><div class="cat-tags"><span class="cat-tag">React</span><span class="cat-tag">Python</span><span class="cat-tag">Node</span><span class="cat-tag">QA</span></div></div><div class="cat"><div class="cat-icon">🎨</div><h4>UI/UX Design</h4><p>Figma mockups, prototyping, design systems</p><div class="cat-tags"><span class="cat-tag">Figma</span><span class="cat-tag">Prototyping</span><span class="cat-tag">Research</span></div></div><div class="cat"><div class="cat-icon">🎬</div><h4>Motion Graphics</h4><p>Product demos, social clips, explainers</p><div class="cat-tags"><span class="cat-tag">After Effects</span><span class="cat-tag">Video</span><span class="cat-tag">Animation</span></div></div><div class="cat"><div class="cat-icon">📣</div><h4>Marketing</h4><p>Launch content, social, SEO, email sequences</p><div class="cat-tags"><span class="cat-tag">Social</span><span class="cat-tag">Content</span><span class="cat-tag">SEO</span></div></div><div class="cat"><div class="cat-icon">🎧</div><h4>Customer Care</h4><p>Support inbox, live chat, docs, onboarding</p><div class="cat-tags"><span class="cat-tag">Support</span><span class="cat-tag">Chat</span><span class="cat-tag">CRM</span></div></div><div class="cat"><div class="cat-icon">📊</div><h4>Ops & Admin</h4><p>Data cleanup, research, internal tools</p><div class="cat-tags"><span class="cat-tag">PM</span><span class="cat-tag">Research</span><span class="cat-tag">Admin</span></div></div></div>
+<div class="p-grid"><div class="pc"><div class="p-tier">Solo Pod</div><div class="p-price">€2,400</div><div class="p-scope">1 intern or graduate · 12 weeks</div><div class="p-div"></div><div class="p-feat"><span class="ck">→</span> Any role category<br><span class="ck">→</span> Pod Coordinator<br><span class="ck">→</span> Weekly Pod Reports<br><span class="ck">→</span> Replacement guarantee</div><div class="p-weekly">€200/week</div></div><div class="pc feat"><div class="p-tier">Team Pod</div><div class="p-price">€6,000</div><div class="p-scope">3 interns or graduates · 12 weeks</div><div class="p-div"></div><div class="p-feat"><span class="ck">→</span> Multi-role or single focus<br><span class="ck">→</span> Dedicated coordinator<br><span class="ck">→</span> Coordinated reports<br><span class="ck">→</span> Save 17%</div><div class="p-weekly">€167/week each</div></div></div>
+<div class="scta"><button onclick="openM('co')" class="btn btn-coral">Request a Pod <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></button></div></div></section>
+
+<!-- FOR TALENT -->
+<section class="section section-dark" id="talent"><div class="si reveal"><div class="sl">For Talent</div><div class="st">Get an international company <em>on your CV.</em></div><div class="ss">Blue Ox Jobs places you in an Intern Pod with a real startup for 8–16 weeks. You work from Blue Ox Kampus. You pay nothing.</div>
+<div class="split"><div><h3 style="color:#fff">😤 Your challenges</h3><ul class="xlist"><li>No access to international work experience</li><li>Local opportunities are scarce and underpaid</li><li>University alone doesn't open doors abroad</li><li>Online freelancing is cutthroat and isolating</li><li>No way to prove skills internationally</li></ul></div><div><h3 style="color:#fff">→ How Blue Ox solves it</h3><ul class="vlist"><li>Ship real features for a real startup — not a classroom exercise</li><li>Work from Blue Ox Kampus — power, internet, mentorship</li><li>Weekly competitions — top performers get placed first</li><li>Certificate + professional reference</li><li>Pod → contract → full employment via Blue Ox Jobs</li></ul></div></div>
+<div class="fg-grid"><div class="fc"><div class="fc-icon">🏆</div><h4>Weekly Competitions</h4><p>Every Saturday. Coding, design, marketing. Top-ranked get placed in Pods first.</p></div><div class="fc"><div class="fc-icon">🏢</div><h4>Campus-Based Pods</h4><p>Blue Ox Kampus: 100 Mbps fibre, generators, Pod Coordinator on-site.</p></div><div class="fc"><div class="fc-icon">📜</div><h4>Certificate & Reference</h4><p>Every placement earns a certificate and reference from the hiring company.</p></div><div class="fc"><div class="fc-icon">🌍</div><h4>Career Pipeline</h4><p>Pod internship → contract → full employment in Poland, Netherlands, UAE.</p></div></div>
+<div class="scta"><a href="https://forms.gle/31duiBY8mBERwMrTA" target="_blank" rel="noopener noreferrer" class="btn btn-white">Join the Talent Pool <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a></div></div></section>
+
+<!-- FOR UNIVERSITIES -->
+<section class="section section-uni" id="universities"><div class="si reveal"><div class="sl">For Universities</div><div class="st">Give your students Pod placements <em>that lead somewhere.</em></div><div class="ss">Place students into supervised Intern Pods with international startups. <strong>Real work. Weekly reports. Not coffee runs.</strong></div>
+<div class="split"><div><h3 style="color:#fff">😤 Your challenges</h3><ul class="xlist"><li>Hard to find hosts that mentor and supervise</li><li>Zero visibility into student performance</li><li>Outcomes inconsistent — most students fetch coffee</li><li>Graduates finish with nothing to show</li><li>Admin burden of placement paperwork</li></ul></div><div><h3 style="color:#fff">→ How Blue Ox solves it</h3><ul class="vlist"><li>Pre-vetted startups. Students join shipping Pods.</li><li>Weekly Pod Reports per student</li><li>8–16 week programs with defined deliverables</li><li>Certificates, references, portfolio pieces</li><li>Dashboard: placement, completion, employment rates</li></ul></div></div>
+<div class="fg-grid"><div class="uc"><div class="fc-icon">🔗</div><h4>Startup Network</h4><p>EU, US, and Gulf startups set up to host supervised Pods.</p></div><div class="uc"><div class="fc-icon">📊</div><h4>Outcome Tracking</h4><p>Weekly reports, completion rates, skill assessments — one dashboard.</p></div><div class="uc"><div class="fc-icon">📋</div><h4>Zero Admin</h4><p>Blue Ox handles matching, coordination, supervision, reporting.</p></div><div class="uc"><div class="fc-icon">🏅</div><h4>Graduate Employment</h4><p>Top performers fast-tracked to full employment in EU and Gulf.</p></div></div>
+<div class="scta"><button onclick="openM('uni')" class="btn btn-purple">Partner With Blue Ox <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></button></div></div></section>
+
+<!-- FAQ -->
+<section class="section section-cream" id="faq"><div class="si reveal" style="max-width:700px"><div class="sl">FAQ</div><div class="st">What people ask first.</div>
+<div class="faq-i"><div class="faq-q">What roles can Pods cover?<span class="tog">+</span></div><div class="faq-a">Software dev, UI/UX, motion graphics, marketing, customer support, and operations. If a startup needs it and it ships remotely, we build a Pod for it.</div></div>
+<div class="faq-i"><div class="faq-q">How do you verify work is happening?<span class="tog">+</span></div><div class="faq-a">Every Pod member works from Blue Ox Kampus — daily attendance, guaranteed infrastructure, Pod Coordinator on-site. Weekly Pod Report every Friday.</div></div>
+<div class="faq-i"><div class="faq-q">What if someone drops mid-project?<span class="tog">+</span></div><div class="faq-a">Replaced from our ranked database at no extra cost. Campus model means backups are on-site. 3–5 business days.</div></div>
+<div class="faq-i"><div class="faq-q">Timezone overlap for EU/US/Gulf?<span class="tog">+</span></div><div class="faq-a">Uganda = UTC+3. Full European overlap. US East: 3–4 hours. Gulf: 1 hour ahead — nearly identical business hours.</div></div>
+<div class="faq-i"><div class="faq-q">Do talent pay anything?<span class="tog">+</span></div><div class="faq-a">No. Startups pay the program fee. Talent get free campus, competitions, placement, and career support.</div></div>
+<div class="faq-i"><div class="faq-q">Can placements be grant-funded?<span class="tog">+</span></div><div class="faq-a">Yes. Impact track places refugee talent via IOM, UNHCR, EU-Africa funds. Subsidised rates + ESG documentation.</div></div>
+</div></section>
+
+<!-- CTA -->
+<section class="cta-f"><div class="cta-h">Ready to start?</div><p class="cta-p">Startups request Pods. Talent joins Pods. Universities track outcomes. Shipping starts in 7 days.</p><div class="cta-row"><button onclick="openM('co')" class="btn btn-white">Request a Pod →</button><a href="https://forms.gle/31duiBY8mBERwMrTA" target="_blank" rel="noopener noreferrer" class="btn btn-dark">Join a Pod →</a><button onclick="openM('uni')" class="btn btn-outline" style="border-color:rgba(255,255,255,.3);color:var(--white)">Partner University</button></div></section>
+
+<footer class="footer"><div class="footer-wm"><span class="fws">Blue Ox</span><span class="fwm"> Jobs<span class="fwd">.</span>eu</span></div><div class="footer-r">Part of the <a href="https://blueoxkampus.com">Blue Ox</a> ecosystem: Kampus · Jobs · Rides · Foundation<br>Billy is our managed Pod placement program · Mbarara, Uganda</div></footer>
+
+<!-- MODALS -->
+<div class="mo" id="mo-co"><div class="modal"><button class="mx" onclick="closeM()">✕</button><div id="co-fv"><div class="mh"><div class="mhi mhi-c">🚀</div><h2>Request a Pod</h2><p>Tell us what's piling up. Ranked profiles in 3–5 days.</p></div><div class="mb"><div class="fr"><div class="fg"><label class="fl">Name<span class="rq">*</span></label><input class="fi" id="c-name" placeholder="Jane Kowalski"></div><div class="fg"><label class="fl">Company<span class="rq">*</span></label><input class="fi" id="c-co" placeholder="Acme GmbH"></div></div><div class="fg"><label class="fl">Work email<span class="rq">*</span></label><input class="fi" id="c-em" type="email" placeholder="jane@acme.com"></div><div class="fg"><label class="fl">Pod roles</label><div class="chips" id="c-roles"><label class="chip"><input type="checkbox" value="Dev">Dev</label><label class="chip"><input type="checkbox" value="UI/UX">UI/UX</label><label class="chip"><input type="checkbox" value="Motion">Motion</label><label class="chip"><input type="checkbox" value="Marketing">Marketing</label><label class="chip"><input type="checkbox" value="Support">Support</label><label class="chip"><input type="checkbox" value="Ops">Ops</label></div></div><div class="fg"><label class="fl">Pod size</label><select class="fsel" id="c-sz"><option>Solo Pod (1)</option><option>Team Pod (2–3)</option><option>Large Pod (4+)</option></select></div><div class="fg"><label class="fl">Top 3–5 tasks for the Pod</label><textarea class="fta" id="c-tasks" placeholder="Build landing pages, create social videos, handle support tickets..."></textarea></div><div class="fr"><div class="fg"><label class="fl">Startup based in</label><select class="fsel" id="c-mkt"><option value="">Select...</option><option>EU</option><option>US</option><option>Gulf</option><option>Other</option></select></div><div class="fg"><label class="fl">Start date</label><input class="fi" id="c-dt" type="date"></div></div><button class="fsub fsub-c" onclick="subCo()">Submit Pod Request →</button><p class="fnote">We reply within 48 hours with matched profiles.</p></div></div><div class="fok" id="co-ok"><div class="fok-i">🎉</div><h3>Pod request received!</h3><p>Expect 3–5 ranked profiles in your inbox within 48 hours.</p></div></div></div>
+
+<div class="mo" id="mo-dev"><div class="modal"><button class="mx" onclick="closeM()">✕</button><div id="dev-fv"><div class="mh"><div class="mhi mhi-d">💼</div><h2>Join the Talent Pool</h2><p>Register free. Compete at Blue Ox Kampus. Get placed.</p></div><div class="mb"><div class="fr"><div class="fg"><label class="fl">Full name<span class="rq">*</span></label><input class="fi" id="d-name" placeholder="Joel Natukunda"></div><div class="fg"><label class="fl">Email<span class="rq">*</span></label><input class="fi" id="d-em" type="email" placeholder="joel@email.com"></div></div><div class="fg"><label class="fl">Phone / WhatsApp</label><input class="fi" id="d-ph" placeholder="+256 7XX XXX XXX"></div><div class="fg"><label class="fl">Skills</label><div class="chips" id="d-sk"><label class="chip"><input type="checkbox" value="React">React</label><label class="chip"><input type="checkbox" value="Python">Python</label><label class="chip"><input type="checkbox" value="Node">Node</label><label class="chip"><input type="checkbox" value="Mobile">Mobile</label><label class="chip"><input type="checkbox" value="UI/UX">UI/UX</label><label class="chip"><input type="checkbox" value="Motion">Motion</label><label class="chip"><input type="checkbox" value="Marketing">Marketing</label><label class="chip"><input type="checkbox" value="Support">Support</label><label class="chip"><input type="checkbox" value="Ops">Ops</label><label class="chip"><input type="checkbox" value="Data">Data/ML</label></div></div><div class="fr"><div class="fg"><label class="fl">English</label><select class="fsel" id="d-eng"><option value="">Select...</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option></select></div><div class="fg"><label class="fl">Status</label><select class="fsel" id="d-st"><option value="">Select...</option><option>Student</option><option>Graduate</option><option>Self-taught</option><option>Employed</option><option>Refugee</option></select></div></div><div class="fg"><label class="fl">Portfolio / GitHub</label><input class="fi" id="d-lk" placeholder="https://..."></div><button class="fsub fsub-d" onclick="subDev()">Join the Talent Pool →</button><p class="fnote">Free · Next competition: Saturday at Blue Ox Kampus</p></div></div><div class="fok" id="dev-ok"><div class="fok-i">🎉</div><h3>You're in!</h3><p>Come to Blue Ox Kampus this Saturday. Top performers get priority placement.</p></div></div></div>
+
+<div class="mo" id="mo-uni"><div class="modal"><button class="mx" onclick="closeM()">✕</button><div id="uni-fv"><div class="mh"><div class="mhi mhi-p">🎓</div><h2>University Partnership</h2><p>Structured placements. Tracked outcomes. Zero admin.</p></div><div class="mb"><div class="fg"><label class="fl">Your name<span class="rq">*</span></label><input class="fi" id="u-name" placeholder="Dr. Sarah Namutebi"></div><div class="fg"><label class="fl">University<span class="rq">*</span></label><input class="fi" id="u-uni" placeholder="Mbarara University"></div><div class="fg"><label class="fl">Email<span class="rq">*</span></label><input class="fi" id="u-em" type="email" placeholder="sarah@must.ac.ug"></div><div class="fg"><label class="fl">Role</label><input class="fi" id="u-role" placeholder="Career Services / Dean / Lecturer"></div><div class="fr"><div class="fg"><label class="fl">Students/year</label><select class="fsel" id="u-sz"><option value="">Select...</option><option>Under 50</option><option>50–200</option><option>200–500</option><option>500+</option></select></div><div class="fg"><label class="fl">Departments</label><input class="fi" id="u-dept" placeholder="CS, Business, Design"></div></div><div class="fg"><label class="fl">What are you looking for?</label><textarea class="fta" id="u-nt" placeholder="International placements for final-year students..."></textarea></div><button class="fsub fsub-p" onclick="subUni()">Submit Inquiry →</button><p class="fnote">We'll schedule a call within 48 hours.</p></div></div><div class="fok" id="uni-ok"><div class="fok-i">🎓</div><h3>Inquiry received!</h3><p>We'll schedule a call within 48 hours to discuss partnership.</p></div></div></div>
+
+<script>
+const obs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')})},{threshold:.06});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+document.querySelectorAll('.faq-q').forEach(q=>{q.addEventListener('click',()=>{const i=q.parentElement;const w=i.classList.contains('open');document.querySelectorAll('.faq-i.open').forEach(x=>x.classList.remove('open'));if(!w)i.classList.add('open')})});
+document.querySelectorAll('.chip').forEach(c=>{c.addEventListener('click',()=>{c.classList.toggle('sel');c.querySelector('input').checked=!c.querySelector('input').checked})});
+function openM(t){closeM();document.getElementById('mo-'+t).classList.add('active');document.body.style.overflow='hidden'}
+function closeM(){document.querySelectorAll('.mo').forEach(m=>m.classList.remove('active'));document.body.style.overflow=''}
+document.querySelectorAll('.mo').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)closeM()})});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM()});
+function gc(id){return[...document.querySelectorAll('#'+id+' .chip.sel')].map(c=>c.textContent.trim()).join(', ')}
+function ml(s,b){const a=document.createElement('a');a.href='mailto:obed@blueoxkampus.com?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);a.click()}
+function subCo(){const n=document.getElementById('c-name').value,co=document.getElementById('c-co').value,em=document.getElementById('c-em').value;if(!n||!co||!em){alert('Please fill in name, company, and email.');return}ml('Blue Ox Jobs — '+co,'Name: '+n+'\nCompany: '+co+'\nEmail: '+em+'\nRoles: '+gc('c-roles')+'\nSize: '+document.getElementById('c-sz').value+'\nTasks: '+document.getElementById('c-tasks').value+'\nMarket: '+document.getElementById('c-mkt').value+'\nStart: '+document.getElementById('c-dt').value);document.getElementById('co-fv').style.display='none';document.getElementById('co-ok').classList.add('active')}
+function subDev(){const n=document.getElementById('d-name').value,em=document.getElementById('d-em').value;if(!n||!em){alert('Please fill in name and email.');return}ml('Blue Ox Jobs Talent — '+n,'Name: '+n+'\nEmail: '+em+'\nPhone: '+document.getElementById('d-ph').value+'\nSkills: '+gc('d-sk')+'\nEnglish: '+document.getElementById('d-eng').value+'\nStatus: '+document.getElementById('d-st').value+'\nPortfolio: '+document.getElementById('d-lk').value);document.getElementById('dev-fv').style.display='none';document.getElementById('dev-ok').classList.add('active')}
+function subUni(){const n=document.getElementById('u-name').value,uni=document.getElementById('u-uni').value,em=document.getElementById('u-em').value;if(!n||!uni||!em){alert('Please fill in name, university, and email.');return}ml('Blue Ox Jobs University — '+uni,'Name: '+n+'\nUniversity: '+uni+'\nEmail: '+em+'\nRole: '+document.getElementById('u-role').value+'\nStudents: '+document.getElementById('u-sz').value+'\nDepts: '+document.getElementById('u-dept').value+'\nNotes: '+document.getElementById('u-nt').value);document.getElementById('uni-fv').style.display='none';document.getElementById('uni-ok').classList.add('active')}
+</script>
+</body>
+</html>
