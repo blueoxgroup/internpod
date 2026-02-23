@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Ox Jobs — Interns from Uganda | Build Your International Career</title>
+<link rel="icon" href="/public/assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#1a1a1a;--white:#ffffff;--cream:#f8f6f2;
+  --coral:#e05a3a;--coral-hover:#c94e30;--coral-light:rgba(224,90,58,.06);--coral-pale:#fef5f3;
+  --gray-100:#f5f5f5;--gray-200:#ebebeb;--gray-300:#d4d4d4;--gray-400:#aaa;--gray-500:#888;--gray-600:#666;--gray-700:#444;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',-apple-system,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
+  --max-w:1100px;--transition:.35s cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+::selection{background:var(--coral);color:var(--white)}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--black);background:var(--white);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.7}
+a{text-decoration:none;color:inherit}
+
+/* ═══ NAV ═══ */
+.nav{display:flex;align-items:center;justify-content:center;padding:24px 48px;position:relative;z-index:100}
+.nav-left,.nav-right{display:flex;gap:32px;align-items:center}
+.nav-left{margin-right:auto}
+.nav-right{margin-left:auto}
+.nav-a{font-family:var(--mono);font-size:.7rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--black);transition:color .25s}
+.nav-a:hover{color:var(--coral)}
+.nav-center{display:flex;align-items:center;gap:10px;position:absolute;left:50%;transform:translateX(-50%)}
+.nav-logo{width:44px;height:44px;display:block}
+.nav-wm{display:flex;align-items:baseline;gap:3px}
+.nav-wm .wm-serif{font-family:var(--serif);font-style:italic;font-size:20px;font-weight:600;color:var(--black)}
+.nav-wm .wm-mono{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--gray-500)}
+@media(max-width:800px){.nav-left,.nav-right{display:none}.nav{padding:20px 24px}}
+
+/* ═══ TICKER ═══ */
+.ticker{background:var(--white);border-top:1px solid var(--gray-200);border-bottom:1px solid var(--gray-200);overflow:hidden;white-space:nowrap;padding:10px 0}
+.ticker-track{display:inline-flex;animation:ticker 30s linear infinite}
+.ticker-item{font-family:var(--mono);font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--coral);padding:0 24px}
+.ticker-item::after{content:'•';margin-left:24px;color:var(--coral)}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ═══ HERO ═══ */
+.hero{padding:100px 48px 80px;text-align:center}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,7.5vw,6.5rem);font-weight:400;line-height:1.05;letter-spacing:-.03em;color:var(--black);margin-bottom:28px}
+.hero h1 em{font-style:italic;color:var(--coral)}
+.hero-sub{font-size:1.15rem;color:var(--gray-500);max-width:580px;margin:0 auto 40px;line-height:1.8}
+.hero-sub strong{color:var(--black);font-weight:500}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);background:var(--coral-pale);border:1px solid rgba(224,90,58,.15);padding:5px 14px;border-radius:100px;margin-bottom:24px}
+@media(max-width:600px){.hero{padding:60px 24px 60px}}
+
+/* ═══ BUTTONS ═══ */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:8px;font-family:var(--sans);font-weight:600;font-size:.9rem;transition:all var(--transition);border:none;cursor:pointer}
+.btn svg{width:14px;height:14px}
+.btn-coral{background:var(--coral);color:var(--white)}.btn-coral:hover{background:var(--coral-hover);transform:translateY(-2px);box-shadow:0 8px 24px rgba(224,90,58,.15)}
+.btn-dark{background:var(--black);color:var(--white)}.btn-dark:hover{background:var(--gray-700);transform:translateY(-2px)}
+.btn-outline{border:1.5px solid var(--gray-300);color:var(--gray-700);background:transparent}.btn-outline:hover{border-color:var(--black);color:var(--black)}
+.btn-white{background:var(--white);color:var(--black)}.btn-white:hover{background:var(--gray-100)}
+
+/* ═══ SECTION SYSTEM ═══ */
+.section{padding:100px 48px}
+.section-cream{background:var(--cream)}
+.section-dark{background:var(--black);color:var(--white)}
+.section-coral{background:var(--coral);color:var(--white)}
+.si{max-width:var(--max-w);margin:0 auto}
+@media(max-width:600px){.section{padding:70px 24px}}
+
+.sl{font-family:var(--mono);font-size:.65rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);margin-bottom:16px}
+.section-dark .sl{color:var(--coral)}
+.st{font-family:var(--serif);font-size:clamp(2rem,4vw,3rem);font-weight:400;line-height:1.12;letter-spacing:-.02em;margin-bottom:16px}
+.st em{font-style:italic;color:var(--coral)}
+.section-dark .st{color:var(--white)}
+.ss{font-size:1.05rem;color:var(--gray-500);max-width:520px;line-height:1.8;margin-bottom:52px}
+.ss strong{color:var(--black);font-weight:600}
+.section-dark .ss{color:var(--gray-400)}.section-dark .ss strong{color:var(--white)}
+
+/* ═══ BENEFIT CARDS ═══ */
+.benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:16px}
+@media(max-width:700px){.benefit-grid{grid-template-columns:1fr}}
+.benefit-card{border:1.5px solid var(--gray-200);border-radius:16px;padding:36px 30px;transition:all var(--transition);position:relative;overflow:hidden}
+.benefit-card::before{content:'';position:absolute;inset:0;background:var(--coral-light);opacity:0;transition:opacity var(--transition)}
+.benefit-card:hover{border-color:var(--coral);transform:translateY(-4px);box-shadow:0 20px 48px rgba(224,90,58,.08)}
+.benefit-card:hover::before{opacity:1}
+.benefit-card>*{position:relative;z-index:1}
+.benefit-icon{font-size:2rem;margin-bottom:16px}
+.benefit-num{font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--coral);margin-bottom:8px}
+.benefit-title{font-family:var(--serif);font-size:1.25rem;font-weight:600;margin-bottom:10px}
+.benefit-desc{font-size:.88rem;color:var(--gray-600);line-height:1.7}
+
+/* ═══ CERTIFICATES SECTION ═══ */
+.cert-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+@media(max-width:700px){.cert-grid{grid-template-columns:1fr}}
+.cert-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:36px 28px;transition:all var(--transition);text-align:center}
+.cert-card:hover{border-color:rgba(224,90,58,.4);background:rgba(255,255,255,.07);transform:translateY(-3px)}
+.cert-num{width:40px;height:40px;border-radius:10px;background:rgba(224,90,58,.15);border:1px solid rgba(224,90,58,.25);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.1rem;font-weight:600;color:var(--coral);margin:0 auto 16px}
+.cert-issuer{font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);margin-bottom:8px}
+.cert-card h3{font-family:var(--serif);font-size:1.1rem;font-weight:600;color:var(--white);margin-bottom:8px}
+.cert-card p{font-size:.82rem;color:rgba(255,255,255,.45);line-height:1.7}
+.cert-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:.55rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;background:rgba(224,90,58,.1);border:1px solid rgba(224,90,58,.2);color:var(--coral);padding:4px 10px;border-radius:100px;margin-top:14px}
+
+/* ═══ HOW IT WORKS ═══ */
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+@media(max-width:700px){.how-grid{grid-template-columns:1fr}}
+.how-step{position:relative;padding-top:16px}
+.how-num{font-family:var(--serif);font-size:4.5rem;font-weight:700;color:var(--gray-200);line-height:1;margin-bottom:-20px}
+.how-step h3{font-family:var(--serif);font-size:1.15rem;font-weight:600;margin-bottom:8px;position:relative}
+.how-step p{font-size:.88rem;color:var(--gray-600);line-height:1.7}
+
+/* ═══ ROLES ═══ */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+@media(max-width:700px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.cat-grid{grid-template-columns:1fr}}
+.cat{border:1.5px solid var(--gray-200);border-radius:10px;padding:24px 20px;transition:all var(--transition)}
+.cat:hover{border-color:var(--coral);transform:translateY(-3px)}
+.cat-icon{font-size:1.4rem;margin-bottom:10px}
+.cat h4{font-family:var(--serif);font-size:.95rem;font-weight:600;margin-bottom:4px}
+.cat p{font-size:.78rem;color:var(--gray-600);line-height:1.5}
+.cat-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.cat-tag{font-family:var(--mono);font-size:.55rem;font-weight:500;padding:2px 7px;border-radius:100px;background:var(--gray-100);color:var(--gray-500);letter-spacing:.03em}
+
+/* ═══ QUALIFICATIONS ═══ */
+.qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+@media(max-width:800px){.qual-grid{grid-template-columns:1fr;gap:32px}}
+.qual-grid h3{font-family:var(--serif);font-size:1.1rem;font-weight:600;margin-bottom:16px}
+.vlist{list-style:none;display:flex;flex-direction:column;gap:12px}
+.vlist li{font-size:.9rem;line-height:1.6;display:flex;align-items:flex-start;gap:10px}
+.vlist li::before{content:'→';color:var(--coral);font-weight:700;flex-shrink:0;margin-top:1px}
+.xlist{list-style:none;display:flex;flex-direction:column;gap:12px}
+.xlist li{font-size:.9rem;line-height:1.6;display:flex;align-items:flex-start;gap:10px;color:var(--gray-600)}
+.xlist li::before{content:'✕';color:var(--coral);font-weight:700;flex-shrink:0;font-size:.75rem;margin-top:3px}
+
+/* ═══ STATS BAR ═══ */
+.stats{background:var(--black);padding:32px 48px}
+.stats-inner{max-width:var(--max-w);margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.stat{text-align:center;flex:1;min-width:100px}
+.stat-n{font-family:var(--serif);font-size:1.8rem;font-weight:500;color:var(--white);line-height:1}
+.stat-l{font-family:var(--mono);font-size:.55rem;font-weight:500;letter-spacing:.16em;color:var(--gray-500);text-transform:uppercase;margin-top:4px}
+
+/* ═══ FAQ ═══ */
+.faq-i{border-bottom:1px solid var(--gray-200);padding:24px 0}
+.faq-q{font-family:var(--serif);font-size:1.05rem;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;transition:color .2s}
+.faq-q:hover{color:var(--coral)}
+.faq-q .tog{font-size:1.1rem;color:var(--gray-400);transition:transform .3s;flex-shrink:0;margin-left:16px}
+.faq-a{font-size:.88rem;color:var(--gray-600);line-height:1.8;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease}
+.faq-i.open .faq-a{max-height:200px;padding-top:12px}
+.faq-i.open .tog{transform:rotate(45deg);color:var(--coral)}
+
+/* ═══ CTA ═══ */
+.cta-f{text-align:center;background:var(--coral);padding:100px 48px;position:relative;overflow:hidden}
+.cta-f::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.07) 0%,transparent 60%);pointer-events:none}
+.cta-f>*{position:relative;z-index:1}
+.cta-h{font-family:var(--serif);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:400;font-style:italic;color:var(--white);margin-bottom:14px}
+.cta-p{font-size:1rem;color:rgba(255,255,255,.7);max-width:400px;margin:0 auto 32px}
+.cta-row{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+
+/* ═══ FOOTER ═══ */
+.footer{background:var(--black);padding:40px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-wm{display:flex;align-items:baseline;gap:3px}
+.footer-wm .fws{font-family:var(--serif);font-style:italic;font-size:14px;font-weight:600;color:var(--white)}
+.footer-wm .fwm{font-family:var(--mono);font-size:11px;color:var(--gray-500)}
+.footer-wm .fwd{color:var(--coral)}
+.footer-r{font-family:var(--mono);font-size:.55rem;color:var(--gray-500);letter-spacing:.06em;text-align:right;line-height:1.9}
+.footer-r a{color:var(--coral);transition:color .2s}.footer-r a:hover{color:var(--white)}
+
+.scta{display:flex;gap:14px;flex-wrap:wrap;margin-top:48px}
+.reveal{opacity:0;transform:translateY(24px);transition:all .6s cubic-bezier(.22,1,.36,1)}.reveal.vis{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+<div class="nav-left">
+<a href="/" class="nav-a">Home</a>
+<a href="/#startups" class="nav-a">For Startups</a>
+<a href="/#universities" class="nav-a">Universities</a>
+</div>
+<a href="/" class="nav-center">
+<img src="/public/assets/logo.svg" alt="Blue Ox" class="nav-logo">
+<div class="nav-wm"><span class="wm-serif">Blue Ox</span><span class="wm-mono"> Jobs</span></div>
+</a>
+<div class="nav-right">
+<a href="/#how" class="nav-a">How It Works</a>
+<a href="#faq" class="nav-a">FAQ</a>
+<a href="https://forms.gle/31duiBY8mBERwMrTA" target="_blank" rel="noopener noreferrer" class="nav-a" style="color:var(--coral);font-weight:600">Join a Pod</a>
+</div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker">
+<div class="ticker-track">
+<span class="ticker-item">Free for interns</span>
+<span class="ticker-item">3 certificates per placement</span>
+<span class="ticker-item">EU startup experience</span>
+<span class="ticker-item">Brookes Foundation certified</span>
+<span class="ticker-item">GLP Software House certified</span>
+<span class="ticker-item">Retention opportunities</span>
+<span class="ticker-item">Blue Ox Kampus · Mbarara</span>
+<span class="ticker-item">8–16 week Pods</span>
+<span class="ticker-item">Free for interns</span>
+<span class="ticker-item">3 certificates per placement</span>
+<span class="ticker-item">EU startup experience</span>
+<span class="ticker-item">Brookes Foundation certified</span>
+<span class="ticker-item">GLP Software House certified</span>
+<span class="ticker-item">Retention opportunities</span>
+<span class="ticker-item">Blue Ox Kampus · Mbarara</span>
+<span class="ticker-item">8–16 week Pods</span>
+</div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+<div class="hero-tag">🇺🇬 For Students & Graduates in Uganda</div>
+<h1>Your international career<br>starts <em>right here.</em></h1>
+<p class="hero-sub">Blue Ox Jobs places Ugandan students and graduates into real Intern Pods with European startups. You ship real work. You earn three certificates. <strong>You pay nothing.</strong></p>
+<div class="hero-btns">
+<a href="https://forms.gle/31duiBY8mBERwMrTA" target="_blank" rel="noopener noreferrer" class="btn btn-coral">Join a Pod <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+<a href="#how-it-works" class="btn btn-outline">How it works ↓</a>
+</div>
+</section>
+
+<!-- STATS -->
+<div class="stats"><div class="stats-inner">
+<div class="stat"><div class="stat-n">3</div><div class="stat-l">Certificates per Pod</div></div>
+<div class="stat"><div class="stat-n">Free</div><div class="stat-l">Cost to Interns</div></div>
+<div class="stat"><div class="stat-n">8–16</div><div class="stat-l">Week Placements</div></div>
+<div class="stat"><div class="stat-n">EU</div><div class="stat-l">Startup Experience</div></div>
+</div></div>
+
+<!-- BENEFITS -->
+<section class="section">
+<div class="si reveal">
+<div class="sl">Why Join a Pod</div>
+<div class="st">Three reasons this changes <em>your career.</em></div>
+<div class="ss">Everything you need to break into the international job market — from a single Pod placement.</div>
+<div class="benefit-grid">
+  <div class="benefit-card">
+    <div class="benefit-icon">🌍</div>
+    <div class="benefit-num">Benefit 01</div>
+    <div class="benefit-title">International Exposure</div>
+    <div class="benefit-desc">Work directly with a real European startup on real sprints. When the Pod ends, you have an international company name — and a reference — on your CV. That is the single biggest career accelerator you can have.</div>
+  </div>
+  <div class="benefit-card">
+    <div class="benefit-icon">🏆</div>
+    <div class="benefit-num">Benefit 02</div>
+    <div class="benefit-title">Triple Certification</div>
+    <div class="benefit-desc">Every completed Pod earns you three certificates: one from Brookes Foundation, one from GLP Software House in Poland, and one from the startup you worked with. Three organisations. Three endorsements. One placement.</div>
+  </div>
+  <div class="benefit-card">
+    <div class="benefit-icon">🚀</div>
+    <div class="benefit-num">Benefit 03</div>
+    <div class="benefit-title">Retention & Employment</div>
+    <div class="benefit-desc">Top performers get offered contracts or full employment by the very startups they intern with. Your Pod is your audition. Excellent work leads directly to jobs in Europe — without ever leaving Kampus.</div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- CERTIFICATES -->
+<section class="section section-dark">
+<div class="si reveal">
+<div class="sl">Certification</div>
+<div class="st">Three certificates. <em>One placement.</em></div>
+<div class="ss">No other internship program in Uganda gives you this. Complete your Pod and walk away with endorsements from three recognised organisations.</div>
+<div class="cert-grid">
+  <div class="cert-card">
+    <div class="cert-num">1</div>
+    <div class="cert-issuer">Brookes Foundation</div>
+    <h3>Foundation Certificate</h3>
+    <p>Issued by Brookes Foundation on completion of your Intern Pod. Validates your professional development, attendance, and contribution.</p>
+    <div class="cert-badge">✓ Issued on completion</div>
+  </div>
+  <div class="cert-card">
+    <div class="cert-num">2</div>
+    <div class="cert-issuer">GLP Software House · Poland</div>
+    <h3>Partner Certificate</h3>
+    <p>Issued by GLP Software House, our technology partner based in Poland. An internationally recognised endorsement of your technical and professional skills.</p>
+    <div class="cert-badge">✓ International recognition</div>
+  </div>
+  <div class="cert-card">
+    <div class="cert-num">3</div>
+    <div class="cert-issuer">Your Startup</div>
+    <h3>Startup Reference Certificate</h3>
+    <p>Issued directly by the European startup you worked with. This is the one that goes on your CV. A named company, a named project, a real professional reference.</p>
+    <div class="cert-badge">✓ Named company reference</div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section section-cream" id="how-it-works">
+<div class="si reveal">
+<div class="sl">How It Works</div>
+<div class="st">From sign-up to certificate <em>in five steps.</em></div>
+<div class="ss">The process is straightforward. You register, you compete, you get placed, you ship, you get certified.</div>
+<div class="how-grid" style="grid-template-columns:repeat(3,1fr)">
+  <div class="how-step">
+    <div class="how-num">01</div>
+    <h3>Register — free</h3>
+    <p>Fill in the form. No application fee. No cost at all. Just your name, skills, and a portfolio link if you have one.</p>
+  </div>
+  <div class="how-step">
+    <div class="how-num">02</div>
+    <h3>Compete on Saturdays</h3>
+    <p>Join weekly competitions at Blue Ox Kampus — coding, design, marketing. Top performers get matched to Pods first.</p>
+  </div>
+  <div class="how-step">
+    <div class="how-num">03</div>
+    <h3>Get matched to a startup</h3>
+    <p>We match you to a European startup based on your skills and their backlog. You meet the team. You approve the match.</p>
+  </div>
+  <div class="how-step">
+    <div class="how-num">04</div>
+    <h3>Ship from Kampus</h3>
+    <p>Work from Blue Ox Kampus — 100 Mbps fibre, generators, Pod Coordinator on-site. 8–16 weeks of real output.</p>
+  </div>
+  <div class="how-step">
+    <div class="how-num">05</div>
+    <h3>Receive your 3 certificates</h3>
+    <p>On successful completion, all three certificates are issued. Your career just went international.</p>
+  </div>
+  <div class="how-step">
+    <div class="how-num">06</div>
+    <h3>Get retained or pipeline</h3>
+    <p>Top performers receive contract or employment offers. Others enter the Blue Ox Jobs pipeline for EU and Gulf placements.</p>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ROLES -->
+<section class="section">
+<div class="si reveal">
+<div class="sl">What You Can Do</div>
+<div class="st">Every skill has a Pod <em>waiting for it.</em></div>
+<div class="ss">You don't need to be a developer. Pods are built across six role categories — pick yours.</div>
+<div class="cat-grid">
+  <div class="cat"><div class="cat-icon">⚛️</div><h4>Software Dev</h4><p>Build features, fix bugs, write APIs, do QA</p><div class="cat-tags"><span class="cat-tag">React</span><span class="cat-tag">Python</span><span class="cat-tag">Node</span><span class="cat-tag">Mobile</span></div></div>
+  <div class="cat"><div class="cat-icon">🎨</div><h4>UI/UX Design</h4><p>Figma mockups, prototyping, design systems</p><div class="cat-tags"><span class="cat-tag">Figma</span><span class="cat-tag">Prototyping</span><span class="cat-tag">Research</span></div></div>
+  <div class="cat"><div class="cat-icon">🎬</div><h4>Motion Graphics</h4><p>Product demos, social clips, explainers</p><div class="cat-tags"><span class="cat-tag">After Effects</span><span class="cat-tag">Video</span><span class="cat-tag">Animation</span></div></div>
+  <div class="cat"><div class="cat-icon">📣</div><h4>Marketing</h4><p>Content, social media, SEO, email sequences</p><div class="cat-tags"><span class="cat-tag">Social</span><span class="cat-tag">Content</span><span class="cat-tag">SEO</span></div></div>
+  <div class="cat"><div class="cat-icon">🎧</div><h4>Customer Support</h4><p>Support inbox, live chat, docs, onboarding</p><div class="cat-tags"><span class="cat-tag">Support</span><span class="cat-tag">Chat</span><span class="cat-tag">CRM</span></div></div>
+  <div class="cat"><div class="cat-icon">📊</div><h4>Ops & Admin</h4><p>Data, research, internal tools, project tracking</p><div class="cat-tags"><span class="cat-tag">PM</span><span class="cat-tag">Research</span><span class="cat-tag">Admin</span></div></div>
+</div>
+<div class="scta">
+  <a href="https://forms.gle/31duiBY8mBERwMrTA" target="_blank" rel="noopener noreferrer" class="btn btn-coral">Apply for a Pod <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+</div>
+</div>
+</section>
+
+<!-- WHO QUALIFIES -->
+<section class="section section-cream">
+<div class="si reveal">
+<div class="sl">Who Can Apply</div>
+<div class="st">You qualify if you show up <em>ready to ship.</em></div>
+<div class="ss">We don't gatekeep on grades. We look at skill, attitude, and commitment.</div>
+<div class="qual-grid">
+  <div>
+    <h3>→ You're a good fit if</h3>
+    <ul class="vlist">
+      <li>You're a student or graduate based in Uganda</li>
+      <li>You have a skill in any of our six role categories</li>
+      <li>You can communicate in English (B1 or above)</li>
+      <li>You can attend Blue Ox Kampus in Mbarara</li>
+      <li>You're ready to work on real tasks for a real company</li>
+      <li>You want international experience on your CV</li>
+    </ul>
+  </div>
+  <div>
+    <h3>✕ You don't need</h3>
+    <ul class="xlist">
+      <li>A degree — graduates and self-taught are both welcome</li>
+      <li>Prior work experience — Pods are designed for starters</li>
+      <li>To pay anything — Pods are fully free for interns</li>
+      <li>Your own equipment — Kampus provides everything</li>
+      <li>Connections — your competition ranking is what gets you placed</li>
+    </ul>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+<div class="si reveal" style="max-width:700px">
+<div class="sl">FAQ</div>
+<div class="st">Questions interns ask first.</div>
+<div class="faq-i"><div class="faq-q">Do I pay anything to join?<span class="tog">+</span></div><div class="faq-a">Nothing. Zero. Pods are fully funded by the startups. You get free campus access, competitions, placement, mentorship, and three certificates — all at no cost to you.</div></div>
+<div class="faq-i"><div class="faq-q">Where do I work from?<span class="tog">+</span></div><div class="faq-a">Blue Ox Kampus in Mbarara, Uganda. You get a dedicated workspace with 100 Mbps fibre internet, generator power backup, and a Pod Coordinator on-site to support you daily.</div></div>
+<div class="faq-i"><div class="faq-q">What companies will I work with?<span class="tog">+</span></div><div class="faq-a">European startups — primarily in Poland, Netherlands, Germany, and the UK. These are real companies with real products and real backlogs. Not mock projects.</div></div>
+<div class="faq-i"><div class="faq-q">How long is a Pod placement?<span class="tog">+</span></div><div class="faq-a">Between 8 and 16 weeks, depending on the startup's needs and your availability. Most placements run for 12 weeks.</div></div>
+<div class="faq-i"><div class="faq-q">What exactly are the three certificates?<span class="tog">+</span></div><div class="faq-a">On completion you receive: (1) a certificate from Brookes Foundation recognising your professional development, (2) a certificate from GLP Software House, our technology partner in Poland, and (3) a reference certificate from the startup you worked with — the most valuable one for your CV.</div></div>
+<div class="faq-i"><div class="faq-q">Can I actually get hired by the startup?<span class="tog">+</span></div><div class="faq-a">Yes. Top-performing interns are offered contracts or full employment by the startups they work with. It happens regularly. Your Pod is your audition — perform well and the opportunity follows naturally.</div></div>
+<div class="faq-i"><div class="faq-q">How do I get selected for a Pod?<span class="tog">+</span></div><div class="faq-a">Register first, then compete at our weekly Saturday competitions at Kampus. The top performers from each competition get matched to Pods first. The ranking is transparent — you earn your place.</div></div>
+</div>
+</section>
+
+<!-- CTA -->
+<section class="cta-f">
+<div class="cta-h">Ready to go international?</div>
+<p class="cta-p">Register free. Compete on Saturday. Ship real work. Earn three certificates. Get retained.</p>
+<div class="cta-row">
+  <a href="https://forms.gle/31duiBY8mBERwMrTA" target="_blank" rel="noopener noreferrer" class="btn btn-white">Join a Pod — it's free <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+  <a href="/" class="btn btn-dark">Back to main site</a>
+</div>
+</section>
+
+<footer class="footer">
+<div class="footer-wm"><span class="fws">Blue Ox</span><span class="fwm"> Jobs<span class="fwd">.</span>eu</span></div>
+<div class="footer-r">Part of the <a href="https://blueoxkampus.com">Blue Ox</a> ecosystem: Kampus · Jobs · Rides · Foundation<br>Billy is our managed Pod placement program · Mbarara, Uganda</div>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')})},{threshold:.06});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+document.querySelectorAll('.faq-q').forEach(q=>{q.addEventListener('click',()=>{const i=q.parentElement;const w=i.classList.contains('open');document.querySelectorAll('.faq-i.open').forEach(x=>x.classList.remove('open'));if(!w)i.classList.add('open')})});
+</script>
+</body>
+</html>
