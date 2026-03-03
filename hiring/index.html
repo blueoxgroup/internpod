@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Ox Jobs — Hire a Pod | Startup Dashboard</title>
+<link rel="icon" href="/public/assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#1a1a1a;--white:#fff;--cream:#f8f6f2;
+  --coral:#e05a3a;--coral-hover:#c94e30;--coral-light:rgba(224,90,58,.06);--coral-pale:#fef5f3;
+  --green:#16a34a;--green-pale:#f0fdf4;
+  --gray-100:#f5f5f5;--gray-200:#ebebeb;--gray-300:#d4d4d4;--gray-400:#aaa;--gray-500:#888;--gray-600:#666;--gray-700:#444;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',-apple-system,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
+  --transition:.3s cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--black);background:var(--white);-webkit-font-smoothing:antialiased;line-height:1.6}
+a{text-decoration:none;color:inherit}
+::selection{background:var(--coral);color:#fff}
+
+/* ── AUTH SCREEN ─────────────────────── */
+#auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--cream);padding:24px}
+.auth-box{background:#fff;border-radius:20px;padding:56px 48px;max-width:440px;width:100%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.08);border:1px solid var(--gray-200)}
+.auth-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:32px}
+.auth-logo img{width:48px;height:48px}
+.auth-logo-wm{font-family:var(--serif);font-style:italic;font-size:22px;font-weight:600}
+.auth-logo-sub{font-family:var(--mono);font-size:14px;color:var(--gray-500)}
+.auth-box h1{font-family:var(--serif);font-size:1.8rem;font-weight:500;margin-bottom:10px;line-height:1.2}
+.auth-box h1 em{font-style:italic;color:var(--coral)}
+.auth-box p{font-size:.9rem;color:var(--gray-500);margin-bottom:32px;line-height:1.7}
+.auth-divider{height:1px;background:var(--gray-200);margin:24px 0;position:relative}
+.auth-divider span{position:absolute;left:50%;transform:translateX(-50%);top:-9px;background:#fff;padding:0 12px;font-family:var(--mono);font-size:.6rem;color:var(--gray-400);letter-spacing:.1em;text-transform:uppercase}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:14px;border:1.5px solid var(--gray-200);border-radius:10px;background:#fff;font-family:var(--sans);font-size:.95rem;font-weight:600;color:var(--black);cursor:pointer;transition:all var(--transition)}
+.btn-google:hover{border-color:var(--black);box-shadow:0 4px 16px rgba(0,0,0,.06);transform:translateY(-1px)}
+.btn-google svg{width:20px;height:20px;flex-shrink:0}
+.auth-note{font-family:var(--mono);font-size:.55rem;color:var(--gray-400);margin-top:20px;letter-spacing:.05em;text-transform:uppercase}
+.auth-back{display:inline-flex;align-items:center;gap:6px;margin-top:20px;font-family:var(--mono);font-size:.65rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-500);transition:color .2s}
+.auth-back:hover{color:var(--coral)}
+
+/* ── APP SHELL ───────────────────────── */
+#app{display:none;min-height:100vh;background:var(--gray-100)}
+
+/* ── TOPBAR ──────────────────────────── */
+.topbar{background:#fff;border-bottom:1px solid var(--gray-200);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-brand{display:flex;align-items:center;gap:10px}
+.topbar-brand img{width:36px;height:36px}
+.topbar-brand span{font-family:var(--serif);font-style:italic;font-size:18px;font-weight:600}
+.topbar-brand sub{font-family:var(--mono);font-size:11px;color:var(--gray-400);margin-left:2px}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.topbar-user{display:flex;align-items:center;gap:8px}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.7rem;font-weight:700;color:#fff;flex-shrink:0}
+.topbar-email{font-size:.78rem;color:var(--gray-600);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-signout{font-family:var(--mono);font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-500);border:1px solid var(--gray-200);background:#fff;border-radius:6px;padding:6px 12px;cursor:pointer;transition:all .2s}
+.btn-signout:hover{color:var(--coral);border-color:var(--coral)}
+
+/* ── MAIN LAYOUT ─────────────────────── */
+.main-layout{display:grid;grid-template-columns:1fr 300px;gap:0;min-height:calc(100vh - 60px)}
+@media(max-width:900px){.main-layout{grid-template-columns:1fr}}
+
+/* ── LEFT PANEL ──────────────────────── */
+.left-panel{padding:24px;overflow-y:auto}
+
+/* ── FILTER BAR ──────────────────────── */
+.filter-bar{background:#fff;border:1px solid var(--gray-200);border-radius:12px;padding:16px 20px;margin-bottom:20px}
+.filter-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.search-wrap{position:relative;flex:1;min-width:180px}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--gray-400)}
+.search-input{width:100%;padding:9px 12px 9px 32px;border:1.5px solid var(--gray-200);border-radius:8px;font-family:var(--sans);font-size:.85rem;color:var(--black);background:#fff;outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--coral)}
+.filter-select{padding:9px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-family:var(--sans);font-size:.82rem;color:var(--black);background:#fff;outline:none;cursor:pointer;transition:border-color .2s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.filter-select:focus{border-color:var(--coral)}
+.filter-toggle{display:flex;gap:4px;background:var(--gray-100);border-radius:8px;padding:3px}
+.filter-toggle button{padding:6px 12px;border:none;border-radius:6px;font-family:var(--mono);font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;background:transparent;color:var(--gray-500);transition:all .2s}
+.filter-toggle button.active{background:#fff;color:var(--black);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.filter-results{font-family:var(--mono);font-size:.6rem;color:var(--gray-500);letter-spacing:.08em;margin-top:10px}
+
+/* ── INTERN GRID ─────────────────────── */
+.intern-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.intern-card{background:#fff;border:1.5px solid var(--gray-200);border-radius:14px;padding:24px;transition:all var(--transition);position:relative;display:flex;flex-direction:column;gap:12px}
+.intern-card:hover{border-color:var(--coral);box-shadow:0 8px 32px rgba(224,90,58,.07);transform:translateY(-2px)}
+.intern-card.taken{opacity:.65}
+.intern-card.taken:hover{transform:none;border-color:var(--gray-300);box-shadow:none}
+.intern-card.selected{border-color:var(--coral);background:var(--coral-pale);box-shadow:0 0 0 3px rgba(224,90,58,.1)}
+
+.card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card-avatar{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.1rem;font-weight:600;color:#fff;flex-shrink:0;letter-spacing:-.02em}
+.card-meta{flex:1;min-width:0}
+.card-name{font-family:var(--serif);font-size:1rem;font-weight:600;line-height:1.2;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-location{font-size:.75rem;color:var(--gray-500);display:flex;align-items:center;gap:4px}
+
+.card-skill-badge{display:inline-flex;align-items:center;font-family:var(--mono);font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:100px;background:var(--gray-100);color:var(--gray-600)}
+
+.card-tags{display:flex;flex-wrap:wrap;gap:5px}
+.card-tag{font-family:var(--mono);font-size:.55rem;padding:3px 8px;border-radius:100px;background:var(--gray-100);color:var(--gray-500);white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis}
+
+.card-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.card-stat{background:var(--gray-100);border-radius:8px;padding:8px 10px}
+.card-stat-label{font-family:var(--mono);font-size:.5rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-400);margin-bottom:2px}
+.card-stat-val{font-size:.78rem;font-weight:600;color:var(--black)}
+
+.card-desc{font-size:.78rem;color:var(--gray-600);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+
+.card-links{display:flex;gap:8px}
+.card-link{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:.58rem;font-weight:600;letter-spacing:.06em;color:var(--coral);text-transform:uppercase;transition:opacity .2s}
+.card-link:hover{opacity:.7}
+.card-link svg{width:11px;height:11px}
+
+.card-footer{margin-top:auto}
+.btn-add{width:100%;padding:10px;border:none;border-radius:8px;background:var(--coral);color:#fff;font-family:var(--sans);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-add:hover{background:var(--coral-hover)}
+.btn-add svg{width:14px;height:14px}
+.btn-remove{width:100%;padding:10px;border:1.5px solid var(--coral);border-radius:8px;background:transparent;color:var(--coral);font-family:var(--sans);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-remove:hover{background:var(--coral-pale)}
+.btn-taken{width:100%;padding:10px;border:1.5px solid var(--gray-300);border-radius:8px;background:var(--gray-100);color:var(--gray-400);font-family:var(--sans);font-size:.85rem;font-weight:600;cursor:not-allowed;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-taken svg{width:14px;height:14px}
+
+.taken-badge{position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--gray-200);color:var(--gray-500);padding:3px 8px;border-radius:100px}
+
+.empty-state{grid-column:1/-1;text-align:center;padding:60px 24px;color:var(--gray-400)}
+.empty-state svg{width:40px;height:40px;margin-bottom:16px;opacity:.4}
+.empty-state p{font-family:var(--serif);font-size:1.1rem;font-style:italic}
+
+/* ── POD BUILDER SIDEBAR ─────────────── */
+.pod-sidebar{background:#fff;border-left:1px solid var(--gray-200);padding:24px;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;display:flex;flex-direction:column;gap:20px}
+@media(max-width:900px){.pod-sidebar{position:static;height:auto;border-left:none;border-top:1px solid var(--gray-200)}}
+
+.pod-header{display:flex;align-items:center;justify-content:space-between}
+.pod-title{font-family:var(--serif);font-size:1.1rem;font-weight:600}
+.pod-count{font-family:var(--mono);font-size:.65rem;font-weight:700;padding:4px 10px;border-radius:100px;background:var(--coral-pale);color:var(--coral)}
+.pod-count.full{background:#dcfce7;color:var(--green)}
+
+.pod-slots{display:flex;flex-direction:column;gap:10px}
+.pod-slot{border:1.5px dashed var(--gray-300);border-radius:10px;padding:14px 16px;min-height:64px;display:flex;align-items:center;gap:12px;transition:all .2s}
+.pod-slot.filled{border-style:solid;border-color:var(--coral);background:var(--coral-pale)}
+.pod-slot-num{font-family:var(--mono);font-size:.65rem;font-weight:700;color:var(--gray-300);flex-shrink:0}
+.pod-slot.filled .pod-slot-num{color:var(--coral)}
+.pod-slot-info{flex:1;min-width:0}
+.pod-slot-name{font-size:.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pod-slot-skill{font-family:var(--mono);font-size:.58rem;color:var(--gray-500);letter-spacing:.04em;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pod-slot-empty{font-size:.82rem;color:var(--gray-400);font-style:italic}
+.pod-slot-remove{width:24px;height:24px;border:none;background:rgba(224,90,58,.1);color:var(--coral);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:14px}
+.pod-slot-remove:hover{background:var(--coral);color:#fff}
+
+.pod-info{background:var(--gray-100);border-radius:10px;padding:14px 16px}
+.pod-info p{font-size:.78rem;color:var(--gray-600);line-height:1.7}
+.pod-info strong{color:var(--black)}
+
+.btn-confirm{width:100%;padding:14px;border:none;border-radius:10px;background:var(--coral);color:#fff;font-family:var(--sans);font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-confirm:hover:not(:disabled){background:var(--coral-hover);transform:translateY(-1px);box-shadow:0 6px 20px rgba(224,90,58,.2)}
+.btn-confirm:disabled{background:var(--gray-300);cursor:not-allowed;transform:none;box-shadow:none}
+.btn-confirm svg{width:16px;height:16px}
+
+/* ── CONFIRMATION SCREEN ─────────────── */
+#confirmation-screen{display:none;min-height:100vh;background:var(--cream);align-items:center;justify-content:center;padding:24px}
+.confirm-box{background:#fff;border-radius:20px;padding:48px;max-width:540px;width:100%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.08);border:1px solid var(--gray-200)}
+.confirm-icon{font-size:3rem;margin-bottom:20px}
+.confirm-box h2{font-family:var(--serif);font-size:2rem;font-weight:500;margin-bottom:10px}
+.confirm-box h2 em{color:var(--coral);font-style:italic}
+.confirm-box p{color:var(--gray-500);font-size:.9rem;line-height:1.7;max-width:380px;margin:0 auto 28px}
+.confirm-pod-list{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.confirm-intern{display:flex;align-items:center;gap:14px;background:var(--gray-100);border-radius:10px;padding:14px 16px;text-align:left}
+.confirm-avatar{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:.95rem;font-weight:600;color:#fff;flex-shrink:0}
+.confirm-info{flex:1}
+.confirm-name{font-weight:600;font-size:.9rem}
+.confirm-skill{font-family:var(--mono);font-size:.6rem;color:var(--gray-500);letter-spacing:.06em;margin-top:2px}
+.confirm-contact{font-size:.75rem;color:var(--gray-500);margin-top:2px}
+.btn-back-home{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:8px;background:var(--black);color:#fff;font-family:var(--sans);font-size:.88rem;font-weight:600;border:none;cursor:pointer;transition:all .2s}
+.btn-back-home:hover{background:var(--gray-700)}
+
+/* ── LOADING ─────────────────────────── */
+.loading{display:flex;align-items:center;justify-content:center;height:200px;gap:10px;color:var(--gray-400)}
+.spinner{width:20px;height:20px;border:2.5px solid var(--gray-200);border-top-color:var(--coral);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── ALREADY CONFIRMED BANNER ────────── */
+.confirmed-banner{background:#dcfce7;border:1px solid #bbf7d0;border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.confirmed-banner svg{width:18px;height:18px;color:var(--green);flex-shrink:0}
+.confirmed-banner p{font-size:.85rem;color:#15803d;line-height:1.5}
+.confirmed-banner strong{font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- ═══ AUTH SCREEN ═══ -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <img src="/public/assets/logo.svg" alt="Blue Ox">
+      <div>
+        <div class="auth-logo-wm">Blue Ox <span style="font-style:normal;font-family:var(--mono);font-size:16px;color:var(--gray-500)">Jobs</span></div>
+        <div class="auth-logo-sub">Startup Hiring Portal</div>
+      </div>
+    </div>
+    <h1>Build your<br><em>Intern Pod</em></h1>
+    <p>Browse competition-ranked interns and select up to 3 to form your Pod. Sign in with your company Google account to get started.</p>
+    <button class="btn-google" id="btn-google-signin">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      Continue with Google
+    </button>
+    <p class="auth-note">Only for startups · Your data is secure</p>
+    <a href="/" class="auth-back">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+      Back to main site
+    </a>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="app">
+  <!-- Topbar -->
+  <div class="topbar">
+    <a href="/" class="topbar-brand">
+      <img src="/public/assets/logo.svg" alt="Blue Ox">
+      <span>Blue Ox Jobs</span>
+      <sub>hiring</sub>
+    </a>
+    <div class="topbar-right">
+      <div class="topbar-user">
+        <div class="topbar-avatar" id="topbar-avatar">?</div>
+        <span class="topbar-email" id="topbar-email"></span>
+      </div>
+      <button class="btn-signout" id="btn-signout">Sign out</button>
+    </div>
+  </div>
+
+  <!-- Main layout -->
+  <div class="main-layout">
+    <!-- Left: filters + intern grid -->
+    <div class="left-panel">
+      <!-- Already confirmed banner (shown if pod is already locked) -->
+      <div class="confirmed-banner" id="confirmed-banner" style="display:none">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <p><strong>Your Pod is confirmed.</strong> You have locked in your 3 interns. Our team will be in touch within 48 hours to arrange kickoff.</p>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-bar">
+        <div class="filter-row">
+          <div class="search-wrap">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
+            <input class="search-input" id="search" type="text" placeholder="Search by name, skill, location…">
+          </div>
+          <select class="filter-select" id="filter-skill">
+            <option value="">All skills</option>
+            <option>Software Development</option>
+            <option>UI/UX Design</option>
+            <option>Data Science</option>
+            <option>Virtual Assistant</option>
+            <option>Sales</option>
+            <option>Marketing</option>
+            <option>Architecture</option>
+            <option>Other</option>
+          </select>
+          <select class="filter-select" id="filter-english">
+            <option value="">Any English level</option>
+            <option>Native/Fluent</option>
+            <option>Advanced</option>
+            <option>Intermediate</option>
+            <option>Basic</option>
+          </select>
+          <select class="filter-select" id="filter-tz">
+            <option value="">Any timezone</option>
+            <option value="EU">EU overlap</option>
+            <option value="US">US overlap</option>
+            <option value="UAE">UAE overlap</option>
+          </select>
+          <div class="filter-toggle">
+            <button id="tog-all" class="active" onclick="setAvailFilter('all')">All</button>
+            <button id="tog-avail" onclick="setAvailFilter('available')">Available</button>
+          </div>
+        </div>
+        <div class="filter-results" id="filter-results">Loading…</div>
+      </div>
+
+      <!-- Grid -->
+      <div class="intern-grid" id="intern-grid">
+        <div class="loading"><div class="spinner"></div> Loading interns…</div>
+      </div>
+    </div>
+
+    <!-- Right: Pod builder -->
+    <div class="pod-sidebar">
+      <div>
+        <div class="pod-header">
+          <div class="pod-title">Your Pod</div>
+          <div class="pod-count" id="pod-count">0 / 3</div>
+        </div>
+        <p style="font-size:.78rem;color:var(--gray-500);margin-top:6px">Select 3 interns to form your team.</p>
+      </div>
+
+      <div class="pod-slots" id="pod-slots">
+        <div class="pod-slot" id="slot-0"><span class="pod-slot-num">01</span><span class="pod-slot-empty">Empty slot</span></div>
+        <div class="pod-slot" id="slot-1"><span class="pod-slot-num">02</span><span class="pod-slot-empty">Empty slot</span></div>
+        <div class="pod-slot" id="slot-2"><span class="pod-slot-num">03</span><span class="pod-slot-empty">Empty slot</span></div>
+      </div>
+
+      <div class="pod-info">
+        <p>Your pod is <strong>locked in</strong> once you confirm. Interns are notified within 24 hours. Kickoff in <strong>7 days</strong>.</p>
+      </div>
+
+      <button class="btn-confirm" id="btn-confirm" disabled>
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        Confirm Pod →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONFIRMATION SCREEN ═══ -->
+<div id="confirmation-screen" style="display:flex">
+  <div class="confirm-box">
+    <div class="confirm-icon">🎉</div>
+    <h2>Pod <em>confirmed!</em></h2>
+    <p>Your Intern Pod has been locked in. Our team will reach out within 48 hours to arrange kickoff. Here's your pod:</p>
+    <div class="confirm-pod-list" id="confirm-pod-list"></div>
+    <a href="/" class="btn-back-home">Back to main site</a>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+const SUPABASE_URL = 'https://krmqoseusxmjdlfxxdjy.supabase.co'
+const SUPABASE_KEY = 'sb_publishable_3Bsp_RSJW6Hvdvw9gB3Avg_tbpgQsj_'
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+// ── State ────────────────────────────────────────
+let currentUser = null
+let allInterns = []
+let takenMap = {}     // intern_id → {startup_id, startup_email}
+let mySelections = [] // intern ids selected by current startup
+let podConfirmed = false
+let availFilter = 'all'
+
+// ── Colour palette for avatars ───────────────────
+const COLOURS = ['#e05a3a','#7c3aed','#0369a1','#15803d','#b45309','#be185d','#0f766e','#dc2626']
+function avatarColor(name) {
+  let h = 0; for (const c of name) h = (h * 31 + c.charCodeAt(0)) % COLOURS.length
+  return COLOURS[h]
+}
+function initials(name) {
+  const p = name.trim().split(/\s+/)
+  return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase()
+}
+
+// ── Auth ─────────────────────────────────────────
+document.getElementById('btn-google-signin').addEventListener('click', async () => {
+  await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.href }
+  })
+})
+
+document.getElementById('btn-signout').addEventListener('click', async () => {
+  await supabase.auth.signOut()
+  location.reload()
+})
+
+// ── Boot ─────────────────────────────────────────
+async function boot() {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) {
+    show('auth-screen'); return
+  }
+  currentUser = session.user
+  setupTopbar()
+  await loadData()
+  show('app')
+}
+
+function show(id) {
+  document.getElementById('auth-screen').style.display = 'none'
+  document.getElementById('app').style.display = 'none'
+  document.getElementById('confirmation-screen').style.display = 'none'
+  if (id === 'auth-screen') document.getElementById('auth-screen').style.display = 'flex'
+  else if (id === 'app') document.getElementById('app').style.display = 'block'
+  else if (id === 'confirmation-screen') document.getElementById('confirmation-screen').style.display = 'flex'
+}
+
+function setupTopbar() {
+  const name = currentUser.user_metadata?.full_name || currentUser.email || '?'
+  const email = currentUser.email || ''
+  document.getElementById('topbar-avatar').textContent = name[0].toUpperCase()
+  document.getElementById('topbar-avatar').style.background = avatarColor(name)
+  document.getElementById('topbar-email').textContent = email
+}
+
+// ── Load data ────────────────────────────────────
+async function loadData() {
+  const [internsRes, selectionsRes] = await Promise.all([
+    supabase.from('interns').select('*').order('name'),
+    supabase.from('pod_selections').select('*')
+  ])
+  allInterns = internsRes.data || []
+
+  // Build taken map
+  takenMap = {}
+  mySelections = []
+  podConfirmed = false
+  for (const s of (selectionsRes.data || [])) {
+    takenMap[s.intern_id] = s
+    if (s.startup_id === currentUser.id) {
+      mySelections.push(s.intern_id)
+      if (s.confirmed) podConfirmed = true
+    }
+  }
+
+  if (podConfirmed) {
+    showConfirmedBanner()
+    document.getElementById('btn-confirm').disabled = true
+    document.getElementById('btn-confirm').textContent = 'Pod Confirmed ✓'
+  }
+
+  renderGrid()
+  renderPodSidebar()
+}
+
+// ── Render intern grid ───────────────────────────
+function renderGrid() {
+  const search = document.getElementById('search').value.toLowerCase()
+  const skill  = document.getElementById('filter-skill').value
+  const eng    = document.getElementById('filter-english').value
+  const tz     = document.getElementById('filter-tz').value
+
+  let filtered = allInterns.filter(intern => {
+    const takenByOther = takenMap[intern.id] && takenMap[intern.id].startup_id !== currentUser.id
+    if (availFilter === 'available' && takenByOther) return false
+    if (skill && !intern.main_skill?.includes(skill)) return false
+    if (eng && intern.english_level !== eng) return false
+    if (tz && !intern.timezones?.includes(tz)) return false
+    if (search) {
+      const hay = [intern.name, intern.main_skill, intern.location, intern.skills_detail, intern.project_description].join(' ').toLowerCase()
+      if (!hay.includes(search)) return false
+    }
+    return true
+  })
+
+  document.getElementById('filter-results').textContent = `${filtered.length} intern${filtered.length !== 1 ? 's' : ''} shown`
+  const grid = document.getElementById('intern-grid')
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg><p>No interns match your filters.</p></div>`
+    return
+  }
+
+  grid.innerHTML = filtered.map(intern => renderCard(intern)).join('')
+
+  // Attach button events
+  grid.querySelectorAll('[data-action="add"]').forEach(btn => {
+    btn.addEventListener('click', () => toggleSelect(btn.dataset.id, 'add'))
+  })
+  grid.querySelectorAll('[data-action="remove"]').forEach(btn => {
+    btn.addEventListener('click', () => toggleSelect(btn.dataset.id, 'remove'))
+  })
+}
+
+function renderCard(intern) {
+  const takenByOther = takenMap[intern.id] && takenMap[intern.id].startup_id !== currentUser.id
+  const selectedByMe = mySelections.includes(intern.id)
+  const skillShort = (intern.main_skill || 'Other').replace('Development','Dev').replace('Design','Design').replace('Virtual Assistant','VA')
+  const tags = (intern.skills_detail || '').split(';').map(t => t.trim()).filter(Boolean).slice(0, 4)
+  const color = avatarColor(intern.name)
+
+  let footer = ''
+  if (podConfirmed) {
+    footer = selectedByMe
+      ? `<button class="btn-taken"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> In your pod</button>`
+      : takenByOther
+        ? `<button class="btn-taken"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg> Taken</button>`
+        : `<button class="btn-taken" style="cursor:default">—</button>`
+  } else if (takenByOther) {
+    footer = `<button class="btn-taken"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg> Taken</button>`
+  } else if (selectedByMe) {
+    footer = `<button class="btn-remove" data-action="remove" data-id="${intern.id}">− Remove from Pod</button>`
+  } else {
+    const full = mySelections.length >= 3
+    footer = `<button class="btn-add" data-action="add" data-id="${intern.id}" ${full ? 'disabled style="opacity:.4;cursor:not-allowed"' : ''}><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Add to Pod</button>`
+  }
+
+  const portLink = intern.portfolio && intern.portfolio !== 'N/A'
+    ? `<a class="card-link" href="${intern.portfolio}" target="_blank" rel="noopener"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg> Portfolio</a>` : ''
+  const ghLink = intern.github && intern.github !== 'N/A' && intern.github !== 'https://github.com/'
+    ? `<a class="card-link" href="${intern.github}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg> GitHub</a>` : ''
+
+  return `
+  <div class="intern-card ${takenByOther ? 'taken' : ''} ${selectedByMe ? 'selected' : ''}" data-id="${intern.id}">
+    ${takenByOther ? '<span class="taken-badge">Taken</span>' : ''}
+    <div class="card-header">
+      <div class="card-avatar" style="background:${color}">${initials(intern.name)}</div>
+      <div class="card-meta">
+        <div class="card-name" title="${intern.name}">${intern.name}</div>
+        <div class="card-location">📍 ${intern.location || 'Uganda'}</div>
+      </div>
+    </div>
+    <span class="card-skill-badge" style="background:${color}18;color:${color}">${skillShort}</span>
+    ${tags.length ? `<div class="card-tags">${tags.map(t => `<span class="card-tag">${t}</span>`).join('')}</div>` : ''}
+    <div class="card-stats">
+      <div class="card-stat">
+        <div class="card-stat-label">English</div>
+        <div class="card-stat-val">${intern.english_level || '—'}</div>
+      </div>
+      <div class="card-stat">
+        <div class="card-stat-label">Availability</div>
+        <div class="card-stat-val">${(intern.availability || '—').replace('Part-time (20-40 hours)','Part-time').replace('Full-time (40+ hours)','Full-time')}</div>
+      </div>
+      <div class="card-stat">
+        <div class="card-stat-label">Timezone</div>
+        <div class="card-stat-val" style="font-size:.7rem">${(intern.timezones || '—').replace(/\([^)]+\)/g,'').replace(/;/g,' · ').trim() || '—'}</div>
+      </div>
+      <div class="card-stat">
+        <div class="card-stat-label">Start date</div>
+        <div class="card-stat-val">${intern.preferred_start_date || '—'}</div>
+      </div>
+    </div>
+    ${intern.project_description && intern.project_description !== 'N/A' ? `<div class="card-desc">${intern.project_description}</div>` : ''}
+    ${portLink || ghLink ? `<div class="card-links">${portLink}${ghLink}</div>` : ''}
+    <div class="card-footer">${footer}</div>
+  </div>`
+}
+
+// ── Select / deselect ────────────────────────────
+async function toggleSelect(internId, action) {
+  if (podConfirmed) return
+
+  if (action === 'add') {
+    if (mySelections.length >= 3) return
+    if (takenMap[internId]) return
+
+    const intern = allInterns.find(i => i.id === internId)
+    const { error } = await supabase.from('pod_selections').insert({
+      startup_id: currentUser.id,
+      startup_email: currentUser.email,
+      startup_name: currentUser.user_metadata?.full_name || currentUser.email,
+      intern_id: internId
+    })
+    if (!error) {
+      mySelections.push(internId)
+      takenMap[internId] = { startup_id: currentUser.id, startup_email: currentUser.email }
+    }
+  } else {
+    const { error } = await supabase.from('pod_selections')
+      .delete()
+      .eq('intern_id', internId)
+      .eq('startup_id', currentUser.id)
+    if (!error) {
+      mySelections = mySelections.filter(id => id !== internId)
+      delete takenMap[internId]
+    }
+  }
+  renderGrid()
+  renderPodSidebar()
+}
+
+// ── Confirm pod ──────────────────────────────────
+document.getElementById('btn-confirm').addEventListener('click', async () => {
+  if (mySelections.length !== 3 || podConfirmed) return
+  const { error } = await supabase.from('pod_selections')
+    .update({ confirmed: true })
+    .eq('startup_id', currentUser.id)
+  if (!error) {
+    podConfirmed = true
+    showConfirmationScreen()
+  }
+})
+
+function showConfirmationScreen() {
+  const podInterns = mySelections.map(id => allInterns.find(i => i.id === id)).filter(Boolean)
+  const list = document.getElementById('confirm-pod-list')
+  list.innerHTML = podInterns.map(intern => `
+    <div class="confirm-intern">
+      <div class="confirm-avatar" style="background:${avatarColor(intern.name)}">${initials(intern.name)}</div>
+      <div class="confirm-info">
+        <div class="confirm-name">${intern.name}</div>
+        <div class="confirm-skill">${intern.main_skill || 'Intern'}</div>
+        <div class="confirm-contact">${intern.email || ''}</div>
+      </div>
+    </div>`).join('')
+  show('confirmation-screen')
+}
+
+function showConfirmedBanner() {
+  document.getElementById('confirmed-banner').style.display = 'flex'
+}
+
+// ── Pod sidebar ──────────────────────────────────
+function renderPodSidebar() {
+  const count = mySelections.length
+  const countEl = document.getElementById('pod-count')
+  countEl.textContent = `${count} / 3`
+  countEl.className = `pod-count${count === 3 ? ' full' : ''}`
+
+  const confirmBtn = document.getElementById('btn-confirm')
+  if (!podConfirmed) {
+    confirmBtn.disabled = count !== 3
+    confirmBtn.innerHTML = count === 3
+      ? `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Confirm Pod →`
+      : `Select ${3 - count} more intern${3 - count !== 1 ? 's' : ''}`
+  }
+
+  for (let i = 0; i < 3; i++) {
+    const slot = document.getElementById(`slot-${i}`)
+    const internId = mySelections[i]
+    if (internId) {
+      const intern = allInterns.find(x => x.id === internId)
+      const color = intern ? avatarColor(intern.name) : '#aaa'
+      const skill = intern ? (intern.main_skill || 'Intern').replace('Development','Dev') : ''
+      slot.className = 'pod-slot filled'
+      slot.innerHTML = `
+        <span class="pod-slot-num">0${i+1}</span>
+        <div style="width:32px;height:32px;border-radius:8px;background:${color};display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:.75rem;font-weight:600;color:#fff;flex-shrink:0">${intern ? initials(intern.name) : '?'}</div>
+        <div class="pod-slot-info">
+          <div class="pod-slot-name">${intern ? intern.name : '—'}</div>
+          <div class="pod-slot-skill">${skill}</div>
+        </div>
+        ${!podConfirmed ? `<button class="pod-slot-remove" data-id="${internId}" title="Remove">✕</button>` : ''}
+      `
+      if (!podConfirmed) {
+        slot.querySelector('.pod-slot-remove').addEventListener('click', () => toggleSelect(internId, 'remove'))
+      }
+    } else {
+      slot.className = 'pod-slot'
+      slot.innerHTML = `<span class="pod-slot-num">0${i+1}</span><span class="pod-slot-empty">Empty slot</span>`
+    }
+  }
+}
+
+// ── Filter listeners ─────────────────────────────
+;['search','filter-skill','filter-english','filter-tz'].forEach(id => {
+  document.getElementById(id).addEventListener('input', renderGrid)
+  document.getElementById(id).addEventListener('change', renderGrid)
+})
+
+window.setAvailFilter = function(val) {
+  availFilter = val
+  document.getElementById('tog-all').className = val === 'all' ? 'active' : ''
+  document.getElementById('tog-avail').className = val === 'available' ? 'active' : ''
+  renderGrid()
+}
+
+// ── Listen for auth changes ───────────────────────
+supabase.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_IN' && session) {
+    currentUser = session.user; setupTopbar()
+    if (document.getElementById('auth-screen').style.display !== 'none') {
+      loadData().then(() => show('app'))
+    }
+  } else if (event === 'SIGNED_OUT') {
+    show('auth-screen')
+  }
+})
+
+boot()
+</script>
+</body>
+</html>
