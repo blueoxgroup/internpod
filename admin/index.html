@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Ox Jobs — Admin</title>
+<link rel="icon" href="/public/assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#1a1a1a;--white:#fff;--cream:#f8f6f2;
+  --coral:#e05a3a;--coral-hover:#c94e30;--coral-pale:#fef5f3;
+  --green:#16a34a;--green-pale:#f0fdf4;
+  --purple:#7c3aed;--purple-pale:#f5f3ff;
+  --gray-100:#f5f5f5;--gray-200:#ebebeb;--gray-300:#d4d4d4;--gray-400:#aaa;--gray-500:#888;--gray-600:#666;--gray-700:#444;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',-apple-system,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
+  --transition:.3s cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--black);background:var(--gray-100);-webkit-font-smoothing:antialiased;line-height:1.6}
+a{text-decoration:none;color:inherit}
+::selection{background:var(--coral);color:#fff}
+
+/* ── SCREENS ─────────────────────────── */
+.screen{min-height:100vh;display:none;align-items:center;justify-content:center;background:var(--cream);padding:24px}
+.screen-box{background:#fff;border-radius:20px;padding:52px 44px;max-width:440px;width:100%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.08);border:1px solid var(--gray-200)}
+.screen-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:28px}
+.screen-logo img{width:44px;height:44px}
+.screen-logo-wm{font-family:var(--serif);font-style:italic;font-size:22px;font-weight:600}
+.screen-box h1{font-family:var(--serif);font-size:1.7rem;font-weight:500;margin-bottom:10px;line-height:1.25}
+.screen-box h1 em{font-style:italic;color:var(--coral)}
+.screen-box p{font-size:.9rem;color:var(--gray-500);margin-bottom:28px;line-height:1.7}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:14px;border:1.5px solid var(--gray-200);border-radius:10px;background:#fff;font-family:var(--sans);font-size:.95rem;font-weight:600;color:var(--black);cursor:pointer;transition:all var(--transition)}
+.btn-google:hover{border-color:var(--black);box-shadow:0 4px 16px rgba(0,0,0,.06);transform:translateY(-1px)}
+.btn-google svg{width:20px;height:20px;flex-shrink:0}
+
+/* ── TOPBAR ──────────────────────────── */
+.topbar{background:var(--black);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-brand{display:flex;align-items:center;gap:10px}
+.topbar-brand img{width:32px;height:32px;filter:brightness(0) invert(1)}
+.topbar-brand span{font-family:var(--serif);font-style:italic;font-size:18px;font-weight:600;color:#fff}
+.admin-badge{font-family:var(--mono);font-size:.55rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--coral);color:#fff;padding:3px 8px;border-radius:4px;margin-left:4px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-email{font-size:.78rem;color:rgba(255,255,255,.5)}
+.btn-signout{font-family:var(--mono);font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.15);background:transparent;border-radius:6px;padding:6px 12px;cursor:pointer;transition:all .2s}
+.btn-signout:hover{color:#fff;border-color:rgba(255,255,255,.4)}
+
+/* ── TABS ────────────────────────────── */
+.tab-bar{background:#fff;border-bottom:1px solid var(--gray-200);padding:0 24px;display:flex;gap:0}
+.tab-btn{padding:14px 20px;border:none;background:transparent;font-family:var(--sans);font-size:.88rem;font-weight:500;color:var(--gray-500);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;display:flex;align-items:center;gap:7px}
+.tab-btn.active{color:var(--coral);border-bottom-color:var(--coral);font-weight:600}
+.tab-btn:hover:not(.active){color:var(--black)}
+.tab-count{font-family:var(--mono);font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:10px;background:var(--gray-100);color:var(--gray-500)}
+.tab-btn.active .tab-count{background:var(--coral-pale);color:var(--coral)}
+
+/* ── MAIN ────────────────────────────── */
+.main{padding:24px;max-width:1400px;margin:0 auto}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* ── STATS ───────────────────────────── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+@media(max-width:700px){.stats-row{grid-template-columns:1fr 1fr}}
+.stat-card{background:#fff;border:1px solid var(--gray-200);border-radius:12px;padding:20px 22px}
+.stat-val{font-family:var(--serif);font-size:2rem;font-weight:600;line-height:1;margin-bottom:4px}
+.stat-label{font-family:var(--mono);font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-400)}
+
+/* ── SECTION HEADER ─────────────────── */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px;flex-wrap:wrap}
+.section-title{font-family:var(--serif);font-size:1.2rem;font-weight:600}
+.search-bar{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--gray-200);border-radius:8px;padding:8px 12px;flex:1;max-width:320px}
+.search-bar svg{width:14px;height:14px;color:var(--gray-400);flex-shrink:0}
+.search-bar input{border:none;outline:none;font-family:var(--sans);font-size:.85rem;color:var(--black);width:100%;background:transparent}
+
+/* ── INTERN GRID ─────────────────────── */
+.intern-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.intern-card{background:#fff;border:1.5px solid var(--gray-200);border-radius:14px;padding:20px;position:relative;display:flex;flex-direction:column;gap:10px;transition:box-shadow .2s}
+.intern-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.card-header{display:flex;align-items:flex-start;gap:12px}
+.card-avatar{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0}
+.card-meta{flex:1;min-width:0}
+.card-name{font-family:var(--serif);font-size:.95rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-sub{font-size:.72rem;color:var(--gray-500);margin-top:2px}
+.card-skill-badge{display:inline-flex;font-family:var(--mono);font-size:.55rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:100px}
+.card-tags{display:flex;flex-wrap:wrap;gap:4px}
+.card-tag{font-family:var(--mono);font-size:.55rem;padding:2px 7px;border-radius:100px;background:var(--gray-100);color:var(--gray-500)}
+.card-detail-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.card-detail{font-size:.75rem;color:var(--gray-600)}
+.card-detail span{color:var(--gray-400);font-size:.68rem}
+.card-actions{display:flex;gap:8px;margin-top:4px}
+.btn-edit{flex:1;padding:8px;border:1.5px solid var(--gray-200);border-radius:8px;background:#fff;font-family:var(--sans);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;color:var(--black)}
+.btn-edit:hover{border-color:var(--coral);color:var(--coral)}
+.btn-del{padding:8px 14px;border:1.5px solid var(--gray-200);border-radius:8px;background:#fff;font-family:var(--mono);font-size:.6rem;font-weight:600;cursor:pointer;transition:all .2s;color:var(--gray-500)}
+.btn-del:hover{border-color:#fecaca;color:#dc2626;background:#fff5f5}
+
+/* ── STARTUPS TABLE ─────────────────── */
+.startups-list{display:flex;flex-direction:column;gap:12px}
+.startup-card{background:#fff;border:1.5px solid var(--gray-200);border-radius:14px;overflow:hidden}
+.startup-head{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;transition:background .15s}
+.startup-head:hover{background:var(--gray-100)}
+.startup-initials{width:40px;height:40px;border-radius:10px;background:var(--purple);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0}
+.startup-info{flex:1;min-width:0}
+.startup-name{font-weight:700;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.startup-meta{font-size:.75rem;color:var(--gray-500);margin-top:1px}
+.startup-pod-badge{font-family:var(--mono);font-size:.55rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:100px;background:var(--gray-100);color:var(--gray-500);flex-shrink:0}
+.startup-pod-badge.confirmed{background:#dcfce7;color:var(--green)}
+.startup-pod-badge.partial{background:var(--coral-pale);color:var(--coral)}
+.startup-chevron{font-size:12px;color:var(--gray-400);transition:transform .2s;flex-shrink:0}
+.startup-card.open .startup-chevron{transform:rotate(90deg)}
+.startup-body{display:none;padding:0 20px 16px;border-top:1px solid var(--gray-100)}
+.startup-card.open .startup-body{display:block}
+.startup-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0;border-bottom:1px solid var(--gray-100);margin-bottom:14px}
+.startup-detail{font-size:.78rem;color:var(--gray-600)}
+.startup-detail span{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);margin-bottom:2px}
+.startup-desc{font-size:.8rem;color:var(--gray-600);line-height:1.6;margin-bottom:14px}
+.pod-selection-title{font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-400);margin-bottom:8px}
+.pod-selection-list{display:flex;flex-direction:column;gap:6px}
+.pod-intern-row{display:flex;align-items:center;gap:10px;background:var(--gray-100);border-radius:8px;padding:8px 12px}
+.pod-intern-av{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.6rem;font-weight:700;color:#fff;flex-shrink:0}
+.pod-intern-name{font-size:.82rem;font-weight:600}
+.pod-intern-skill{font-family:var(--mono);font-size:.58rem;color:var(--gray-500);margin-left:auto}
+.pod-empty{font-size:.8rem;color:var(--gray-400);font-style:italic;padding:8px 0}
+
+/* ── EDIT MODAL ──────────────────────── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.2)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--gray-200);position:sticky;top:0;background:#fff;z-index:1}
+.modal-title{font-family:var(--serif);font-size:1.1rem;font-weight:600}
+.modal-close{width:32px;height:32px;border:none;background:var(--gray-100);border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--gray-600);transition:all .2s}
+.modal-close:hover{background:var(--gray-200)}
+.modal-body{padding:24px}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:500px){.modal-grid{grid-template-columns:1fr}}
+.m-field{display:flex;flex-direction:column;gap:5px}
+.m-field label{font-size:.78rem;font-weight:600;color:var(--gray-700)}
+.m-field input,.m-field select,.m-field textarea{padding:9px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-family:var(--sans);font-size:.85rem;color:var(--black);background:#fff;outline:none;transition:border-color .2s;width:100%}
+.m-field input:focus,.m-field select:focus,.m-field textarea:focus{border-color:var(--coral)}
+.m-field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer}
+.m-field textarea{resize:vertical;min-height:70px;line-height:1.6}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--gray-200);display:flex;gap:10px;justify-content:flex-end}
+.btn-modal-save{padding:10px 22px;background:var(--coral);color:#fff;border:none;border-radius:8px;font-family:var(--sans);font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-modal-save:hover{background:var(--coral-hover)}
+.btn-modal-cancel{padding:10px 16px;background:transparent;color:var(--gray-600);border:1.5px solid var(--gray-200);border-radius:8px;font-family:var(--sans);font-size:.88rem;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-modal-cancel:hover{border-color:var(--gray-400)}
+
+/* ── LOADING ─────────────────────────── */
+.loading{display:flex;align-items:center;justify-content:center;padding:60px 24px;gap:10px;color:var(--gray-400)}
+.spinner{width:20px;height:20px;border:2.5px solid var(--gray-200);border-top-color:var(--coral);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-msg{text-align:center;padding:40px;color:var(--gray-400);font-family:var(--serif);font-size:1rem;font-style:italic}
+</style>
+</head>
+<body>
+
+<!-- ══ AUTH SCREEN ═══════════════════════════ -->
+<div id="auth-screen" class="screen" style="display:flex">
+  <div class="screen-box">
+    <div class="screen-logo">
+      <img src="/public/assets/logo.svg" alt="Blue Ox">
+      <div><div class="screen-logo-wm">Blue Ox <em>Jobs</em></div></div>
+    </div>
+    <h1><em>Admin</em> access only</h1>
+    <p>Sign in with your admin Google account.</p>
+    <button class="btn-google" onclick="signIn()">
+      <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Sign in with Google
+    </button>
+    <a href="/" style="display:inline-flex;align-items:center;gap:6px;margin-top:18px;font-family:var(--mono);font-size:.65rem;color:var(--gray-500);letter-spacing:.1em;text-transform:uppercase">← Back to homepage</a>
+  </div>
+</div>
+
+<!-- ══ ACCESS DENIED ════════════════════════ -->
+<div id="denied-screen" class="screen">
+  <div class="screen-box">
+    <div class="screen-logo"><img src="/public/assets/logo.svg" alt="Blue Ox"><div><div class="screen-logo-wm">Blue Ox <em>Jobs</em></div></div></div>
+    <h1>Access <em>denied</em></h1>
+    <p>This account doesn't have admin access. Contact your system administrator.</p>
+    <button onclick="signOut()" style="padding:12px 24px;background:var(--black);color:#fff;border:none;border-radius:10px;font-family:var(--sans);font-size:.9rem;font-weight:600;cursor:pointer;width:100%">Sign out</button>
+  </div>
+</div>
+
+<!-- ══ APP ════════════════════════════════════ -->
+<div id="app" style="display:none">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <img src="/public/assets/logo.svg" alt="Blue Ox">
+      <span>Blue Ox Jobs</span>
+      <span class="admin-badge">Admin</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-email" id="topbar-email"></span>
+      <button class="btn-signout" onclick="signOut()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-overview-btn" onclick="switchTab('overview')">
+      Overview
+    </button>
+    <button class="tab-btn" id="tab-interns-btn" onclick="switchTab('interns')">
+      Interns <span class="tab-count" id="interns-count">—</span>
+    </button>
+    <button class="tab-btn" id="tab-startups-btn" onclick="switchTab('startups')">
+      Startups <span class="tab-count" id="startups-count">—</span>
+    </button>
+  </div>
+
+  <div class="main">
+
+    <!-- ── OVERVIEW ─── -->
+    <div class="tab-pane active" id="tab-overview">
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val" id="stat-interns">—</div><div class="stat-label">Total Interns</div></div>
+        <div class="stat-card"><div class="stat-val" id="stat-startups">—</div><div class="stat-label">Startups</div></div>
+        <div class="stat-card"><div class="stat-val" id="stat-pods">—</div><div class="stat-label">Active Pods</div></div>
+        <div class="stat-card"><div class="stat-val" id="stat-confirmed">—</div><div class="stat-label">Confirmed Pods</div></div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--gray-200);border-radius:12px;padding:20px 24px">
+        <div style="font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:16px">Quick links</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a href="/profile" target="_blank" style="padding:9px 16px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:.85rem;font-weight:500;color:var(--black);transition:border-color .2s" onmouseover="this.style.borderColor='var(--coral)'" onmouseout="this.style.borderColor='var(--gray-200)'">Intern profile page ↗</a>
+          <a href="/hiring" target="_blank" style="padding:9px 16px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:.85rem;font-weight:500;color:var(--black);transition:border-color .2s" onmouseover="this.style.borderColor='var(--coral)'" onmouseout="this.style.borderColor='var(--gray-200)'">Startup hiring page ↗</a>
+          <a href="/interns" target="_blank" style="padding:9px 16px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:.85rem;font-weight:500;color:var(--black);transition:border-color .2s" onmouseover="this.style.borderColor='var(--coral)'" onmouseout="this.style.borderColor='var(--gray-200)'">Public interns page ↗</a>
+          <a href="/" target="_blank" style="padding:9px 16px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:.85rem;font-weight:500;color:var(--black);transition:border-color .2s" onmouseover="this.style.borderColor='var(--coral)'" onmouseout="this.style.borderColor='var(--gray-200)'">Landing page ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── INTERNS ─── -->
+    <div class="tab-pane" id="tab-interns">
+      <div class="section-header">
+        <div class="section-title">All Interns</div>
+        <div class="search-bar">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
+          <input type="text" id="intern-search" placeholder="Search by name, skill, location…" oninput="renderInterns()">
+        </div>
+      </div>
+      <div class="intern-grid" id="intern-grid">
+        <div class="loading"><div class="spinner"></div> Loading…</div>
+      </div>
+    </div>
+
+    <!-- ── STARTUPS ─── -->
+    <div class="tab-pane" id="tab-startups">
+      <div class="section-header">
+        <div class="section-title">All Startups</div>
+        <div class="search-bar">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
+          <input type="text" id="startup-search" placeholder="Search by name, industry…" oninput="renderStartups()">
+        </div>
+      </div>
+      <div class="startups-list" id="startups-list">
+        <div class="loading"><div class="spinner"></div> Loading…</div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ══ EDIT MODAL ════════════════════════════ -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Edit Intern</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id">
+      <div class="modal-grid">
+        <div class="m-field"><label>Full name *</label><input id="e-name" type="text"></div>
+        <div class="m-field"><label>Location</label><input id="e-location" type="text"></div>
+        <div class="m-field"><label>Email</label><input id="e-email" type="email"></div>
+        <div class="m-field"><label>WhatsApp</label><input id="e-whatsapp" type="tel"></div>
+        <div class="m-field"><label>Main role</label>
+          <select id="e-skill">
+            <option value="">— Select —</option>
+            <optgroup label="Tech"><option>Software Development</option><option>UI/UX Design</option><option>Data &amp; Analytics</option><option>Motion Graphics &amp; Video</option></optgroup>
+            <optgroup label="Business"><option>Digital Marketing</option><option>Sales &amp; Business Dev</option><option>Content &amp; Copywriting</option><option>Customer Support</option></optgroup>
+            <optgroup label="Professional"><option>Architecture &amp; Engineering</option><option>Finance &amp; Accounting</option><option>Ops &amp; Admin</option><option>Other</option></optgroup>
+          </select>
+        </div>
+        <div class="m-field"><label>English level</label>
+          <select id="e-english"><option value="">—</option><option>Native</option><option>Fluent</option><option>Advanced</option><option>Intermediate</option><option>Basic</option></select>
+        </div>
+        <div class="m-field" style="grid-column:1/-1"><label>Skills / Tech stack (semicolon-separated)</label><input id="e-skills" type="text" placeholder="React;Python;Figma"></div>
+        <div class="m-field"><label>Availability</label>
+          <select id="e-avail"><option value="">—</option><option>Full-time</option><option>Part-time</option><option>Weekends</option></select>
+        </div>
+        <div class="m-field"><label>Timezone</label><input id="e-tz" type="text"></div>
+        <div class="m-field"><label>Start date</label><input id="e-start" type="date"></div>
+        <div class="m-field"><label>GitHub / Portfolio</label><input id="e-github" type="url"></div>
+        <div class="m-field"><label>LinkedIn</label><input id="e-linkedin" type="url"></div>
+        <div class="m-field" style="grid-column:1/-1"><label>Background &amp; interests</label><textarea id="e-desc" rows="3"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-modal-save" onclick="saveEdit()">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+const SUPABASE_URL = 'https://krmqoseusxmjdlfxxdjy.supabase.co'
+const SUPABASE_KEY = 'sb_publishable_3Bsp_RSJW6Hvdvw9gB3Avg_tbpgQsj_'
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+let currentUser = null
+let allInterns = []
+let allStartups = []     // startup_profiles
+let allSelections = []   // pod_selections
+
+const COLOURS = ['#e05a3a','#7c3aed','#0369a1','#15803d','#b45309','#be185d','#0f766e','#dc2626']
+function avatarColor(str) {
+  let h=0; for (const c of (str||'?')) h=(h*31+c.charCodeAt(0))%COLOURS.length; return COLOURS[h]
+}
+function initials(str) {
+  if (!str) return '?'
+  return str.trim().split(/\s+/).slice(0,2).map(w=>w[0].toUpperCase()).join('')
+}
+
+const SKILL_SHORT = {
+  'Software Development':'Software Dev','UI/UX Design':'UI/UX','Data & Analytics':'Data',
+  'Motion Graphics & Video':'Motion','Digital Marketing':'Marketing','Sales & Business Dev':'Sales',
+  'Content & Copywriting':'Content','Customer Support':'Support',
+  'Architecture & Engineering':'Architecture','Finance & Accounting':'Finance','Ops & Admin':'Ops'
+}
+
+function showScreen(id) {
+  ['auth-screen','denied-screen','app'].forEach(s => {
+    const el = document.getElementById(s)
+    if (el) el.style.display = 'none'
+  })
+  const el = document.getElementById(id)
+  if (el) el.style.display = id === 'app' ? 'block' : 'flex'
+}
+
+window.signIn = async function() {
+  await supabase.auth.signInWithOAuth({ provider:'google', options:{ redirectTo: window.location.href }})
+}
+window.signOut = async function() { await supabase.auth.signOut(); location.reload() }
+
+window.switchTab = function(tab) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'))
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+  document.getElementById(`tab-${tab}`).classList.add('active')
+  document.getElementById(`tab-${tab}-btn`).classList.add('active')
+}
+
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if (session?.user) {
+    currentUser = session.user
+    const { data: prof } = await supabase.from('profiles').select('role').eq('id', currentUser.id).maybeSingle()
+    if (!prof || prof.role !== 'admin') { showScreen('denied-screen'); return }
+    document.getElementById('topbar-email').textContent = currentUser.email
+    showScreen('app')
+    await loadAll()
+  }
+})
+
+async function loadAll() {
+  const [ir, sr, pr] = await Promise.all([
+    supabase.from('interns').select('*').order('created_at', { ascending: false }),
+    supabase.from('startup_profiles').select('*').order('created_at', { ascending: false }),
+    supabase.from('pod_selections').select('*')
+  ])
+  allInterns    = ir.data || []
+  allStartups   = sr.data || []
+  allSelections = pr.data || []
+  updateStats()
+  renderInterns()
+  renderStartups()
+}
+
+function updateStats() {
+  const startupIds = [...new Set(allSelections.map(s => s.startup_id))]
+  const confirmedCount = startupIds.filter(sid => allSelections.some(s => s.startup_id===sid && s.confirmed)).length
+  document.getElementById('stat-interns').textContent   = allInterns.length
+  document.getElementById('stat-startups').textContent  = allStartups.length
+  document.getElementById('stat-pods').textContent      = startupIds.length
+  document.getElementById('stat-confirmed').textContent = confirmedCount
+  document.getElementById('interns-count').textContent  = allInterns.length
+  document.getElementById('startups-count').textContent = allStartups.length
+}
+
+// ── Interns ───────────────────────────────────
+window.renderInterns = function() {
+  const q = document.getElementById('intern-search').value.toLowerCase()
+  const filtered = q
+    ? allInterns.filter(i => [i.name,i.main_skill,i.location,i.email].join(' ').toLowerCase().includes(q))
+    : allInterns
+  const grid = document.getElementById('intern-grid')
+  if (!filtered.length) { grid.innerHTML = '<div class="empty-msg">No interns yet.</div>'; return }
+  grid.innerHTML = filtered.map(intern => {
+    const color = avatarColor(intern.name)
+    const tags = (intern.skills_detail||'').split(';').map(t=>t.trim()).filter(Boolean).slice(0,3)
+    const skillShort = SKILL_SHORT[intern.main_skill]||intern.main_skill||'—'
+    return `
+    <div class="intern-card">
+      <div class="card-header">
+        <div class="card-avatar" style="background:${color}">${initials(intern.name)}</div>
+        <div class="card-meta">
+          <div class="card-name">${intern.name}</div>
+          <div class="card-sub">📍 ${intern.location||'—'} · ${intern.email||'—'}</div>
+        </div>
+      </div>
+      <span class="card-skill-badge" style="background:${color}18;color:${color}">${skillShort}</span>
+      ${tags.length?`<div class="card-tags">${tags.map(t=>`<span class="card-tag">${t}</span>`).join('')}</div>`:''}
+      <div class="card-detail-row">
+        <div class="card-detail"><span>English</span>${intern.english_level||'—'}</div>
+        <div class="card-detail"><span>Availability</span>${intern.availability||'—'}</div>
+        <div class="card-detail"><span>Timezone</span>${intern.timezones||'—'}</div>
+        <div class="card-detail"><span>Start</span>${intern.preferred_start_date||'—'}</div>
+      </div>
+      <div class="card-actions">
+        <button class="btn-edit" onclick="openEdit('${intern.id}')">Edit</button>
+        <button class="btn-del" onclick="deleteIntern('${intern.id}')">Delete</button>
+      </div>
+    </div>`
+  }).join('')
+}
+
+// ── Startups ──────────────────────────────────
+window.renderStartups = function() {
+  const q = document.getElementById('startup-search').value.toLowerCase()
+  const filtered = q
+    ? allStartups.filter(s => [s.company_name,s.industry,s.location,s.email].join(' ').toLowerCase().includes(q))
+    : allStartups
+  const list = document.getElementById('startups-list')
+  if (!filtered.length) { list.innerHTML = '<div class="empty-msg">No startups yet.</div>'; return }
+
+  list.innerHTML = filtered.map(startup => {
+    const selections = allSelections.filter(s => s.startup_id === startup.user_id)
+    const confirmed = selections.some(s => s.confirmed)
+    const podCount = selections.length
+    let badgeCls = '', badgeText = 'No pod'
+    if (confirmed) { badgeCls = 'confirmed'; badgeText = 'Pod confirmed' }
+    else if (podCount > 0) { badgeCls = 'partial'; badgeText = `${podCount}/3 selected` }
+
+    const podInterns = selections.map(s => allInterns.find(i => i.id === s.intern_id)).filter(Boolean)
+    const podHtml = podInterns.length
+      ? podInterns.map(intern => {
+          const c = avatarColor(intern.name)
+          return `<div class="pod-intern-row"><div class="pod-intern-av" style="background:${c}">${initials(intern.name)}</div><div><div class="pod-intern-name">${intern.name}</div><div style="font-size:.7rem;color:var(--gray-500)">${intern.email||''}</div></div><span class="pod-intern-skill">${SKILL_SHORT[intern.main_skill]||intern.main_skill||'—'}</span></div>`
+        }).join('')
+      : '<div class="pod-empty">No interns selected yet.</div>'
+
+    return `
+    <div class="startup-card" id="sc-${startup.id}">
+      <div class="startup-head" onclick="toggleStartup('${startup.id}')">
+        <div class="startup-initials">${initials(startup.company_name)}</div>
+        <div class="startup-info">
+          <div class="startup-name">${startup.company_name}</div>
+          <div class="startup-meta">${startup.industry||'—'} · ${startup.location||'—'} · ${startup.email||'—'}</div>
+        </div>
+        <span class="startup-pod-badge ${badgeCls}">${badgeText}</span>
+        <span class="startup-chevron">▶</span>
+      </div>
+      <div class="startup-body">
+        <div class="startup-detail-grid">
+          <div class="startup-detail"><span>Website</span>${startup.website?`<a href="${startup.website}" target="_blank" style="color:var(--coral)">${startup.website}</a>`:'—'}</div>
+          <div class="startup-detail"><span>Team size</span>${startup.team_size||'—'}</div>
+          <div class="startup-detail"><span>Joined</span>${new Date(startup.created_at).toLocaleDateString()}</div>
+        </div>
+        ${startup.description?`<div class="startup-desc">${startup.description}</div>`:''}
+        <div class="pod-selection-title">Pod selection (${podCount}/3)</div>
+        <div class="pod-selection-list">${podHtml}</div>
+      </div>
+    </div>`
+  }).join('')
+}
+
+window.toggleStartup = function(id) {
+  const card = document.getElementById(`sc-${id}`)
+  card.classList.toggle('open')
+}
+
+// ── Edit intern ───────────────────────────────
+window.openEdit = function(id) {
+  const intern = allInterns.find(i => i.id === id)
+  if (!intern) return
+  document.getElementById('edit-id').value = id
+  document.getElementById('e-name').value = intern.name || ''
+  document.getElementById('e-location').value = intern.location || ''
+  document.getElementById('e-email').value = intern.email || ''
+  document.getElementById('e-whatsapp').value = intern.whatsapp || ''
+  document.getElementById('e-skill').value = intern.main_skill || ''
+  document.getElementById('e-english').value = intern.english_level || ''
+  document.getElementById('e-skills').value = intern.skills_detail || ''
+  document.getElementById('e-avail').value = intern.availability || ''
+  document.getElementById('e-tz').value = intern.timezones || ''
+  document.getElementById('e-start').value = intern.preferred_start_date || ''
+  document.getElementById('e-github').value = intern.github || ''
+  document.getElementById('e-linkedin').value = intern.linkedin || ''
+  document.getElementById('e-desc').value = intern.project_description || ''
+  document.getElementById('edit-modal').classList.add('open')
+}
+
+window.closeModal = function() {
+  document.getElementById('edit-modal').classList.remove('open')
+}
+
+window.saveEdit = async function() {
+  const id = document.getElementById('edit-id').value
+  const payload = {
+    name: document.getElementById('e-name').value.trim(),
+    location: document.getElementById('e-location').value.trim(),
+    email: document.getElementById('e-email').value.trim(),
+    whatsapp: document.getElementById('e-whatsapp').value.trim(),
+    main_skill: document.getElementById('e-skill').value,
+    english_level: document.getElementById('e-english').value,
+    skills_detail: document.getElementById('e-skills').value.trim(),
+    availability: document.getElementById('e-avail').value,
+    timezones: document.getElementById('e-tz').value.trim(),
+    preferred_start_date: document.getElementById('e-start').value,
+    github: document.getElementById('e-github').value.trim(),
+    linkedin: document.getElementById('e-linkedin').value.trim(),
+    project_description: document.getElementById('e-desc').value.trim()
+  }
+  const { error } = await supabase.from('interns').update(payload).eq('id', id)
+  if (error) { alert('Error: ' + error.message); return }
+  const idx = allInterns.findIndex(i => i.id === id)
+  if (idx !== -1) allInterns[idx] = { ...allInterns[idx], ...payload }
+  closeModal()
+  renderInterns()
+}
+
+window.deleteIntern = async function(id) {
+  const intern = allInterns.find(i => i.id === id)
+  if (!intern) return
+  if (!confirm(`Delete ${intern.name}'s profile? This cannot be undone.`)) return
+  const { error } = await supabase.from('interns').delete().eq('id', id)
+  if (error) { alert('Error: ' + error.message); return }
+  allInterns = allInterns.filter(i => i.id !== id)
+  allSelections = allSelections.filter(s => s.intern_id !== id)
+  updateStats(); renderInterns(); renderStartups()
+}
+
+// ── Close modal on overlay click ──────────────
+document.getElementById('edit-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('edit-modal')) closeModal()
+})
+</script>
+</body>
+</html>
