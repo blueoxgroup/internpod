@@ -366,5 +366,26 @@ function subCo(){const n=document.getElementById('c-name').value,co=document.get
 function subDev(){const n=document.getElementById('d-name').value,em=document.getElementById('d-em').value;if(!n||!em){alert('Please fill in name and email.');return}ml('Blue Ox Jobs Talent — '+n,'Name: '+n+'\nEmail: '+em+'\nPhone: '+document.getElementById('d-ph').value+'\nSkills: '+gc('d-sk')+'\nEnglish: '+document.getElementById('d-eng').value+'\nStatus: '+document.getElementById('d-st').value+'\nPortfolio: '+document.getElementById('d-lk').value);document.getElementById('dev-fv').style.display='none';document.getElementById('dev-ok').classList.add('active')}
 function subUni(){const n=document.getElementById('u-name').value,uni=document.getElementById('u-uni').value,em=document.getElementById('u-em').value;if(!n||!uni||!em){alert('Please fill in name, university, and email.');return}ml('Blue Ox Jobs University — '+uni,'Name: '+n+'\nUniversity: '+uni+'\nEmail: '+em+'\nRole: '+document.getElementById('u-role').value+'\nStudents: '+document.getElementById('u-sz').value+'\nDepts: '+document.getElementById('u-dept').value+'\nNotes: '+document.getElementById('u-nt').value);document.getElementById('uni-fv').style.display='none';document.getElementById('uni-ok').classList.add('active')}
 </script>
+
+<!-- Smart CTAs: if already signed in, update buttons to skip sign-in -->
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+const supabase = createClient('https://krmqoseusxmjdlfxxdjy.supabase.co','sb_publishable_3Bsp_RSJW6Hvdvw9gB3Avg_tbpgQsj_')
+const { data: { session } } = await supabase.auth.getSession()
+if (session?.user) {
+  const { data: prof } = await supabase.from('profiles').select('role').eq('id', session.user.id).maybeSingle()
+  const role = prof?.role
+  // Update "Request a Pod" buttons for startups
+  document.querySelectorAll('a[href="/hiring"]').forEach(el => {
+    if (role === 'startup') { el.textContent = 'Go to Dashboard →' }
+  })
+  // Update "Join a Pod" / talent buttons for interns
+  document.querySelectorAll('a[href="/profile"]').forEach(el => {
+    if (role === 'intern') {
+      el.textContent = 'My Profile →'
+    }
+  })
+}
+</script>
 </body>
 </html>

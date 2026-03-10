@@ -24,6 +24,50 @@ body{font-family:var(--sans);color:var(--black);background:var(--white);-webkit-
 a{text-decoration:none;color:inherit}
 ::selection{background:var(--coral);color:#fff}
 
+/* ── LOADING ─────────────────────────────── */
+#loading-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--cream);flex-direction:column;gap:16px}
+.spinner{width:28px;height:28px;border:3px solid var(--gray-200);border-top-color:var(--coral);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-logo{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.loading-logo img{width:36px;height:36px;opacity:.5}
+.loading-logo span{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--gray-400)}
+
+/* ── ONBOARDING WIZARD ───────────────────── */
+#onboarding-screen{min-height:100vh;display:none;align-items:flex-start;justify-content:center;background:var(--cream);padding:40px 24px}
+.ob-inner{width:100%;max-width:560px}
+.ob-header{display:flex;align-items:center;gap:10px;margin-bottom:36px}
+.ob-header img{width:36px;height:36px}
+.ob-brand{font-family:var(--serif);font-style:italic;font-size:17px;font-weight:600}
+.ob-steps{margin-left:auto;display:flex;align-items:center;gap:8px}
+.ob-step-dot{width:8px;height:8px;border-radius:50%;background:var(--gray-200);transition:all .3s}
+.ob-step-dot.done{background:var(--coral);opacity:.4}
+.ob-step-dot.active{background:var(--coral);width:24px;border-radius:4px}
+.ob-card{background:#fff;border-radius:20px;padding:44px;box-shadow:0 24px 80px rgba(0,0,0,.08);border:1px solid var(--gray-200);display:none}
+.ob-card.active{display:block}
+.ob-eyebrow{font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);margin-bottom:10px}
+.ob-card h2{font-family:var(--serif);font-size:1.7rem;font-weight:500;line-height:1.2;margin-bottom:8px}
+.ob-card h2 em{font-style:italic;color:var(--coral)}
+.ob-card .ob-sub{font-size:.88rem;color:var(--gray-500);line-height:1.7;margin-bottom:28px}
+.ob-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.ob-grid{grid-template-columns:1fr}}
+.ob-field{display:flex;flex-direction:column;gap:5px}
+.ob-field label{font-size:.78rem;font-weight:600;color:var(--gray-700)}
+.ob-field input,.ob-field select,.ob-field textarea{padding:11px 13px;border:1.5px solid var(--gray-200);border-radius:9px;font-family:var(--sans);font-size:.9rem;color:var(--black);background:#fff;outline:none;transition:border-color .2s;width:100%}
+.ob-field input:focus,.ob-field select:focus,.ob-field textarea:focus{border-color:var(--coral)}
+.ob-field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
+.ob-field textarea{resize:vertical;min-height:90px;line-height:1.6}
+.role-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
+.role-chip{padding:6px 12px;border:1.5px solid var(--gray-200);border-radius:20px;font-family:var(--mono);font-size:.62rem;font-weight:600;cursor:pointer;transition:all .2s;color:var(--gray-600);background:#fff;white-space:nowrap}
+.role-chip:hover{border-color:var(--coral);color:var(--coral)}
+.role-chip.selected{border-color:var(--coral);background:var(--coral-pale);color:var(--coral)}
+.ob-nav{display:flex;align-items:center;justify-content:space-between;margin-top:28px}
+.btn-ob-back{display:flex;align-items:center;gap:6px;padding:11px 18px;border:1.5px solid var(--gray-200);border-radius:9px;background:#fff;font-family:var(--sans);font-size:.9rem;font-weight:500;color:var(--gray-500);cursor:pointer;transition:all .2s}
+.btn-ob-back:hover{border-color:var(--gray-400);color:var(--black)}
+.btn-ob-next{display:flex;align-items:center;gap:8px;padding:12px 28px;border:none;border-radius:9px;background:var(--coral);color:#fff;font-family:var(--sans);font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-ob-next:hover:not(:disabled){background:var(--coral-hover);transform:translateY(-1px);box-shadow:0 6px 20px rgba(224,90,58,.25)}
+.btn-ob-next:disabled{background:var(--gray-200);color:var(--gray-400);cursor:not-allowed;transform:none}
+.btn-ob-next svg,.btn-ob-back svg{width:14px;height:14px}
+
 /* ── FULL-PAGE SCREENS ───────────────────── */
 .screen{min-height:100vh;display:none;align-items:center;justify-content:center;background:var(--cream);padding:24px}
 .screen-box{background:#fff;border-radius:20px;padding:52px 44px;max-width:500px;width:100%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.08);border:1px solid var(--gray-200)}
@@ -199,8 +243,17 @@ a{text-decoration:none;color:inherit}
 </head>
 <body>
 
+<!-- ══ LOADING (default) ═════════════════════ -->
+<div id="loading-screen">
+  <div class="loading-logo">
+    <img src="/public/assets/logo.svg" alt="">
+    <span>Blue Ox Jobs</span>
+  </div>
+  <div class="spinner"></div>
+</div>
+
 <!-- ══ AUTH SCREEN ═══════════════════════════ -->
-<div id="auth-screen" class="screen" style="display:flex">
+<div id="auth-screen" class="screen">
   <div class="screen-box">
     <div class="screen-logo">
       <img src="/public/assets/logo.svg" alt="Blue Ox">
@@ -250,30 +303,38 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
-<!-- ══ COMPANY PROFILE SETUP ═════════════════ -->
-<div id="company-screen" class="screen">
-  <div class="screen-box" style="max-width:520px">
-    <div class="screen-logo">
+<!-- ══ ONBOARDING WIZARD ══════════════════════ -->
+<div id="onboarding-screen">
+  <div class="ob-inner">
+    <div class="ob-header">
       <img src="/public/assets/logo.svg" alt="Blue Ox">
-      <div><div class="screen-logo-wm">Blue Ox <em style="font-style:italic">Jobs</em></div></div>
+      <span class="ob-brand">Blue Ox <em style="font-style:italic">Jobs</em></span>
+      <div class="ob-steps">
+        <div class="ob-step-dot active" id="ob-dot-0"></div>
+        <div class="ob-step-dot" id="ob-dot-1"></div>
+        <div class="ob-step-dot" id="ob-dot-2"></div>
+      </div>
     </div>
-    <h1>Tell us about your <em>startup</em></h1>
-    <p>Admins and interns will see this info. Takes 60 seconds.</p>
-    <div class="cp-form">
-      <div class="cp-grid">
-        <div class="cp-field" style="grid-column:1/-1">
+
+    <!-- Step 0: Company identity -->
+    <div class="ob-card active" id="ob-step-0">
+      <div class="ob-eyebrow">Step 1 of 2 — Your company</div>
+      <h2>Tell us about your <em>startup</em></h2>
+      <p class="ob-sub">Interns and our team will see this. Takes under a minute.</p>
+      <div class="ob-grid">
+        <div class="ob-field" style="grid-column:1/-1">
           <label for="cp-name">Company name *</label>
-          <input id="cp-name" type="text" placeholder="Acme Inc.">
+          <input id="cp-name" type="text" placeholder="Acme Inc." oninput="obCheckNext(0)">
         </div>
-        <div class="cp-field">
+        <div class="ob-field">
           <label for="cp-website">Website</label>
           <input id="cp-website" type="url" placeholder="https://acme.com">
         </div>
-        <div class="cp-field">
+        <div class="ob-field">
           <label for="cp-location">Country / City</label>
           <input id="cp-location" type="text" placeholder="Berlin, Germany">
         </div>
-        <div class="cp-field">
+        <div class="ob-field">
           <label for="cp-industry">Industry</label>
           <select id="cp-industry">
             <option value="">— Select —</option>
@@ -289,7 +350,7 @@ a{text-decoration:none;color:inherit}
             <option>Other</option>
           </select>
         </div>
-        <div class="cp-field">
+        <div class="ob-field">
           <label for="cp-size">Team size</label>
           <select id="cp-size">
             <option value="">— Select —</option>
@@ -300,12 +361,49 @@ a{text-decoration:none;color:inherit}
             <option>50+</option>
           </select>
         </div>
-        <div class="cp-field" style="grid-column:1/-1">
-          <label for="cp-desc">What are you building? *</label>
-          <textarea id="cp-desc" placeholder="One or two sentences about your product and what kind of intern you're looking for…" rows="3"></textarea>
+      </div>
+      <div class="ob-nav">
+        <span></span>
+        <button class="btn-ob-next" id="ob-next-0" onclick="obNext(0)" disabled>
+          Next <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 1: What you're building + roles needed -->
+    <div class="ob-card" id="ob-step-1">
+      <div class="ob-eyebrow">Step 2 of 2 — What you need</div>
+      <h2>What are you <em>building?</em></h2>
+      <p class="ob-sub">This helps interns understand your product and self-select. Be specific.</p>
+      <div class="ob-field" style="margin-bottom:18px">
+        <label for="cp-desc">Describe your product and what interns will work on *</label>
+        <textarea id="cp-desc" rows="4" placeholder="We're a SaaS logistics platform for SMEs. We need interns to help build our customer dashboard in React, write product documentation, and handle support tickets…" oninput="obCheckNext(1)"></textarea>
+      </div>
+      <div class="ob-field">
+        <label>Roles you're looking for <span style="font-weight:400;color:var(--gray-400)">(optional — helps filter)</span></label>
+        <div class="role-chips" id="ob-role-chips">
+          <span class="role-chip" onclick="toggleObRole(this,'Software Development')">⚙️ Software Dev</span>
+          <span class="role-chip" onclick="toggleObRole(this,'UI/UX Design')">🎨 UI/UX Design</span>
+          <span class="role-chip" onclick="toggleObRole(this,'Data & Analytics')">📊 Data</span>
+          <span class="role-chip" onclick="toggleObRole(this,'Motion Graphics & Video')">🎬 Motion / Video</span>
+          <span class="role-chip" onclick="toggleObRole(this,'Digital Marketing')">📣 Marketing</span>
+          <span class="role-chip" onclick="toggleObRole(this,'Sales & Business Dev')">💼 Sales</span>
+          <span class="role-chip" onclick="toggleObRole(this,'Content & Copywriting')">✍️ Content</span>
+          <span class="role-chip" onclick="toggleObRole(this,'Customer Support')">🎧 Support</span>
+          <span class="role-chip" onclick="toggleObRole(this,'Architecture & Engineering')">🏗️ Architecture</span>
+          <span class="role-chip" onclick="toggleObRole(this,'Finance & Accounting')">💰 Finance</span>
+          <span class="role-chip" onclick="toggleObRole(this,'Ops & Admin')">📋 Ops</span>
         </div>
       </div>
-      <button class="btn-submit" id="btn-cp-save" onclick="saveCompanyProfile()">Save &amp; Continue →</button>
+      <div class="ob-nav">
+        <button class="btn-ob-back" onclick="obBack(1)">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg> Back
+        </button>
+        <button class="btn-ob-next" id="ob-next-1" onclick="saveCompanyProfile()" disabled>
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          Go to hiring dashboard
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -476,13 +574,15 @@ const SKILL_SHORT = {
 }
 
 function showScreen(id) {
-  ['auth-screen','role-screen','company-screen','wrong-role-screen','app','confirmation-screen'].forEach(s => {
+  ['loading-screen','auth-screen','role-screen','onboarding-screen','wrong-role-screen','app','confirmation-screen'].forEach(s => {
     const el = document.getElementById(s)
     if (el) el.style.display = 'none'
   })
   const el = document.getElementById(id)
   if (!el) return
-  el.style.display = id === 'app' ? 'block' : 'flex'
+  if (id === 'app') el.style.display = 'block'
+  else if (id === 'onboarding-screen') el.style.display = 'flex'
+  else el.style.display = 'flex'
 }
 
 // ── Auth ─────────────────────────────────────
@@ -496,15 +596,49 @@ window.pickRole = async function(role) {
   const { error } = await supabase.from('profiles').insert({ id: currentUser.id, role, email: currentUser.email })
   if (error) { alert('Error: ' + error.message); return }
   if (role === 'intern') { location.href = '/profile'; return }
-  showScreen('company-screen')
+  showScreen('onboarding-screen')
+}
+
+// ── Onboarding wizard helpers ─────────────────
+window.obCheckNext = function(step) {
+  const checks = {
+    0: () => document.getElementById('cp-name').value.trim(),
+    1: () => document.getElementById('cp-desc').value.trim().length > 20
+  }
+  const btn = document.getElementById(`ob-next-${step}`)
+  if (btn) btn.disabled = !(checks[step] && checks[step]())
+}
+window.obNext = function(from) {
+  document.getElementById(`ob-step-${from}`).classList.remove('active')
+  document.getElementById(`ob-step-${from+1}`).classList.add('active')
+  updateObDots(from+1)
+}
+window.obBack = function(from) {
+  document.getElementById(`ob-step-${from}`).classList.remove('active')
+  document.getElementById(`ob-step-${from-1}`).classList.add('active')
+  updateObDots(from-1)
+}
+function updateObDots(active) {
+  for (let i=0;i<3;i++) {
+    const d = document.getElementById(`ob-dot-${i}`)
+    if (!d) continue
+    d.className = 'ob-step-dot' + (i<active?' done':'') + (i===active?' active':'')
+  }
+}
+let selectedObRoles = []
+window.toggleObRole = function(el, role) {
+  el.classList.toggle('selected')
+  if (el.classList.contains('selected')) { if (!selectedObRoles.includes(role)) selectedObRoles.push(role) }
+  else selectedObRoles = selectedObRoles.filter(r => r !== role)
 }
 
 window.saveCompanyProfile = async function() {
   const name = document.getElementById('cp-name').value.trim()
   const desc = document.getElementById('cp-desc').value.trim()
   if (!name || !desc) { alert('Company name and description are required.'); return }
-  const btn = document.getElementById('btn-cp-save')
-  btn.disabled = true; btn.textContent = 'Saving…'
+  const btn = document.getElementById('ob-next-1')
+  btn.disabled = true
+  btn.innerHTML = '<div class="spinner" style="width:16px;height:16px;border-width:2px;margin:0"></div> Saving…'
   const payload = {
     user_id: currentUser.id,
     company_name: name,
@@ -513,10 +647,16 @@ window.saveCompanyProfile = async function() {
     industry: document.getElementById('cp-industry').value,
     team_size: document.getElementById('cp-size').value,
     description: desc,
+    roles_needed: selectedObRoles.join(';'),
     email: currentUser.email
   }
   const { error } = await supabase.from('startup_profiles').insert(payload)
-  if (error) { alert('Error: ' + error.message); btn.disabled = false; btn.textContent = 'Save & Continue →'; return }
+  if (error) {
+    alert('Error: ' + error.message)
+    btn.disabled = false
+    btn.innerHTML = '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Go to hiring dashboard'
+    return
+  }
   setupTopbar(name)
   await loadData()
   showScreen('app')
@@ -524,6 +664,7 @@ window.saveCompanyProfile = async function() {
 
 // ── Boot ─────────────────────────────────────
 async function boot() {
+  // loading-screen is shown by default in HTML; keep it until auth resolves
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) { showScreen('auth-screen'); return }
   currentUser = session.user
@@ -538,7 +679,7 @@ async function routeByRole() {
 
   // Startup — check if company profile exists
   const { data: cp } = await supabase.from('startup_profiles').select('company_name').eq('user_id', currentUser.id).maybeSingle()
-  if (!cp) { showScreen('company-screen'); return }
+  if (!cp) { showScreen('onboarding-screen'); return }
 
   setupTopbar(cp.company_name)
   await loadData()
@@ -753,11 +894,9 @@ window.setAvailFilter = function(val) {
 
 // ── Auth state change ─────────────────────────
 supabase.auth.onAuthStateChange(async (event, session) => {
-  if (event === 'SIGNED_IN' && session) {
+  if (event === 'SIGNED_IN' && session && !currentUser) {
     currentUser = session.user
-    if (document.getElementById('auth-screen').style.display !== 'none') {
-      await routeByRole()
-    }
+    await routeByRole()
   } else if (event === 'SIGNED_OUT') {
     showScreen('auth-screen')
   }

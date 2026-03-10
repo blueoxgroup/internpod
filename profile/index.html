@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blue Ox Jobs — Build Your Intern Profile</title>
+<title>Blue Ox Jobs — Intern Profile</title>
 <link rel="icon" href="/public/assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --black:#1a1a1a;--white:#fff;--cream:#f8f6f2;
-  --coral:#e05a3a;--coral-hover:#c94e30;--coral-pale:#fef5f3;
+  --coral:#e05a3a;--coral-hover:#c94e30;--coral-pale:#fef5f3;--coral-light:rgba(224,90,58,.06);
   --green:#16a34a;--green-pale:#f0fdf4;
   --gray-100:#f5f5f5;--gray-200:#ebebeb;--gray-300:#d4d4d4;--gray-400:#aaa;--gray-500:#888;--gray-600:#666;--gray-700:#444;
   --serif:'Playfair Display',Georgia,serif;
@@ -24,8 +24,16 @@ body{font-family:var(--sans);color:var(--black);background:var(--white);-webkit-
 a{text-decoration:none;color:inherit}
 ::selection{background:var(--coral);color:#fff}
 
-/* ── FULL-PAGE CENTRED SCREENS ───────────── */
-.screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--cream);padding:24px}
+/* ── LOADING ─────────────────────────── */
+#loading-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--cream);flex-direction:column;gap:16px}
+.spinner{width:28px;height:28px;border:3px solid var(--gray-200);border-top-color:var(--coral);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-logo{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.loading-logo img{width:36px;height:36px;opacity:.5}
+.loading-logo span{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--gray-400)}
+
+/* ── FULL-PAGE SCREENS ───────────────── */
+.screen{min-height:100vh;display:none;align-items:center;justify-content:center;background:var(--cream);padding:24px}
 .screen-box{background:#fff;border-radius:20px;padding:52px 44px;max-width:460px;width:100%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.08);border:1px solid var(--gray-200)}
 .screen-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:32px}
 .screen-logo img{width:44px;height:44px}
@@ -33,15 +41,15 @@ a{text-decoration:none;color:inherit}
 .screen-logo-sub{font-family:var(--mono);font-size:13px;color:var(--gray-500)}
 .screen-box h1{font-family:var(--serif);font-size:1.75rem;font-weight:500;margin-bottom:10px;line-height:1.25}
 .screen-box h1 em{font-style:italic;color:var(--coral)}
-.screen-box p{font-size:.9rem;color:var(--gray-500);margin-bottom:28px;line-height:1.7}
-
-/* Google button */
+.screen-box>p{font-size:.9rem;color:var(--gray-500);margin-bottom:28px;line-height:1.7}
 .btn-google{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:14px;border:1.5px solid var(--gray-200);border-radius:10px;background:#fff;font-family:var(--sans);font-size:.95rem;font-weight:600;color:var(--black);cursor:pointer;transition:all var(--transition)}
 .btn-google:hover{border-color:var(--black);box-shadow:0 4px 16px rgba(0,0,0,.06);transform:translateY(-1px)}
 .btn-google svg{width:20px;height:20px;flex-shrink:0}
 .screen-note{font-family:var(--mono);font-size:.55rem;color:var(--gray-400);margin-top:18px;letter-spacing:.05em;text-transform:uppercase}
-.screen-back{display:inline-flex;align-items:center;gap:6px;margin-top:18px;font-family:var(--mono);font-size:.65rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-500);transition:color .2s}
+.screen-back{display:inline-flex;align-items:center;gap:6px;margin-top:18px;font-family:var(--mono);font-size:.65rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-500);transition:color .2s;cursor:pointer;border:none;background:none}
 .screen-back:hover{color:var(--coral)}
+.divider{height:1px;background:var(--gray-200);margin:20px 0;position:relative}
+.divider span{position:absolute;left:50%;transform:translateX(-50%);top:-9px;background:#fff;padding:0 12px;font-family:var(--mono);font-size:.6rem;color:var(--gray-400);letter-spacing:.1em;text-transform:uppercase}
 
 /* Role picker */
 .role-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px}
@@ -51,17 +59,92 @@ a{text-decoration:none;color:inherit}
 .role-card-title{font-family:var(--serif);font-size:1rem;font-weight:600;margin-bottom:4px}
 .role-card-desc{font-size:.75rem;color:var(--gray-500);line-height:1.5}
 
-/* Wrong role screen */
+/* Wrong role */
 .redirect-card{border:1.5px solid var(--gray-200);border-radius:14px;padding:20px;margin-bottom:20px;text-align:left}
 .redirect-card-title{font-weight:700;font-size:.9rem;margin-bottom:4px}
 .redirect-card-desc{font-size:.8rem;color:var(--gray-500)}
 .btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;background:var(--coral);color:#fff;border:none;border-radius:10px;font-family:var(--sans);font-size:.9rem;font-weight:700;cursor:pointer;transition:all var(--transition);width:100%}
 .btn-primary:hover{background:var(--coral-hover);transform:translateY(-1px)}
 
-/* ── APP SHELL ──────────────────────────── */
-#app{display:none;min-height:100vh;background:var(--gray-100)}
+/* ── WIZARD ──────────────────────────── */
+#wizard-screen{min-height:100vh;display:none;align-items:flex-start;justify-content:center;background:var(--cream);padding:40px 24px}
+.wizard-inner{width:100%;max-width:580px}
+.wizard-header{display:flex;align-items:center;gap:10px;margin-bottom:36px}
+.wizard-header img{width:36px;height:36px}
+.wizard-header-brand{font-family:var(--serif);font-style:italic;font-size:17px;font-weight:600;color:var(--black)}
+.wizard-steps-indicator{margin-left:auto;display:flex;align-items:center;gap:6px}
+.ws-dot{width:8px;height:8px;border-radius:50%;background:var(--gray-200);transition:all .3s}
+.ws-dot.done{background:var(--coral);opacity:.4}
+.ws-dot.active{background:var(--coral);width:24px;border-radius:4px}
 
-/* ── TOPBAR ─────────────────────────────── */
+.wizard-card{background:#fff;border-radius:20px;padding:44px;box-shadow:0 24px 80px rgba(0,0,0,.08);border:1px solid var(--gray-200);display:none}
+.wizard-card.active{display:block}
+.wizard-eyebrow{font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);margin-bottom:10px}
+.wizard-card h2{font-family:var(--serif);font-size:1.7rem;font-weight:500;line-height:1.2;margin-bottom:8px}
+.wizard-card h2 em{font-style:italic;color:var(--coral)}
+.wizard-card .wc-sub{font-size:.88rem;color:var(--gray-500);line-height:1.7;margin-bottom:28px}
+.wizard-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.wizard-grid{grid-template-columns:1fr}}
+.wz-field{display:flex;flex-direction:column;gap:5px}
+.wz-field label{font-size:.78rem;font-weight:600;color:var(--gray-700)}
+.wz-field input,.wz-field select,.wz-field textarea{padding:11px 13px;border:1.5px solid var(--gray-200);border-radius:9px;font-family:var(--sans);font-size:.9rem;color:var(--black);background:#fff;outline:none;transition:border-color .2s;width:100%}
+.wz-field input:focus,.wz-field select:focus,.wz-field textarea:focus{border-color:var(--coral)}
+.wz-field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
+.wz-field textarea{resize:vertical;min-height:90px;line-height:1.6}
+.wz-field .field-hint{font-size:.72rem;color:var(--gray-400);margin-top:3px}
+.wz-hint-chip{display:inline-flex;align-items:center;gap:5px;font-size:.75rem;color:var(--gray-500);background:var(--gray-100);padding:5px 10px;border-radius:6px;margin-top:4px}
+
+/* Availability toggle */
+.avail-toggle{display:flex;border:1.5px solid var(--gray-200);border-radius:9px;overflow:hidden;background:var(--gray-100)}
+.avail-toggle button{flex:1;padding:10px 8px;border:none;font-family:var(--sans);font-size:.85rem;font-weight:500;cursor:pointer;background:transparent;color:var(--gray-500);transition:all .2s}
+.avail-toggle button.active{background:#fff;color:var(--black);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* Tag input */
+.tag-input-wrap{border:1.5px solid var(--gray-200);border-radius:9px;padding:8px 10px;display:flex;flex-wrap:wrap;gap:5px;cursor:text;transition:border-color .2s;background:#fff;min-height:48px;align-items:flex-start}
+.tag-input-wrap:focus-within{border-color:var(--coral)}
+.tag-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;background:var(--coral-pale);border:1px solid rgba(224,90,58,.2);border-radius:20px;font-size:.72rem;color:var(--coral);font-family:var(--mono)}
+.tag-chip button{background:none;border:none;cursor:pointer;color:var(--coral);font-size:13px;line-height:1;padding:0;margin-left:2px;opacity:.6}
+.tag-chip button:hover{opacity:1}
+.tag-input-inner{border:none;outline:none;font-family:var(--sans);font-size:.88rem;color:var(--black);background:transparent;min-width:120px;flex:1;padding:2px 4px}
+.tag-suggestions{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.tag-suggestion{padding:4px 10px;background:var(--gray-100);border-radius:20px;font-family:var(--mono);font-size:.6rem;color:var(--gray-600);cursor:pointer;transition:all .2s;border:1px solid transparent}
+.tag-suggestion:hover{background:var(--coral-pale);color:var(--coral);border-color:rgba(224,90,58,.2)}
+
+/* Skill category picker */
+.skill-categories{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.skill-cat{border:2px solid var(--gray-200);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+.skill-cat:hover{border-color:var(--coral)}
+.skill-cat.selected{border-color:var(--coral);background:var(--coral-pale)}
+.skill-cat-icon{font-size:1.1rem;flex-shrink:0}
+.skill-cat-name{font-size:.8rem;font-weight:600}
+.skill-cat-group{font-size:.62rem;color:var(--gray-400);font-family:var(--mono)}
+
+/* Wizard nav */
+.wizard-nav{display:flex;align-items:center;justify-content:space-between;margin-top:28px}
+.btn-wz-back{display:flex;align-items:center;gap:6px;padding:11px 18px;border:1.5px solid var(--gray-200);border-radius:9px;background:#fff;font-family:var(--sans);font-size:.9rem;font-weight:500;color:var(--gray-500);cursor:pointer;transition:all .2s}
+.btn-wz-back:hover{border-color:var(--gray-400);color:var(--black)}
+.btn-wz-next{display:flex;align-items:center;gap:8px;padding:12px 28px;border:none;border-radius:9px;background:var(--coral);color:#fff;font-family:var(--sans);font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-wz-next:hover:not(:disabled){background:var(--coral-hover);transform:translateY(-1px);box-shadow:0 6px 20px rgba(224,90,58,.25)}
+.btn-wz-next:disabled{background:var(--gray-200);color:var(--gray-400);cursor:not-allowed;transform:none}
+.btn-wz-next svg,.btn-wz-back svg{width:14px;height:14px}
+
+/* Wizard preview panel */
+.wizard-preview-row{display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start}
+@media(max-width:720px){.wizard-preview-row{grid-template-columns:1fr}}
+.wizard-preview-label{font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:10px}
+
+/* Completion card */
+.completion-card{text-align:center}
+.completion-icon{font-size:3.5rem;margin-bottom:16px}
+.completion-card h2{font-family:var(--serif);font-size:2rem;font-weight:500;margin-bottom:8px}
+.completion-card h2 em{color:var(--coral);font-style:italic}
+.completion-card p{font-size:.9rem;color:var(--gray-500);line-height:1.7;max-width:380px;margin:0 auto 28px}
+.btn-complete{width:100%;padding:14px;border:none;border-radius:10px;background:var(--coral);color:#fff;font-family:var(--sans);font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-complete:hover:not(:disabled){background:var(--coral-hover);transform:translateY(-1px);box-shadow:0 6px 20px rgba(224,90,58,.25)}
+.btn-complete:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── APP SHELL ───────────────────────── */
+#app{display:none;min-height:100vh;background:var(--gray-100)}
 .topbar{background:#fff;border-bottom:1px solid var(--gray-200);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .topbar-brand{display:flex;align-items:center;gap:10px}
 .topbar-brand img{width:36px;height:36px}
@@ -74,19 +157,13 @@ a{text-decoration:none;color:inherit}
 .topbar-email{font-size:.78rem;color:var(--gray-600);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .btn-signout{font-family:var(--mono);font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-500);border:1px solid var(--gray-200);background:#fff;border-radius:6px;padding:6px 12px;cursor:pointer;transition:all .2s}
 .btn-signout:hover{color:var(--coral);border-color:var(--coral)}
-
-/* ── MAIN LAYOUT ────────────────────────── */
 .main-layout{display:grid;grid-template-columns:1fr 340px;gap:24px;padding:32px 24px;max-width:1200px;margin:0 auto;align-items:start}
 @media(max-width:900px){.main-layout{grid-template-columns:1fr}.preview-col{order:-1}}
-
-/* ── LIVE BANNER ────────────────────────── */
 .live-banner{background:var(--green-pale);border:1.5px solid #bbf7d0;border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:20px}
 .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
 .live-banner-text{font-size:.85rem;color:#166534;line-height:1.4}
 .live-banner-text strong{font-weight:600}
-
-/* ── FORM CARD ──────────────────────────── */
 .form-card{background:#fff;border:1px solid var(--gray-200);border-radius:16px;overflow:hidden}
 .form-section{padding:24px 28px;border-bottom:1px solid var(--gray-100)}
 .form-section:last-child{border-bottom:none}
@@ -100,19 +177,13 @@ a{text-decoration:none;color:inherit}
 .field textarea{resize:vertical;min-height:90px;line-height:1.6}
 .field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px;cursor:pointer}
 .field-hint{font-size:.72rem;color:var(--gray-400);margin-top:2px}
-
-/* Tags */
 .tags-preview{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;min-height:20px}
-.tag-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;background:var(--gray-100);border-radius:20px;font-size:.72rem;color:var(--gray-700);font-family:var(--mono)}
-.tag-chip button{background:none;border:none;cursor:pointer;color:var(--gray-400);font-size:11px;line-height:1;padding:0;margin-left:2px}
-.tag-chip button:hover{color:var(--coral)}
-
-/* Availability toggle */
-.avail-toggle{display:flex;border:1.5px solid var(--gray-200);border-radius:8px;overflow:hidden;background:var(--gray-100)}
-.avail-toggle button{flex:1;padding:9px 8px;border:none;font-family:var(--sans);font-size:.82rem;font-weight:500;cursor:pointer;background:transparent;color:var(--gray-500);transition:all .2s}
-.avail-toggle button.active{background:#fff;color:var(--black);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-
-/* Form actions */
+.edit-tag-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;background:var(--gray-100);border-radius:20px;font-size:.72rem;color:var(--gray-700);font-family:var(--mono)}
+.edit-tag-chip button{background:none;border:none;cursor:pointer;color:var(--gray-400);font-size:11px;line-height:1;padding:0;margin-left:2px}
+.edit-tag-chip button:hover{color:var(--coral)}
+.avail-toggle-edit{display:flex;border:1.5px solid var(--gray-200);border-radius:8px;overflow:hidden;background:var(--gray-100)}
+.avail-toggle-edit button{flex:1;padding:9px 8px;border:none;font-family:var(--sans);font-size:.82rem;font-weight:500;cursor:pointer;background:transparent;color:var(--gray-500);transition:all .2s}
+.avail-toggle-edit button.active{background:#fff;color:var(--black);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .form-actions{padding:20px 28px;background:var(--gray-100);display:flex;align-items:center;gap:16px;border-top:1px solid var(--gray-200)}
 .btn-save{padding:12px 28px;background:var(--coral);color:#fff;border:none;border-radius:10px;font-family:var(--sans);font-size:.92rem;font-weight:700;cursor:pointer;transition:all var(--transition);display:flex;align-items:center;gap:8px}
 .btn-save:hover:not(:disabled){background:var(--coral-hover);transform:translateY(-1px);box-shadow:0 4px 16px rgba(224,90,58,.3)}
@@ -122,12 +193,10 @@ a{text-decoration:none;color:inherit}
 .save-status{font-family:var(--mono);font-size:.65rem;color:var(--green);letter-spacing:.05em;display:none}
 .save-status.err{color:#dc2626}
 
-/* ── PREVIEW COLUMN ─────────────────────── */
+/* Preview card */
 .preview-col{position:sticky;top:84px}
 .preview-label{font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400);margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .preview-label::after{content:'';flex:1;height:1px;background:var(--gray-200)}
-
-/* ── INTERN CARD ────────────────────────── */
 .intern-card{background:#fff;border:1.5px solid var(--coral);box-shadow:0 0 0 3px rgba(224,90,58,.1);border-radius:14px;padding:18px;position:relative}
 .card-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .card-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden}
@@ -153,37 +222,43 @@ a{text-decoration:none;color:inherit}
 </head>
 <body>
 
-<!-- ══ AUTH SCREEN ════════════════════════════ -->
+<!-- ══ LOADING (default) ═════════════════════ -->
+<div id="loading-screen">
+  <div class="loading-logo">
+    <img src="/public/assets/logo.svg" alt="">
+    <span>Blue Ox Jobs</span>
+  </div>
+  <div class="spinner"></div>
+</div>
+
+<!-- ══ AUTH SCREEN ═══════════════════════════ -->
 <div id="auth-screen" class="screen">
   <div class="screen-box">
     <div class="screen-logo">
       <img src="/public/assets/logo.svg" alt="Blue Ox">
       <div>
-        <div class="screen-logo-wm">Blue Ox <em>Jobs</em></div>
+        <div class="screen-logo-wm">Blue Ox <em style="font-style:italic">Jobs</em></div>
         <div class="screen-logo-sub">Intern Profile</div>
       </div>
     </div>
     <h1>Build your <em>intern card</em></h1>
-    <p>Sign in to create your profile. Startups browsing the Pod builder will discover and select you.</p>
-    <div style="height:1px;background:var(--gray-200);margin:20px 0;position:relative"><span style="position:absolute;left:50%;transform:translateX(-50%);top:-9px;background:#fff;padding:0 12px;font-family:var(--mono);font-size:.6rem;color:var(--gray-400);letter-spacing:.1em;text-transform:uppercase">Continue with</span></div>
+    <p>Create a profile and get discovered by startups building their Intern Pods. Free, takes 3 minutes.</p>
+    <div class="divider"><span>Continue with</span></div>
     <button class="btn-google" onclick="signIn()">
       <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
       Continue with Google
     </button>
     <p class="screen-note">Free · Interns &amp; graduates only</p>
-    <a href="/" class="screen-back">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-      Back to homepage
-    </a>
+    <a href="/" class="screen-back">← Back to homepage</a>
   </div>
 </div>
 
 <!-- ══ ROLE PICKER ════════════════════════════ -->
-<div id="role-screen" class="screen" style="display:none">
+<div id="role-screen" class="screen">
   <div class="screen-box">
     <div class="screen-logo">
       <img src="/public/assets/logo.svg" alt="Blue Ox">
-      <div><div class="screen-logo-wm">Blue Ox <em>Jobs</em></div></div>
+      <div><div class="screen-logo-wm">Blue Ox <em style="font-style:italic">Jobs</em></div></div>
     </div>
     <h1>How are you <em>joining?</em></h1>
     <p>Your account type is permanent — choose carefully.</p>
@@ -196,33 +271,245 @@ a{text-decoration:none;color:inherit}
       <div class="role-card" onclick="pickRole('startup')">
         <div class="role-card-icon">🚀</div>
         <div class="role-card-title">I'm a Startup</div>
-        <div class="role-card-desc">I want to hire interns and build a team</div>
+        <div class="role-card-desc">I want to hire interns and build a Pod</div>
       </div>
     </div>
     <p style="font-size:.72rem;color:var(--gray-400);margin-top:20px;margin-bottom:0">Can't change this later without contacting us.</p>
-    <a href="#" onclick="signOut();return false" class="screen-back" style="margin-top:12px">Sign out</a>
+    <button class="screen-back" onclick="signOut()">Sign out</button>
   </div>
 </div>
 
-<!-- ══ WRONG ROLE (is a startup) ═════════════ -->
-<div id="wrong-role-screen" class="screen" style="display:none">
+<!-- ══ WRONG ROLE ════════════════════════════ -->
+<div id="wrong-role-screen" class="screen">
   <div class="screen-box">
     <div class="screen-logo">
       <img src="/public/assets/logo.svg" alt="Blue Ox">
-      <div><div class="screen-logo-wm">Blue Ox <em>Jobs</em></div></div>
+      <div><div class="screen-logo-wm">Blue Ox <em style="font-style:italic">Jobs</em></div></div>
     </div>
     <h1>You're a <em>Startup</em></h1>
-    <p>Your account is registered as a startup. The intern profile page is only for interns.</p>
+    <p>This page is for interns. Go to your startup hiring dashboard.</p>
     <div class="redirect-card">
-      <div class="redirect-card-title">Go to your Hiring Dashboard</div>
-      <div class="redirect-card-desc">Browse intern profiles and build your Pod.</div>
+      <div class="redirect-card-title">Startup Hiring Dashboard</div>
+      <div class="redirect-card-desc">Browse intern profiles and build your Intern Pod.</div>
     </div>
     <button class="btn-primary" onclick="location.href='/hiring'">Go to Hiring Dashboard →</button>
-    <a href="#" onclick="signOut();return false" class="screen-back">Sign out</a>
+    <button class="screen-back" onclick="signOut()">Sign out</button>
   </div>
 </div>
 
-<!-- ══ APP ════════════════════════════════════ -->
+<!-- ══ WIZARD ════════════════════════════════ -->
+<div id="wizard-screen">
+  <div class="wizard-inner">
+    <div class="wizard-header">
+      <img src="/public/assets/logo.svg" alt="Blue Ox">
+      <span class="wizard-header-brand">Blue Ox <em style="font-style:italic">Jobs</em></span>
+      <div class="wizard-steps-indicator">
+        <div class="ws-dot active" id="wdot-0"></div>
+        <div class="ws-dot" id="wdot-1"></div>
+        <div class="ws-dot" id="wdot-2"></div>
+        <div class="ws-dot" id="wdot-3"></div>
+        <div class="ws-dot" id="wdot-4"></div>
+      </div>
+    </div>
+
+    <!-- Step 0: Basics -->
+    <div class="wizard-card active" id="wstep-0">
+      <div class="wizard-eyebrow">Step 1 of 4 — Personal info</div>
+      <h2>Let's build your <em>card</em></h2>
+      <p class="wc-sub">Startups use this to find you. Takes 3 minutes. We've pre-filled what we can from Google.</p>
+      <div class="wizard-grid">
+        <div class="wz-field" style="grid-column:1/-1">
+          <label for="w-name">Full name *</label>
+          <input id="w-name" type="text" placeholder="Ada Namukasa" oninput="wzCheckNext(0)">
+        </div>
+        <div class="wz-field">
+          <label for="w-location">City &amp; Country *</label>
+          <input id="w-location" type="text" placeholder="Mbarara, Uganda" oninput="wzCheckNext(0)">
+        </div>
+        <div class="wz-field">
+          <label for="w-whatsapp">WhatsApp number</label>
+          <input id="w-whatsapp" type="tel" placeholder="+256 700 000000">
+          <span class="field-hint">Optional — startups may reach out directly</span>
+        </div>
+        <div class="wz-field" style="grid-column:1/-1">
+          <label>Email</label>
+          <input id="w-email" type="email" readonly style="background:var(--gray-100);color:var(--gray-500);cursor:not-allowed">
+          <span class="field-hint">From your Google account · can't be changed</span>
+        </div>
+      </div>
+      <div class="wizard-nav">
+        <span></span>
+        <button class="btn-wz-next" id="wznext-0" onclick="wzNext(0)" disabled>
+          Next <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 1: Role & Skills -->
+    <div class="wizard-card" id="wstep-1">
+      <div class="wizard-eyebrow">Step 2 of 4 — Role &amp; skills</div>
+      <h2>What's your <em>main skill?</em></h2>
+      <p class="wc-sub">Pick your primary role. You can add specific tools and tech stack below.</p>
+      <div class="wz-field" style="margin-bottom:18px">
+        <label for="w-skill">Main role *</label>
+        <select id="w-skill" onchange="onSkillChange(); wzCheckNext(1)">
+          <option value="">— Pick your role —</option>
+          <optgroup label="Tech">
+            <option>Software Development</option>
+            <option>UI/UX Design</option>
+            <option>Data &amp; Analytics</option>
+            <option>Motion Graphics &amp; Video</option>
+          </optgroup>
+          <optgroup label="Business">
+            <option>Digital Marketing</option>
+            <option>Sales &amp; Business Dev</option>
+            <option>Content &amp; Copywriting</option>
+            <option>Customer Support</option>
+          </optgroup>
+          <optgroup label="Professional">
+            <option>Architecture &amp; Engineering</option>
+            <option>Finance &amp; Accounting</option>
+            <option>Ops &amp; Admin</option>
+            <option>Other</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="wz-field" style="margin-bottom:6px">
+        <label>Tools &amp; tech stack <span style="font-weight:400;color:var(--gray-400)">(type then press Enter or comma)</span></label>
+        <div class="tag-input-wrap" id="wz-tag-wrap" onclick="document.getElementById('wz-tag-input').focus()">
+          <input class="tag-input-inner" id="wz-tag-input" placeholder="React, Figma, Python…">
+        </div>
+      </div>
+      <div class="tag-suggestions" id="wz-tag-suggestions"></div>
+      <div class="wizard-nav" style="margin-top:24px">
+        <button class="btn-wz-back" onclick="wzBack(1)">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg> Back
+        </button>
+        <button class="btn-wz-next" id="wznext-1" onclick="wzNext(1)" disabled>
+          Next <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: Availability -->
+    <div class="wizard-card" id="wstep-2">
+      <div class="wizard-eyebrow">Step 3 of 4 — Availability</div>
+      <h2>When can you <em>start?</em></h2>
+      <p class="wc-sub">Startups filter by availability and timezone. Be accurate — it affects your ranking.</p>
+      <div class="wizard-grid">
+        <div class="wz-field" style="grid-column:1/-1">
+          <label>Availability *</label>
+          <div class="avail-toggle">
+            <button onclick="setWzAvail('Full-time')" data-val="Full-time">Full-time</button>
+            <button onclick="setWzAvail('Part-time')" data-val="Part-time">Part-time</button>
+            <button onclick="setWzAvail('Weekends')" data-val="Weekends">Weekends only</button>
+          </div>
+          <input type="hidden" id="w-avail">
+        </div>
+        <div class="wz-field">
+          <label for="w-english">English level *</label>
+          <select id="w-english" onchange="wzCheckNext(2)">
+            <option value="">— Select —</option>
+            <option>Native</option>
+            <option>Fluent</option>
+            <option>Advanced</option>
+            <option>Intermediate</option>
+            <option>Basic</option>
+          </select>
+        </div>
+        <div class="wz-field">
+          <label for="w-start">Preferred start date</label>
+          <input id="w-start" type="date">
+        </div>
+        <div class="wz-field" style="grid-column:1/-1">
+          <label for="w-tz">Timezone *</label>
+          <select id="w-tz" onchange="wzCheckNext(2)">
+            <option value="">— Select timezone —</option>
+            <option>UTC+0 (GMT)</option>
+            <option>UTC+1 (CET)</option>
+            <option>UTC+2 (CAT / EET)</option>
+            <option>UTC+3 (EAT / Moscow)</option>
+            <option>UTC+4</option>
+            <option>UTC+5</option>
+            <option>UTC+5:30 (IST)</option>
+            <option>UTC+6</option>
+            <option>UTC+7</option>
+            <option>UTC+8 (CST / SGT)</option>
+            <option>UTC+9 (JST)</option>
+            <option>UTC+10 (AEST)</option>
+            <option>UTC-5 (EST)</option>
+            <option>UTC-6 (CST)</option>
+            <option>UTC-7 (MST)</option>
+            <option>UTC-8 (PST)</option>
+          </select>
+        </div>
+      </div>
+      <div class="wizard-nav">
+        <button class="btn-wz-back" onclick="wzBack(2)">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg> Back
+        </button>
+        <button class="btn-wz-next" id="wznext-2" onclick="wzNext(2)" disabled>
+          Next <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 3: Portfolio + Preview -->
+    <div class="wizard-card" id="wstep-3">
+      <div class="wizard-eyebrow">Step 4 of 4 — Portfolio &amp; bio</div>
+      <h2>Show startups <em>your work</em></h2>
+      <p class="wc-sub">A strong bio and portfolio link make startups much more likely to select you.</p>
+      <div class="wizard-preview-row">
+        <div>
+          <div class="wz-field" style="margin-bottom:14px">
+            <label for="w-desc">Your background &amp; what you can do *</label>
+            <textarea id="w-desc" rows="4" placeholder="I'm a final-year CS student with strong React skills. I've built two production apps and want to work on real product for an international startup…" oninput="wzCheckNext(3); updateWzPreview()"></textarea>
+          </div>
+          <div class="wizard-grid">
+            <div class="wz-field">
+              <label for="w-github">GitHub / Portfolio URL</label>
+              <input id="w-github" type="url" placeholder="https://github.com/you" oninput="updateWzPreview()">
+            </div>
+            <div class="wz-field">
+              <label for="w-linkedin">LinkedIn URL</label>
+              <input id="w-linkedin" type="url" placeholder="https://linkedin.com/in/you" oninput="updateWzPreview()">
+            </div>
+          </div>
+        </div>
+        <div id="wz-preview-col" style="display:none">
+          <div class="wizard-preview-label">Card preview</div>
+          <div id="wz-card-preview"></div>
+        </div>
+      </div>
+      <div class="wizard-nav">
+        <button class="btn-wz-back" onclick="wzBack(3)">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg> Back
+        </button>
+        <button class="btn-wz-next" id="wznext-3" onclick="wzPublish()" disabled>
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          Publish my profile
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 4: Done -->
+    <div class="wizard-card" id="wstep-done">
+      <div class="completion-card">
+        <div class="completion-icon">🎉</div>
+        <h2>You're <em>live!</em></h2>
+        <p>Your intern card is now visible to startups in the Pod builder. They can select you and you'll be notified by email.</p>
+        <div id="wz-final-preview" style="margin-bottom:28px;text-align:left"></div>
+        <button class="btn-complete" onclick="goToEditProfile()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          Edit my profile anytime
+        </button>
+        <p style="font-size:.75rem;color:var(--gray-400);margin-top:12px">You can update or remove your card whenever you want.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APP (edit form for returning users) ══ -->
 <div id="app">
   <div class="topbar">
     <a href="/" class="topbar-brand">
@@ -240,7 +527,6 @@ a{text-decoration:none;color:inherit}
   </div>
 
   <div class="main-layout">
-    <!-- Form -->
     <div class="form-col">
       <div id="live-banner" class="live-banner" style="display:none">
         <div class="live-dot"></div>
@@ -248,38 +534,35 @@ a{text-decoration:none;color:inherit}
       </div>
 
       <div class="form-card">
-        <!-- ABOUT -->
         <div class="form-section">
           <div class="form-section-title">About you</div>
           <div class="form-grid">
             <div class="field">
               <label for="f-name">Full name *</label>
-              <input id="f-name" type="text" placeholder="Ada Namukasa" autocomplete="name">
+              <input id="f-name" type="text" placeholder="Ada Namukasa">
             </div>
             <div class="field">
               <label for="f-location">Location *</label>
               <input id="f-location" type="text" placeholder="Mbarara, Uganda">
             </div>
             <div class="field">
-              <label for="f-email">Email *</label>
+              <label for="f-email">Email</label>
               <input id="f-email" type="email" readonly style="background:var(--gray-100);color:var(--gray-500);cursor:not-allowed">
               <span class="field-hint">From your Google account</span>
             </div>
             <div class="field">
-              <label for="f-whatsapp">WhatsApp number</label>
+              <label for="f-whatsapp">WhatsApp</label>
               <input id="f-whatsapp" type="tel" placeholder="+256 700 000000">
             </div>
           </div>
         </div>
-
-        <!-- SKILLS -->
         <div class="form-section">
-          <div class="form-section-title">Your skills</div>
+          <div class="form-section-title">Skills</div>
           <div class="form-grid">
             <div class="field">
               <label for="f-skill">Main role *</label>
               <select id="f-skill" onchange="updatePreview()">
-                <option value="">— Select a role —</option>
+                <option value="">— Select —</option>
                 <optgroup label="Tech">
                   <option>Software Development</option>
                   <option>UI/UX Design</option>
@@ -303,49 +586,41 @@ a{text-decoration:none;color:inherit}
             <div class="field">
               <label for="f-english">English level *</label>
               <select id="f-english" onchange="updatePreview()">
-                <option value="">— Select level —</option>
-                <option>Native</option>
-                <option>Fluent</option>
-                <option>Advanced</option>
-                <option>Intermediate</option>
-                <option>Basic</option>
+                <option value="">— Select —</option>
+                <option>Native</option><option>Fluent</option><option>Advanced</option><option>Intermediate</option><option>Basic</option>
               </select>
             </div>
             <div class="field" style="grid-column:1/-1">
-              <label for="f-tags-input">Tech stack &amp; skills <span style="font-weight:400;color:var(--gray-400)">(type and press Enter or comma)</span></label>
+              <label>Tools &amp; stack <span style="font-weight:400;color:var(--gray-400)">(Enter or comma to add)</span></label>
               <input id="f-tags-input" type="text" placeholder="React, Python, Figma…">
               <div class="tags-preview" id="tags-preview"></div>
               <input type="hidden" id="f-skills-detail">
             </div>
           </div>
         </div>
-
-        <!-- WORK -->
         <div class="form-section">
-          <div class="form-section-title">Your work</div>
+          <div class="form-section-title">Portfolio</div>
           <div class="form-grid">
             <div class="field">
-              <label for="f-github">GitHub / Portfolio URL</label>
+              <label for="f-github">GitHub / Portfolio</label>
               <input id="f-github" type="url" placeholder="https://github.com/you" onchange="updatePreview()">
             </div>
             <div class="field">
-              <label for="f-linkedin">LinkedIn URL</label>
+              <label for="f-linkedin">LinkedIn</label>
               <input id="f-linkedin" type="url" placeholder="https://linkedin.com/in/you" onchange="updatePreview()">
             </div>
             <div class="field" style="grid-column:1/-1">
               <label for="f-desc">Background &amp; interests *</label>
-              <textarea id="f-desc" placeholder="Briefly describe your background, what you enjoy building, and the kind of startup you'd like to work with…" rows="4" oninput="updatePreview()"></textarea>
+              <textarea id="f-desc" placeholder="What you've built, what you enjoy, what kind of startup you want to work with…" rows="4" oninput="updatePreview()"></textarea>
             </div>
           </div>
         </div>
-
-        <!-- AVAILABILITY -->
         <div class="form-section">
           <div class="form-section-title">Availability</div>
           <div class="form-grid">
             <div class="field">
               <label>Availability *</label>
-              <div class="avail-toggle" id="avail-toggle">
+              <div class="avail-toggle-edit" id="avail-toggle">
                 <button onclick="setAvail('Full-time')" data-val="Full-time">Full-time</button>
                 <button onclick="setAvail('Part-time')" data-val="Part-time">Part-time</button>
                 <button onclick="setAvail('Weekends')" data-val="Weekends">Weekends</button>
@@ -353,37 +628,25 @@ a{text-decoration:none;color:inherit}
               <input type="hidden" id="f-avail">
             </div>
             <div class="field">
-              <label for="f-start">Preferred start date</label>
+              <label for="f-start">Preferred start</label>
               <input id="f-start" type="date" onchange="updatePreview()">
             </div>
             <div class="field" style="grid-column:1/-1">
               <label for="f-tz">Timezone *</label>
               <select id="f-tz" onchange="updatePreview()">
-                <option value="">— Select timezone —</option>
-                <option>UTC+0 (GMT)</option>
-                <option>UTC+1 (CET)</option>
-                <option>UTC+2 (CAT / EET)</option>
-                <option>UTC+3 (EAT / Moscow)</option>
-                <option>UTC+4</option>
-                <option>UTC+5</option>
-                <option>UTC+5:30 (IST)</option>
-                <option>UTC+6</option>
-                <option>UTC+7</option>
-                <option>UTC+8 (CST / SGT)</option>
-                <option>UTC+9 (JST)</option>
-                <option>UTC+10 (AEST)</option>
-                <option>UTC-5 (EST)</option>
-                <option>UTC-6 (CST)</option>
-                <option>UTC-7 (MST)</option>
-                <option>UTC-8 (PST)</option>
+                <option value="">— Select —</option>
+                <option>UTC+0 (GMT)</option><option>UTC+1 (CET)</option><option>UTC+2 (CAT / EET)</option>
+                <option>UTC+3 (EAT / Moscow)</option><option>UTC+4</option><option>UTC+5</option>
+                <option>UTC+5:30 (IST)</option><option>UTC+6</option><option>UTC+7</option>
+                <option>UTC+8 (CST / SGT)</option><option>UTC+9 (JST)</option><option>UTC+10 (AEST)</option>
+                <option>UTC-5 (EST)</option><option>UTC-6 (CST)</option><option>UTC-7 (MST)</option><option>UTC-8 (PST)</option>
               </select>
             </div>
           </div>
         </div>
-
         <div class="form-actions">
           <button class="btn-save" id="btn-save" onclick="saveProfile()" disabled>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
             <span id="btn-save-label">Publish Profile</span>
           </button>
           <span class="save-status" id="save-status"></span>
@@ -392,7 +655,6 @@ a{text-decoration:none;color:inherit}
       </div>
     </div>
 
-    <!-- Card preview -->
     <div class="preview-col">
       <div class="preview-label">Live preview</div>
       <div id="card-preview"></div>
@@ -410,10 +672,12 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 let currentUser = null
 let existingProfile = null
 let skillTags = []
+let wzTags = []
+let wzAvail = ''
 
 const COLORS = ['#e05a3a','#7c3aed','#0ea5e9','#16a34a','#db2777','#d97706','#0891b2','#9333ea']
 function avatarColor(str) {
-  let h = 0; for (let c of (str||'')) h = (h*31+c.charCodeAt(0))%COLORS.length
+  let h=0; for (const c of (str||'')) h=(h*31+c.charCodeAt(0))%COLORS.length
   return COLORS[Math.abs(h)%COLORS.length]
 }
 function initials(name) {
@@ -421,93 +685,256 @@ function initials(name) {
   return name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join('')
 }
 
+const SKILL_SUGGESTIONS = {
+  'Software Development': ['React','Node.js','Python','TypeScript','Next.js','PostgreSQL','Flutter','Go','Java','Docker','REST APIs','Git'],
+  'UI/UX Design': ['Figma','Prototyping','User Research','Design Systems','Wireframing','Adobe XD','Framer','Accessibility'],
+  'Data & Analytics': ['Python','SQL','Excel','Tableau','Power BI','Pandas','Machine Learning','Google Analytics'],
+  'Motion Graphics & Video': ['After Effects','Premiere Pro','DaVinci Resolve','Cinema 4D','Blender','Lottie','Illustration'],
+  'Digital Marketing': ['SEO','Google Ads','Meta Ads','Email Marketing','Content Strategy','Copywriting','HubSpot','Analytics'],
+  'Sales & Business Dev': ['CRM','Cold Outreach','LinkedIn Sales','Lead Generation','Proposal Writing','Pipedrive','Salesforce'],
+  'Content & Copywriting': ['Blog Writing','SEO Writing','Social Media','Email Copy','Brand Voice','Notion','Editing'],
+  'Customer Support': ['Zendesk','Intercom','Email Support','Live Chat','FAQs','Onboarding','Customer Success'],
+  'Architecture & Engineering': ['AutoCAD','Revit','SketchUp','ArchiCAD','3D Rendering','BIM','Structural Analysis'],
+  'Finance & Accounting': ['Excel','QuickBooks','Xero','Financial Modelling','Bookkeeping','Payroll','IFRS'],
+  'Ops & Admin': ['Project Management','Notion','Airtable','Process Docs','Data Entry','Scheduling','G Suite'],
+  'Other': ['Research','Writing','Translation','Virtual Assistance','Social Media','Content Creation']
+}
+
+// ── Screen routing ────────────────────────────
 function showScreen(id) {
-  ['auth-screen','role-screen','wrong-role-screen','app'].forEach(s => {
+  ['loading-screen','auth-screen','role-screen','wrong-role-screen','wizard-screen','app'].forEach(s => {
     const el = document.getElementById(s)
-    if (el) el.style.display = 'none'
+    if (!el) return
+    el.style.display = 'none'
   })
   const target = document.getElementById(id)
-  if (target) target.style.display = id === 'app' ? 'block' : 'flex'
+  if (!target) return
+  if (id === 'app') target.style.display = 'block'
+  else if (id === 'wizard-screen') target.style.display = 'flex'
+  else if (id === 'loading-screen') target.style.display = 'flex'
+  else target.style.display = 'flex'
 }
 
+// ── Auth ──────────────────────────────────────
 window.signIn = async function() {
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: window.location.href }
-  })
-  if (error) alert('Sign-in error: ' + error.message)
+  await supabase.auth.signInWithOAuth({ provider:'google', options:{ redirectTo: window.location.href }})
+}
+window.signOut = async function() { await supabase.auth.signOut(); location.reload() }
+
+// ── Boot ──────────────────────────────────────
+async function boot() {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) { showScreen('auth-screen'); return }
+  currentUser = session.user
+  await routeByRole()
 }
 
-window.signOut = async function() {
-  await supabase.auth.signOut()
-  location.reload()
-}
-
-window.pickRole = async function(role) {
-  const { error } = await supabase.from('profiles').insert({
-    id: currentUser.id,
-    role,
-    email: currentUser.email
-  })
-  if (error) { alert('Error: ' + error.message); return }
-  if (role === 'startup') {
-    location.href = '/hiring'
-  } else {
-    await loadExistingProfile()
-    showScreen('app')
-    updatePreview()
-    watchInputs()
-  }
-}
-
-supabase.auth.onAuthStateChange(async (event, session) => {
-  if (session?.user) {
-    currentUser = session.user
-
-    // Topbar
-    const av = document.getElementById('topbar-avatar')
-    const pic = currentUser.user_metadata?.avatar_url
-    if (pic) av.innerHTML = `<img src="${pic}" alt="">`
-    else av.textContent = initials(currentUser.user_metadata?.full_name || currentUser.email)
-    document.getElementById('topbar-email').textContent = currentUser.email
-
-    // Check profile role
-    const { data: prof } = await supabase.from('profiles').select('role').eq('id', currentUser.id).maybeSingle()
-
-    if (!prof) {
-      showScreen('role-screen')
-      return
-    }
-    if (prof.role === 'startup') { showScreen('wrong-role-screen'); return }
-    if (prof.role === 'admin')   { location.href = '/admin'; return }
-
-    // Intern
-    const googleName = currentUser.user_metadata?.full_name || ''
-    if (googleName && !document.getElementById('f-name').value) {
-      document.getElementById('f-name').value = googleName
-    }
-    document.getElementById('f-email').value = currentUser.email
-
-    await loadExistingProfile()
-    showScreen('app')
-    updatePreview()
-    watchInputs()
-  }
-})
-
-async function loadExistingProfile() {
-  const { data } = await supabase.from('interns').select('*').eq('user_id', currentUser.id).maybeSingle()
-  if (data) {
-    existingProfile = data
-    fillForm(data)
+async function routeByRole() {
+  setupTopbar()
+  const { data: prof } = await supabase.from('profiles').select('role').eq('id', currentUser.id).maybeSingle()
+  if (!prof) { showScreen('role-screen'); return }
+  if (prof.role === 'startup') { showScreen('wrong-role-screen'); return }
+  if (prof.role === 'admin') { location.href = '/admin'; return }
+  // Intern
+  const { data: existingIntern } = await supabase.from('interns').select('*').eq('user_id', currentUser.id).maybeSingle()
+  if (existingIntern) {
+    // Returning intern → edit form
+    existingProfile = existingIntern
+    fillEditForm(existingIntern)
     document.getElementById('live-banner').style.display = 'flex'
     document.getElementById('btn-save-label').textContent = 'Update Profile'
     document.getElementById('btn-delete').style.display = 'block'
     document.getElementById('btn-save').disabled = false
+    initEditTagsInput()
+    watchEditInputs()
+    updatePreview()
+    showScreen('app')
+  } else {
+    // New intern → wizard
+    startWizard()
   }
 }
 
-function fillForm(p) {
+function setupTopbar() {
+  const pic = currentUser.user_metadata?.avatar_url
+  const av = document.getElementById('topbar-avatar')
+  if (pic) av.innerHTML = `<img src="${pic}" alt="">`
+  else { av.textContent = initials(currentUser.user_metadata?.full_name || currentUser.email); av.style.background = avatarColor(currentUser.email) }
+  document.getElementById('topbar-email').textContent = currentUser.email
+}
+
+// ── WIZARD ────────────────────────────────────
+function startWizard() {
+  const googleName = currentUser.user_metadata?.full_name || ''
+  document.getElementById('w-name').value = googleName
+  document.getElementById('w-email').value = currentUser.email
+  if (googleName) wzCheckNext(0)
+  showScreen('wizard-screen')
+  updateWzDots(0)
+  initWzTagInput()
+}
+
+window.wzCheckNext = function(step) {
+  const checks = {
+    0: () => document.getElementById('w-name').value.trim() && document.getElementById('w-location').value.trim(),
+    1: () => document.getElementById('w-skill').value,
+    2: () => document.getElementById('w-avail').value && document.getElementById('w-english').value && document.getElementById('w-tz').value,
+    3: () => document.getElementById('w-desc').value.trim().length > 20
+  }
+  const btn = document.getElementById(`wznext-${step}`)
+  if (btn) btn.disabled = !(checks[step] && checks[step]())
+}
+
+function updateWzDots(active) {
+  for (let i=0;i<5;i++) {
+    const d = document.getElementById(`wdot-${i}`)
+    if (!d) continue
+    d.className = 'ws-dot' + (i < active ? ' done' : '') + (i === active ? ' active' : '')
+  }
+}
+
+window.wzNext = function(from) {
+  document.getElementById(`wstep-${from}`).classList.remove('active')
+  document.getElementById(`wstep-${from+1}`).classList.add('active')
+  updateWzDots(from+1)
+  if (from+1 === 3) { updateWzPreview(); document.getElementById('wz-preview-col').style.display='block' }
+}
+window.wzBack = function(from) {
+  document.getElementById(`wstep-${from}`).classList.remove('active')
+  document.getElementById(`wstep-${from-1}`).classList.add('active')
+  updateWzDots(from-1)
+}
+
+window.setWzAvail = function(val) {
+  wzAvail = val
+  document.getElementById('w-avail').value = val
+  document.querySelectorAll('.avail-toggle button').forEach(b => b.classList.toggle('active', b.dataset.val === val))
+  wzCheckNext(2)
+}
+
+window.onSkillChange = function() {
+  const skill = document.getElementById('w-skill').value
+  const sug = document.getElementById('wz-tag-suggestions')
+  sug.innerHTML = (SKILL_SUGGESTIONS[skill]||[]).filter(s=>!wzTags.includes(s)).slice(0,8).map(s =>
+    `<span class="tag-suggestion" onclick="addWzTag('${s}')">${s}</span>`
+  ).join('')
+  wzCheckNext(1)
+}
+
+window.addWzTag = function(val) {
+  if (!val || wzTags.includes(val)) return
+  wzTags.push(val)
+  renderWzTags()
+  // Refresh suggestions
+  const skill = document.getElementById('w-skill').value
+  const sug = document.getElementById('wz-tag-suggestions')
+  sug.innerHTML = (SKILL_SUGGESTIONS[skill]||[]).filter(s=>!wzTags.includes(s)).slice(0,8).map(s =>
+    `<span class="tag-suggestion" onclick="addWzTag('${s}')">${s}</span>`
+  ).join('')
+}
+
+function renderWzTags() {
+  const wrap = document.getElementById('wz-tag-wrap')
+  wrap.querySelectorAll('.tag-chip').forEach(el => el.remove())
+  const input = document.getElementById('wz-tag-input')
+  wzTags.forEach((t, i) => {
+    const chip = document.createElement('span')
+    chip.className = 'tag-chip'
+    chip.innerHTML = `${t}<button type="button" onclick="removeWzTag(${i})">×</button>`
+    wrap.insertBefore(chip, input)
+  })
+}
+window.removeWzTag = function(i) { wzTags.splice(i,1); renderWzTags() }
+
+function initWzTagInput() {
+  const inp = document.getElementById('wz-tag-input')
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault()
+      const val = inp.value.replace(/,/g,'').trim()
+      if (val && !wzTags.includes(val)) addWzTag(val)
+      inp.value = ''
+    } else if (e.key === 'Backspace' && !inp.value && wzTags.length) {
+      wzTags.pop(); renderWzTags()
+    }
+  })
+  inp.addEventListener('blur', () => {
+    const val = inp.value.replace(/,/g,'').trim()
+    if (val && !wzTags.includes(val)) addWzTag(val)
+    inp.value = ''
+  })
+}
+
+window.updateWzPreview = function() {
+  const data = getWzData()
+  const el = document.getElementById('wz-card-preview')
+  if (!el) return
+  if (!data.name) { el.innerHTML = ''; return }
+  el.innerHTML = buildCardHtml(data)
+}
+
+function getWzData() {
+  return {
+    name: document.getElementById('w-name').value.trim(),
+    email: document.getElementById('w-email').value,
+    location: document.getElementById('w-location').value.trim(),
+    whatsapp: document.getElementById('w-whatsapp').value.trim(),
+    main_skill: document.getElementById('w-skill').value,
+    skills_detail: wzTags.join(';'),
+    english_level: document.getElementById('w-english').value,
+    availability: document.getElementById('w-avail').value,
+    timezones: document.getElementById('w-tz').value,
+    preferred_start_date: document.getElementById('w-start').value,
+    project_description: document.getElementById('w-desc').value.trim(),
+    github: document.getElementById('w-github').value.trim(),
+    linkedin: document.getElementById('w-linkedin').value.trim(),
+    user_id: currentUser?.id
+  }
+}
+
+window.wzPublish = async function() {
+  const btn = document.getElementById('wznext-3')
+  btn.disabled = true
+  btn.innerHTML = '<div class="spinner" style="width:16px;height:16px;border-width:2px;margin:0"></div> Saving…'
+  const payload = getWzData()
+  const { data, error } = await supabase.from('interns').insert(payload).select().single()
+  if (error) {
+    btn.disabled = false
+    btn.innerHTML = '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Publish my profile'
+    alert('Error saving profile: ' + error.message)
+    return
+  }
+  existingProfile = data
+  // Show completion
+  document.getElementById('wz-final-preview').innerHTML = buildCardHtml(payload)
+  updateWzDots(4)
+  document.getElementById('wstep-3').classList.remove('active')
+  document.getElementById('wstep-done').classList.add('active')
+}
+
+window.goToEditProfile = function() {
+  if (existingProfile) {
+    fillEditForm(existingProfile)
+    document.getElementById('live-banner').style.display = 'flex'
+    document.getElementById('btn-save-label').textContent = 'Update Profile'
+    document.getElementById('btn-delete').style.display = 'block'
+    document.getElementById('btn-save').disabled = false
+    initEditTagsInput()
+    watchEditInputs()
+    updatePreview()
+  }
+  showScreen('app')
+}
+
+// ── EDIT FORM ─────────────────────────────────
+window.pickRole = async function(role) {
+  const { error } = await supabase.from('profiles').insert({ id: currentUser.id, role, email: currentUser.email })
+  if (error) { alert('Error: ' + error.message); return }
+  if (role === 'startup') { location.href = '/hiring'; return }
+  startWizard()
+}
+
+function fillEditForm(p) {
   document.getElementById('f-name').value = p.name || ''
   document.getElementById('f-location').value = p.location || ''
   document.getElementById('f-email').value = p.email || ''
@@ -520,101 +947,77 @@ function fillForm(p) {
   document.getElementById('f-start').value = p.preferred_start_date || ''
   document.getElementById('f-tz').value = p.timezones || ''
   skillTags = (p.skills_detail||'').split(';').map(t=>t.trim()).filter(Boolean)
-  renderTags()
+  renderEditTags()
   if (p.availability) {
     const v = p.availability.includes('Full') ? 'Full-time' : p.availability.includes('Part') ? 'Part-time' : 'Weekends'
     setAvail(v)
   }
 }
 
-function renderTags() {
+function renderEditTags() {
   const prev = document.getElementById('tags-preview')
   prev.innerHTML = skillTags.map((t,i) =>
-    `<span class="tag-chip">${t}<button type="button" onclick="removeTag(${i})">×</button></span>`
+    `<span class="edit-tag-chip">${t}<button type="button" onclick="removeEditTag(${i})">×</button></span>`
   ).join('')
   document.getElementById('f-skills-detail').value = skillTags.join(';')
   checkSaveEnabled(); updatePreview()
 }
+window.removeEditTag = function(i) { skillTags.splice(i,1); renderEditTags() }
 
-window.removeTag = function(i) { skillTags.splice(i,1); renderTags() }
-
-function initTagsInput() {
+function initEditTagsInput() {
   const inp = document.getElementById('f-tags-input')
   inp.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault()
       const val = inp.value.replace(/,/g,'').trim()
-      if (val && !skillTags.includes(val)) { skillTags.push(val); renderTags() }
+      if (val && !skillTags.includes(val)) { skillTags.push(val); renderEditTags() }
       inp.value = ''
     } else if (e.key === 'Backspace' && !inp.value && skillTags.length) {
-      skillTags.pop(); renderTags()
+      skillTags.pop(); renderEditTags()
     }
   })
   inp.addEventListener('blur', () => {
     const val = inp.value.replace(/,/g,'').trim()
-    if (val && !skillTags.includes(val)) { skillTags.push(val); renderTags() }
+    if (val && !skillTags.includes(val)) { skillTags.push(val); renderEditTags() }
     inp.value = ''
   })
 }
 
 window.setAvail = function(val) {
   document.getElementById('f-avail').value = val
-  document.querySelectorAll('.avail-toggle button').forEach(b => b.classList.toggle('active', b.dataset.val === val))
+  document.querySelectorAll('.avail-toggle-edit button').forEach(b => b.classList.toggle('active', b.dataset.val === val))
   checkSaveEnabled(); updatePreview()
 }
 
-function watchInputs() {
+function watchEditInputs() {
   ['f-name','f-location','f-skill','f-english','f-desc','f-github','f-linkedin','f-start','f-tz','f-whatsapp'].forEach(id => {
     const el = document.getElementById(id)
-    if (el) { el.addEventListener('input', () => { checkSaveEnabled(); updatePreview() }); el.addEventListener('change', () => { checkSaveEnabled(); updatePreview() }) }
+    if (el) { el.addEventListener('input', ()=>{ checkSaveEnabled(); updatePreview() }); el.addEventListener('change', ()=>{ checkSaveEnabled(); updatePreview() }) }
   })
-  initTagsInput()
 }
 
 function checkSaveEnabled() {
   const ok = document.getElementById('f-name').value.trim() &&
-             document.getElementById('f-location').value.trim() &&
-             document.getElementById('f-skill').value &&
-             document.getElementById('f-english').value &&
-             document.getElementById('f-avail').value &&
-             document.getElementById('f-tz').value &&
-             document.getElementById('f-desc').value.trim()
+    document.getElementById('f-location').value.trim() &&
+    document.getElementById('f-skill').value &&
+    document.getElementById('f-english').value &&
+    document.getElementById('f-avail').value &&
+    document.getElementById('f-tz').value &&
+    document.getElementById('f-desc').value.trim()
   document.getElementById('btn-save').disabled = !ok
 }
 
 window.updatePreview = function() {
-  const intern = getFormData()
+  const data = getEditFormData()
   const el = document.getElementById('card-preview')
-  if (!intern.name && !intern.main_skill) {
-    el.innerHTML = `<div class="card-placeholder"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><p>Fill in your details to see a live preview of how your card looks to startups.</p></div>`
+  if (!data.name && !data.main_skill) {
+    el.innerHTML = `<div class="card-placeholder"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><p>Fill in your details to see a preview.</p></div>`
     return
   }
-  const color = avatarColor(intern.name)
-  const tags = (intern.skills_detail||'').split(';').map(t=>t.trim()).filter(Boolean).slice(0,4)
-  const avail = (intern.availability||'—').replace('Full-time','Full-time').replace('Part-time','Part-time')
-  const pic = currentUser?.user_metadata?.avatar_url
-  const avatarHtml = pic
-    ? `<div class="card-avatar"><img src="${pic}" alt=""></div>`
-    : `<div class="card-avatar" style="background:${color}">${initials(intern.name)}</div>`
-  const ghLink = intern.github ? `<a class="card-link" href="${intern.github}" target="_blank"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg> Portfolio</a>` : ''
-  const liLink = intern.linkedin ? `<a class="card-link" href="${intern.linkedin}" target="_blank"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg> LinkedIn</a>` : ''
-  el.innerHTML = `
-  <div class="intern-card">
-    <div class="card-header">${avatarHtml}<div class="card-meta"><div class="card-name">${intern.name||'—'}</div><div class="card-location">📍 ${intern.location||'—'}</div></div></div>
-    ${intern.main_skill?`<span class="card-skill-badge" style="background:${color}18;color:${color}">${intern.main_skill}</span>`:''}
-    ${tags.length?`<div class="card-tags">${tags.map(t=>`<span class="card-tag">${t}</span>`).join('')}</div>`:''}
-    <div class="card-stats">
-      <div class="card-stat"><div class="card-stat-label">English</div><div class="card-stat-val">${intern.english_level||'—'}</div></div>
-      <div class="card-stat"><div class="card-stat-label">Availability</div><div class="card-stat-val">${avail||'—'}</div></div>
-      <div class="card-stat"><div class="card-stat-label">Timezone</div><div class="card-stat-val" style="font-size:.7rem">${intern.timezones||'—'}</div></div>
-      <div class="card-stat"><div class="card-stat-label">Start date</div><div class="card-stat-val">${intern.preferred_start_date||'—'}</div></div>
-    </div>
-    ${intern.project_description?`<div class="card-desc">${intern.project_description}</div>`:''}
-    ${ghLink||liLink?`<div class="card-links">${ghLink}${liLink}</div>`:''}
-  </div>`
+  el.innerHTML = buildCardHtml(data)
 }
 
-function getFormData() {
+function getEditFormData() {
   return {
     name: document.getElementById('f-name').value.trim(),
     email: document.getElementById('f-email').value.trim(),
@@ -639,11 +1042,10 @@ window.saveProfile = async function() {
   btn.disabled = true
   btn.querySelector('span').textContent = 'Saving…'
   status.style.display = 'none'; status.className = 'save-status'
-  const payload = getFormData()
+  const payload = getEditFormData()
   let error
   if (existingProfile) {
-    const res = await supabase.from('interns').update(payload).eq('id', existingProfile.id)
-    error = res.error
+    ({ error } = await supabase.from('interns').update(payload).eq('id', existingProfile.id))
   } else {
     const res = await supabase.from('interns').insert(payload).select().single()
     error = res.error
@@ -652,7 +1054,7 @@ window.saveProfile = async function() {
   if (error) {
     status.textContent = 'Error: ' + error.message; status.className = 'save-status err'; status.style.display = 'block'
   } else {
-    status.textContent = 'Saved!'; status.style.display = 'block'
+    status.textContent = 'Saved ✓'; status.style.display = 'block'
     document.getElementById('live-banner').style.display = 'flex'
     document.getElementById('btn-save-label').textContent = 'Update Profile'
     document.getElementById('btn-delete').style.display = 'block'
@@ -672,6 +1074,43 @@ window.deleteProfile = async function() {
   document.getElementById('btn-delete').style.display = 'none'
   checkSaveEnabled()
 }
+
+// ── Card renderer (shared) ─────────────────────
+function buildCardHtml(intern) {
+  const color = avatarColor(intern.name)
+  const tags = (intern.skills_detail||'').split(';').map(t=>t.trim()).filter(Boolean).slice(0,4)
+  const pic = currentUser?.user_metadata?.avatar_url
+  const avatarHtml = pic
+    ? `<div class="card-avatar"><img src="${pic}" alt=""></div>`
+    : `<div class="card-avatar" style="background:${color}">${initials(intern.name)}</div>`
+  const ghLink = intern.github ? `<a class="card-link" href="${intern.github}" target="_blank"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg> Portfolio</a>` : ''
+  const liLink = intern.linkedin ? `<a class="card-link" href="${intern.linkedin}" target="_blank"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg> LinkedIn</a>` : ''
+  return `<div class="intern-card">
+    <div class="card-header">${avatarHtml}<div class="card-meta"><div class="card-name">${intern.name||'—'}</div><div class="card-location">📍 ${intern.location||'—'}</div></div></div>
+    ${intern.main_skill?`<span class="card-skill-badge" style="background:${color}18;color:${color}">${intern.main_skill}</span>`:''}
+    ${tags.length?`<div class="card-tags">${tags.map(t=>`<span class="card-tag">${t}</span>`).join('')}</div>`:''}
+    <div class="card-stats">
+      <div class="card-stat"><div class="card-stat-label">English</div><div class="card-stat-val">${intern.english_level||'—'}</div></div>
+      <div class="card-stat"><div class="card-stat-label">Availability</div><div class="card-stat-val">${intern.availability||'—'}</div></div>
+      <div class="card-stat"><div class="card-stat-label">Timezone</div><div class="card-stat-val" style="font-size:.7rem">${intern.timezones||'—'}</div></div>
+      <div class="card-stat"><div class="card-stat-label">Start</div><div class="card-stat-val">${intern.preferred_start_date||'—'}</div></div>
+    </div>
+    ${intern.project_description?`<div class="card-desc">${intern.project_description}</div>`:''}
+    ${ghLink||liLink?`<div class="card-links">${ghLink}${liLink}</div>`:''}
+  </div>`
+}
+
+// ── Auth state change ──────────────────────────
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if (event === 'SIGNED_IN' && session && !currentUser) {
+    currentUser = session.user
+    await routeByRole()
+  } else if (event === 'SIGNED_OUT') {
+    showScreen('auth-screen')
+  }
+})
+
+boot()
 </script>
 </body>
 </html>
