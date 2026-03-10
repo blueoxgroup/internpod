@@ -717,17 +717,11 @@ function showScreen(id) {
 
 // ── Auth ──────────────────────────────────────
 window.signIn = async function() {
-  await supabase.auth.signInWithOAuth({ provider:'google', options:{ redirectTo: window.location.href }})
+  await supabase.auth.signInWithOAuth({ provider:'google', options:{ redirectTo: window.location.origin + '/profile' }})
 }
 window.signOut = async function() { await supabase.auth.signOut(); location.reload() }
 
-// ── Boot ──────────────────────────────────────
-async function boot() {
-  const { data: { session } } = await supabase.auth.getSession()
-  if (!session) { showScreen('auth-screen'); return }
-  currentUser = session.user
-  await routeByRole()
-}
+// ── Boot — single path via onAuthStateChange ──
 
 async function routeByRole() {
   setupTopbar()
@@ -1100,17 +1094,18 @@ function buildCardHtml(intern) {
   </div>`
 }
 
-// ── Auth state change ──────────────────────────
 supabase.auth.onAuthStateChange(async (event, session) => {
-  if (event === 'SIGNED_IN' && session && !currentUser) {
+  if ((event === 'INITIAL_SESSION' || event === 'SIGNED_IN') && session?.user) {
+    if (currentUser) return   // already routed — ignore duplicate events
     currentUser = session.user
     await routeByRole()
+  } else if (event === 'INITIAL_SESSION' && !session) {
+    showScreen('auth-screen')
   } else if (event === 'SIGNED_OUT') {
+    currentUser = null
     showScreen('auth-screen')
   }
 })
-
-boot()
 </script>
 </body>
 </html>

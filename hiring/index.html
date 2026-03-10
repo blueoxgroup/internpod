@@ -589,7 +589,8 @@ function showScreen(id) {
 window.doSignOut = async function() { await supabase.auth.signOut(); location.reload() }
 
 document.getElementById('btn-google-signin').addEventListener('click', async () => {
-  await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } })
+  // Explicit URL so OAuth always returns here, never to the homepage
+  await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/hiring' } })
 })
 document.getElementById('btn-signout').addEventListener('click', window.doSignOut)
 
@@ -648,7 +649,6 @@ window.saveCompanyProfile = async function() {
     industry: document.getElementById('cp-industry').value,
     team_size: document.getElementById('cp-size').value,
     description: desc,
-    roles_needed: selectedObRoles.join(';'),
     email: currentUser.email
   }
   const { error } = await supabase.from('startup_profiles').insert(payload)
@@ -663,14 +663,9 @@ window.saveCompanyProfile = async function() {
   showScreen('app')
 }
 
-// ── Boot ─────────────────────────────────────
-async function boot() {
-  // loading-screen is shown by default in HTML; keep it until auth resolves
-  const { data: { session } } = await supabase.auth.getSession()
-  if (!session) { showScreen('auth-screen'); return }
-  currentUser = session.user
-  await routeByRole()
-}
+// ── Boot — single path via onAuthStateChange ──
+// INITIAL_SESSION fires once on page load (logged in or not).
+// SIGNED_IN fires after OAuth redirect completes.
 
 async function routeByRole() {
   const { data: prof } = await supabase.from('profiles').select('role').eq('id', currentUser.id).maybeSingle()
@@ -893,17 +888,18 @@ window.setAvailFilter = function(val) {
   renderGrid()
 }
 
-// ── Auth state change ─────────────────────────
 supabase.auth.onAuthStateChange(async (event, session) => {
-  if (event === 'SIGNED_IN' && session && !currentUser) {
+  if ((event === 'INITIAL_SESSION' || event === 'SIGNED_IN') && session?.user) {
+    if (currentUser) return   // already routed — ignore duplicate events
     currentUser = session.user
     await routeByRole()
+  } else if (event === 'INITIAL_SESSION' && !session) {
+    showScreen('auth-screen')
   } else if (event === 'SIGNED_OUT') {
+    currentUser = null
     showScreen('auth-screen')
   }
 })
-
-boot()
 </script>
 </body>
 </html>
