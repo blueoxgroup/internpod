@@ -1,7 +1,9 @@
--- Allow any authenticated user to read their own profile row.
--- Writes remain restricted to the owning user.
--- This prevents routeByRole() from hanging due to policy denial.
-DROP POLICY IF EXISTS "users_own_profile" ON public.profiles;
+-- Recreate profiles RLS policies cleanly
+DROP POLICY IF EXISTS "users_own_profile"   ON public.profiles;
+DROP POLICY IF EXISTS "profiles_read_own"   ON public.profiles;
+DROP POLICY IF EXISTS "profiles_write_own"  ON public.profiles;
+DROP POLICY IF EXISTS "profiles_update_own" ON public.profiles;
+DROP POLICY IF EXISTS "profiles_delete_own" ON public.profiles;
 
 CREATE POLICY "profiles_read_own" ON public.profiles
   FOR SELECT TO authenticated
