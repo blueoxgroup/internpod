@@ -663,23 +663,40 @@ window.saveCompanyProfile = async function() {
   showScreen('app')
 }
 
-// ── Boot — single path via onAuthStateChange ──
-// INITIAL_SESSION fires once on page load (logged in or not).
-// SIGNED_IN fires after OAuth redirect completes.
+// ── Boot ─────────────────────────────────────
+// getSession() is the reliable primary path for page loads.
+// onAuthStateChange(SIGNED_IN) catches the OAuth redirect case.
+let _routing = false
+async function boot() {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) { showScreen('auth-screen'); return }
+  currentUser = session.user
+  await routeByRole()
+}
 
 async function routeByRole() {
-  const { data: prof } = await supabase.from('profiles').select('role').eq('id', currentUser.id).maybeSingle()
-  if (!prof) { showScreen('role-screen'); return }
-  if (prof.role === 'intern') { showScreen('wrong-role-screen'); return }
-  if (prof.role === 'admin') { location.href = '/admin'; return }
+  if (_routing) return
+  _routing = true
+  try {
+    const { data: prof, error: e1 } = await supabase.from('profiles').select('role').eq('id', currentUser.id).maybeSingle()
+    if (e1) throw e1
+    if (!prof) { showScreen('role-screen'); return }
+    if (prof.role === 'intern') { showScreen('wrong-role-screen'); return }
+    if (prof.role === 'admin') { location.href = '/admin'; return }
 
-  // Startup — check if company profile exists
-  const { data: cp } = await supabase.from('startup_profiles').select('company_name').eq('user_id', currentUser.id).maybeSingle()
-  if (!cp) { showScreen('onboarding-screen'); return }
+    const { data: cp, error: e2 } = await supabase.from('startup_profiles').select('company_name').eq('user_id', currentUser.id).maybeSingle()
+    if (e2) throw e2
+    if (!cp) { showScreen('onboarding-screen'); return }
 
-  setupTopbar(cp.company_name)
-  await loadData()
-  showScreen('app')
+    setupTopbar(cp.company_name)
+    await loadData()
+    showScreen('app')
+  } catch (err) {
+    console.error('routeByRole:', err)
+    showScreen('auth-screen')   // safe fallback — never stay on loader
+  } finally {
+    _routing = false
+  }
 }
 
 function setupTopbar(companyName) {
@@ -889,17 +906,17 @@ window.setAvailFilter = function(val) {
 }
 
 supabase.auth.onAuthStateChange(async (event, session) => {
-  if ((event === 'INITIAL_SESSION' || event === 'SIGNED_IN') && session?.user) {
-    if (currentUser) return   // already routed — ignore duplicate events
+  if (event === 'SIGNED_IN' && session?.user && !currentUser) {
     currentUser = session.user
     await routeByRole()
-  } else if (event === 'INITIAL_SESSION' && !session) {
-    showScreen('auth-screen')
   } else if (event === 'SIGNED_OUT') {
     currentUser = null
+    _routing = false
     showScreen('auth-screen')
   }
 })
+
+boot()
 </script>
 </body>
 </html>

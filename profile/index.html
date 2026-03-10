@@ -722,31 +722,47 @@ window.signIn = async function() {
 }
 window.signOut = async function() { await supabase.auth.signOut(); location.reload() }
 
-// ── Boot — single path via onAuthStateChange ──
+// ── Boot ─────────────────────────────────────
+let _routing = false
+async function boot() {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) { showScreen('auth-screen'); return }
+  currentUser = session.user
+  await routeByRole()
+}
 
 async function routeByRole() {
-  setupTopbar()
-  const { data: prof } = await supabase.from('profiles').select('role').eq('id', currentUser.id).maybeSingle()
-  if (!prof) { showScreen('role-screen'); return }
-  if (prof.role === 'startup') { showScreen('wrong-role-screen'); return }
-  if (prof.role === 'admin') { location.href = '/admin'; return }
-  // Intern
-  const { data: existingIntern } = await supabase.from('interns').select('*').eq('user_id', currentUser.id).maybeSingle()
-  if (existingIntern) {
-    // Returning intern → edit form
-    existingProfile = existingIntern
-    fillEditForm(existingIntern)
-    document.getElementById('live-banner').style.display = 'flex'
-    document.getElementById('btn-save-label').textContent = 'Update Profile'
-    document.getElementById('btn-delete').style.display = 'block'
-    document.getElementById('btn-save').disabled = false
-    initEditTagsInput()
-    watchEditInputs()
-    updatePreview()
-    showScreen('app')
-  } else {
-    // New intern → wizard
-    startWizard()
+  if (_routing) return
+  _routing = true
+  try {
+    setupTopbar()
+    const { data: prof, error: e1 } = await supabase.from('profiles').select('role').eq('id', currentUser.id).maybeSingle()
+    if (e1) throw e1
+    if (!prof) { showScreen('role-screen'); return }
+    if (prof.role === 'startup') { showScreen('wrong-role-screen'); return }
+    if (prof.role === 'admin') { location.href = '/admin'; return }
+
+    const { data: existingIntern, error: e2 } = await supabase.from('interns').select('*').eq('user_id', currentUser.id).maybeSingle()
+    if (e2) throw e2
+    if (existingIntern) {
+      existingProfile = existingIntern
+      fillEditForm(existingIntern)
+      document.getElementById('live-banner').style.display = 'flex'
+      document.getElementById('btn-save-label').textContent = 'Update Profile'
+      document.getElementById('btn-delete').style.display = 'block'
+      document.getElementById('btn-save').disabled = false
+      initEditTagsInput()
+      watchEditInputs()
+      updatePreview()
+      showScreen('app')
+    } else {
+      startWizard()
+    }
+  } catch (err) {
+    console.error('routeByRole:', err)
+    showScreen('auth-screen')   // never stay on loader
+  } finally {
+    _routing = false
   }
 }
 
@@ -1096,17 +1112,17 @@ function buildCardHtml(intern) {
 }
 
 supabase.auth.onAuthStateChange(async (event, session) => {
-  if ((event === 'INITIAL_SESSION' || event === 'SIGNED_IN') && session?.user) {
-    if (currentUser) return   // already routed — ignore duplicate events
+  if (event === 'SIGNED_IN' && session?.user && !currentUser) {
     currentUser = session.user
     await routeByRole()
-  } else if (event === 'INITIAL_SESSION' && !session) {
-    showScreen('auth-screen')
   } else if (event === 'SIGNED_OUT') {
     currentUser = null
+    _routing = false
     showScreen('auth-screen')
   }
 })
+
+boot()
 </script>
 </body>
 </html>
