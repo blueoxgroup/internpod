@@ -35,6 +35,11 @@ a{text-decoration:none;color:inherit}
 .nav-wm{display:flex;align-items:baseline;gap:3px}
 .nav-wm .wm-serif{font-family:var(--serif);font-style:italic;font-size:20px;font-weight:600;color:var(--black)}
 .nav-wm .wm-mono{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--gray-500)}
+.nav-login{font-family:var(--mono);font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-600);border:1.5px solid var(--gray-300);border-radius:6px;padding:6px 14px;transition:all .2s;cursor:pointer}
+.nav-login:hover{border-color:var(--black);color:var(--black)}
+.hero-login{margin-top:18px;font-size:.85rem;color:var(--gray-500)}
+.hero-login a{color:var(--coral);font-weight:600;transition:opacity .2s}
+.hero-login a:hover{opacity:.75}
 @media(max-width:800px){.nav-left,.nav-right{display:none}.nav{padding:20px 24px}}
 
 /* ═══ TICKER — scrolling coral bar ═══ */
@@ -320,6 +325,7 @@ a{text-decoration:none;color:inherit}
 <a href="#how" class="nav-a">How It Works</a>
 <a href="#faq" class="nav-a">FAQ</a>
 <a href="/hiring" class="nav-a" style="color:var(--coral);font-weight:600">Hire Interns</a>
+<a href="#" class="nav-login" id="nav-login-btn">Log in</a>
 </div>
 </nav>
 
@@ -355,6 +361,7 @@ a{text-decoration:none;color:inherit}
 <a href="/profile" class="btn btn-dark">Join a Pod</a>
 <a href="#universities" class="btn btn-outline">Universities →</a>
 </div>
+<p class="hero-login">Already joined? <a href="#" id="hero-login-btn">Log in →</a></p>
 </section>
 
 <!-- AUDIENCE CARDS -->
@@ -436,6 +443,26 @@ function subUni(){const n=document.getElementById('u-name').value,uni=document.g
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 const supabase = createClient('https://krmqoseusxmjdlfxxdjy.supabase.co','sb_publishable_3Bsp_RSJW6Hvdvw9gB3Avg_tbpgQsj_')
+
+async function doLogin() {
+  // If already signed in (session exists), just redirect by role
+  const { data: { session } } = await supabase.auth.getSession()
+  if (session?.user) {
+    const role = localStorage.getItem('boj_role')
+    const uid  = localStorage.getItem('boj_uid')
+    if (uid === session.user.id && role) {
+      location.href = role === 'intern' ? '/profile' : role === 'admin' ? '/admin' : '/hiring'
+      return
+    }
+    // No cache — default to profile page, it'll route correctly
+    location.href = '/profile'
+    return
+  }
+  // Not signed in — trigger Google OAuth (role will be inferred post-login)
+  await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/profile' } })
+}
+document.getElementById('nav-login-btn').addEventListener('click', e => { e.preventDefault(); doLogin() })
+document.getElementById('hero-login-btn').addEventListener('click', e => { e.preventDefault(); doLogin() })
 
 supabase.auth.onAuthStateChange(async (event, session) => {
   if ((event === 'INITIAL_SESSION' || event === 'SIGNED_IN') && session?.user) {
