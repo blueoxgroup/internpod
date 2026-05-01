@@ -2,8 +2,18 @@
   "name": "internpod",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "node build.js",
     "setup": "node build.js"
+  },
+  "devDependencies": {
+    "vercel": "latest"
+  },
+  "dependencies": {
+    "@clerk/backend": "^1.0.0",
+    "pg": "^8.11.0"
   }
 }

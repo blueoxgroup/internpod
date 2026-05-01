@@ -170,7 +170,7 @@ a{text-decoration:none;color:inherit}
 .card-stat{background:var(--gray-100);border-radius:8px;padding:8px 10px}
 .card-stat-label{font-family:var(--mono);font-size:.5rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-400);margin-bottom:2px}
 .card-stat-val{font-size:.78rem;font-weight:600;color:var(--black)}
-.card-desc{font-size:.78rem;color:var(--gray-600);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card-desc{font-size:.78rem;color:var(--gray-600);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .card-links{display:flex;gap:8px}
 .card-link{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:.58rem;font-weight:600;letter-spacing:.06em;color:var(--coral);text-transform:uppercase;transition:opacity .2s}
 .card-link:hover{opacity:.7}
@@ -598,11 +598,20 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
-<script src="/public/config.js"></script>
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
-
-const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_KEY)
+<script
+  async
+  crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_YW1wbGUtYWlyZWRhbGUtNy5jbGVyay5hY2NvdW50cy5kZXYk"
+  src="https://ample-airedale-7.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js"
+  type="text/javascript"
+></script>
+<script>
+async function apiCall(path, opts = {}) {
+  const token = await window.Clerk?.session?.getToken()
+  const res = await fetch(path, { ...opts, headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', ...(opts.headers || {}) } })
+  if (!res.ok) { const e = await res.json().catch(() => ({})); const err = new Error(e.error || 'API error'); err.status = res.status; throw err }
+  return res.json()
+}
 
 let currentUser = null
 let allInterns = []
@@ -644,27 +653,19 @@ function showScreen(id) {
 function clearCache() {
   ['boj_uid','boj_role','boj_has_company','boj_company_name'].forEach(k => localStorage.removeItem(k))
 }
-window.doSignOut = async function() { clearCache(); await supabase.auth.signOut(); location.reload() }
+window.doSignOut = async function() { clearCache(); await window.Clerk.signOut(); location.reload() }
 
-// Race any Supabase DB query against a 3s timeout — never hang forever
-function dbFetch(query, fallback = { data: null, error: null }) {
-  const t = new Promise(r => setTimeout(() => r(fallback), 3000))
-  return Promise.race([query, t])
-}
-
-document.getElementById('btn-google-signin').addEventListener('click', async () => {
+document.getElementById('btn-google-signin').addEventListener('click', () => {
   sessionStorage.setItem('signup_intent', 'startup')
-  await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/hiring' } })
+  window.Clerk.openSignIn()
 })
 document.getElementById('btn-signout').addEventListener('click', window.doSignOut)
 
 window.pickRole = async function(role) {
-  // Save to cache immediately — don't wait for DB (DB may hang)
   localStorage.setItem('boj_uid', currentUser.id)
   localStorage.setItem('boj_role', role)
-  // Fire DB insert in background
-  dbFetch(supabase.from('profiles').insert({ id: currentUser.id, role, email: currentUser.email }))
-    .then(({ error }) => { if (error) console.warn('profiles insert:', error.message) })
+  apiCall('/api/auth/sync', { method: 'POST', body: JSON.stringify({ role, email: currentUser.email }) })
+    .catch(err => console.warn('sync:', err.message))
   if (role === 'intern') { location.href = '/profile'; return }
   showScreen('onboarding-screen')
 }
@@ -719,9 +720,9 @@ window.saveCompanyProfile = async function() {
     description: desc,
     email: currentUser.email
   }
-  const { error } = await dbFetch(supabase.from('startup_profiles').insert(payload))
-  if (error && error.message !== 'timeout') {
-    alert('Error: ' + error.message)
+  try { await apiCall('/api/startup-profile', { method: 'POST', body: JSON.stringify(payload) }) }
+  catch (err) {
+    alert('Error: ' + err.message)
     btn.disabled = false
     btn.innerHTML = '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Go to hiring dashboard'
     return
@@ -783,13 +784,13 @@ function setupTopbar(companyName) {
 
 // ── Load data ─────────────────────────────────
 async function loadData() {
-  const [internsRes, selectionsRes] = await Promise.all([
-    dbFetch(supabase.from('interns').select('*').order('name'), { data: [], error: null }),
-    dbFetch(supabase.from('pod_selections').select('*'), { data: [], error: null })
+  const [allInternsData, allSelectionsData] = await Promise.all([
+    apiCall('/api/interns').catch(() => []),
+    apiCall('/api/pod-selections?all=true').catch(() => [])
   ])
-  allInterns = internsRes.data || []
+  allInterns = allInternsData || []
   takenMap = {}; mySelections = []; podConfirmed = false
-  for (const s of (selectionsRes.data || [])) {
+  for (const s of (allSelectionsData || [])) {
     takenMap[s.intern_id] = s
     if (s.startup_id === currentUser.id) {
       mySelections.push(s.intern_id)
@@ -886,21 +887,19 @@ async function toggleSelect(internId, action) {
   if (podConfirmed) return
   if (action === 'add') {
     if (mySelections.length >= 3 || takenMap[internId]) return
-    const intern = allInterns.find(i => i.id === internId)
-    const { data: cp } = await dbFetch(supabase.from('startup_profiles').select('company_name').eq('user_id', currentUser.id).maybeSingle())
-    const { error } = await dbFetch(supabase.from('pod_selections').insert({
-      startup_id: currentUser.id,
-      startup_email: currentUser.email,
-      startup_name: cp?.company_name || localStorage.getItem('boj_company_name') || currentUser.email,
-      intern_id: internId
-    }))
-    if (!error) {
+    try {
+      const selection = await apiCall('/api/pod-selections', { method: 'POST', body: JSON.stringify({ intern_id: internId }) })
       mySelections.push(internId)
-      takenMap[internId] = { startup_id: currentUser.id, startup_email: currentUser.email }
-    }
+      takenMap[internId] = { id: selection.id, startup_id: currentUser.id, startup_email: currentUser.email }
+    } catch (err) { console.error('add selection:', err.message) }
   } else {
-    const { error } = await dbFetch(supabase.from('pod_selections').delete().eq('intern_id', internId).eq('startup_id', currentUser.id))
-    if (!error) { mySelections = mySelections.filter(id => id !== internId); delete takenMap[internId] }
+    const selectionId = takenMap[internId]?.id
+    if (!selectionId) return
+    try {
+      await apiCall(`/api/pod-selections/${selectionId}`, { method: 'DELETE' })
+      mySelections = mySelections.filter(id => id !== internId)
+      delete takenMap[internId]
+    } catch (err) { console.error('remove selection:', err.message) }
   }
   renderGrid(); renderPodSidebar()
 }
@@ -908,8 +907,15 @@ async function toggleSelect(internId, action) {
 // ── Confirm pod ───────────────────────────────
 document.getElementById('btn-confirm').addEventListener('click', async () => {
   if (mySelections.length !== 3 || podConfirmed) return
-  const { error } = await dbFetch(supabase.from('pod_selections').update({ confirmed: true }).eq('startup_id', currentUser.id))
-  if (!error) { podConfirmed = true; showConfirmationScreen() }
+  try {
+    await Promise.all(mySelections.map(internId => {
+      const selId = takenMap[internId]?.id
+      if (!selId) return Promise.resolve()
+      return apiCall(`/api/pod-selections/${selId}`, { method: 'PUT', body: JSON.stringify({ confirmed: true }) })
+    }))
+    podConfirmed = true
+    showConfirmationScreen()
+  } catch (err) { console.error('confirm pod:', err.message) }
 })
 
 function showConfirmationScreen() {
@@ -976,43 +982,34 @@ window.setAvailFilter = function(val) {
   renderGrid()
 }
 
-supabase.auth.onAuthStateChange(async (event, session) => {
-  if (event === 'INITIAL_SESSION') {
-    // Fires once on page load — replaces boot()'s getSession()
-    if (session?.user) {
-      currentUser = session.user
-      routeByRole()
+window.addEventListener('load', async function() {
+  await window.Clerk.load()
+  window.Clerk.addListener(({ user, session }) => {
+    if (user && session) {
+      if (!currentUser || currentUser.id !== user.id) {
+        currentUser = {
+          id: user.id,
+          email: user.primaryEmailAddress?.emailAddress || '',
+          user_metadata: { full_name: user.fullName || '', avatar_url: user.imageUrl || '' }
+        }
+        routeByRole()
+      }
     } else {
+      currentUser = null
+      _routing = false
+      clearCache()
       showScreen('auth-screen')
     }
-    return
-  }
-  if (event === 'SIGNED_IN' && session?.user) {
-    // Fires after OAuth redirect; may fire alongside INITIAL_SESSION
-    if (!currentUser || currentUser.id !== session.user.id) {
-      currentUser = session.user
-      routeByRole()
+  })
+
+  setTimeout(() => {
+    const ls = document.getElementById('loading-screen')
+    if (ls && ls.style.display !== 'none') {
+      console.warn('[auth] failsafe triggered — showing auth screen')
+      showScreen('auth-screen')
     }
-    return
-  }
-  if (event === 'SIGNED_OUT') {
-    currentUser = null
-    _routing = false
-    clearCache()
-    showScreen('auth-screen')
-  }
+  }, 5000)
 })
-
-// Failsafe: if loading screen still visible after 5s, something went wrong
-setTimeout(() => {
-  const ls = document.getElementById('loading-screen')
-  if (ls && ls.style.display !== 'none') {
-    console.warn('[auth] failsafe triggered — showing auth screen')
-    showScreen('auth-screen')
-  }
-}, 5000)
-
-boot().catch(err => { console.error('[boot]', err); showScreen('auth-screen') })
 </script>
 </body>
 </html>
