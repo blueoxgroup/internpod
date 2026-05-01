@@ -27,7 +27,7 @@ module.exports = async function handler(req, res) {
     let internId = null
 
     if (role === 'intern' && email) {
-      // Try to claim a seeded intern row by email
+      // Try to claim a seeded intern row by email (user_id NULL = unclaimed)
       const { rowCount, rows } = await db.query(
         `UPDATE public.interns
          SET user_id = $1
@@ -39,14 +39,14 @@ module.exports = async function handler(req, res) {
       if (rowCount > 0) {
         internId = rows[0].id
       } else {
-        // Check if they already have a row
+        // Check if already claimed (by Clerk ID)
         const { rows: existing } = await db.query(
           'SELECT id FROM public.interns WHERE user_id = $1',
           [userId]
         )
 
         if (existing.length === 0) {
-          // First time — create a fresh empty intern row
+          // Brand-new intern — create a fresh empty row
           const { rows: created } = await db.query(
             `INSERT INTO public.interns (user_id, email)
              VALUES ($1, $2)
@@ -58,6 +58,28 @@ module.exports = async function handler(req, res) {
         } else {
           internId = existing[0].id
         }
+      }
+    }
+
+    if (role === 'startup' && email) {
+      // Try to claim a migrated startup_profile by email (old Supabase user_id ≠ Clerk ID)
+      const { rows: existing } = await db.query(
+        'SELECT user_id FROM public.startup_profiles WHERE email = $1',
+        [email]
+      )
+
+      if (existing.length > 0 && existing[0].user_id !== userId) {
+        const oldId = existing[0].user_id
+        // Re-link startup_profile to new Clerk ID
+        await db.query(
+          'UPDATE public.startup_profiles SET user_id = $1 WHERE email = $2',
+          [userId, email]
+        )
+        // Re-link any pod_selections that used the old Supabase ID
+        await db.query(
+          'UPDATE public.pod_selections SET startup_id = $1 WHERE startup_id = $2',
+          [userId, oldId]
+        )
       }
     }
 
