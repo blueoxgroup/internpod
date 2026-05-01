@@ -48,11 +48,11 @@ module.exports = async function handler(req, res) {
         if (existing.length === 0) {
           // Brand-new intern — create a fresh empty row
           const { rows: created } = await db.query(
-            `INSERT INTO public.interns (user_id, email)
-             VALUES ($1, $2)
+            `INSERT INTO public.interns (user_id, email, name)
+             VALUES ($1, $2, $3)
              ON CONFLICT (user_id) DO NOTHING
              RETURNING id`,
-            [userId, email]
+            [userId, email, '']
           )
           if (created[0]) internId = created[0].id
         } else {
