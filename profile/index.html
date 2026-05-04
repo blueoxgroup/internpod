@@ -527,6 +527,7 @@ a{text-decoration:none;color:inherit}
           <div class="wz-field" style="margin-bottom:14px">
             <label for="w-desc">Your background &amp; what you can do *</label>
             <textarea id="w-desc" rows="4" placeholder="I'm a final-year CS student with strong React skills. I've built two production apps and want to work on real product for an international startup…" oninput="wzCheckNext(3); updateWzPreview()"></textarea>
+            <div id="w-desc-hint" style="font-size:.75rem;margin-top:6px;color:var(--gray-400)">Minimum 20 characters — <span id="w-desc-count">0</span> / 20</div>
           </div>
           <div class="wizard-grid">
             <div class="wz-field">
@@ -859,7 +860,14 @@ window.wzCheckNext = function(step) {
     0: () => document.getElementById('w-name').value.trim() && document.getElementById('w-location').value.trim(),
     1: () => document.getElementById('w-skill').value,
     2: () => document.getElementById('w-avail').value && document.getElementById('w-english').value && document.getElementById('w-tz').value,
-    3: () => document.getElementById('w-desc').value.trim().length > 20
+    3: () => document.getElementById('w-desc').value.trim().length >= 20
+  }
+  if (step === 3) {
+    const len = document.getElementById('w-desc').value.trim().length
+    const hint = document.getElementById('w-desc-hint')
+    const counter = document.getElementById('w-desc-count')
+    if (counter) counter.textContent = Math.min(len, 20)
+    if (hint) hint.style.color = len >= 20 ? 'var(--coral)' : 'var(--gray-400)'
   }
   const btn = document.getElementById(`wznext-${step}`)
   if (btn) btn.disabled = !(checks[step] && checks[step]())

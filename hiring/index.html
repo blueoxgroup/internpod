@@ -434,6 +434,7 @@ a{text-decoration:none;color:inherit}
       <div class="ob-field" style="margin-bottom:18px">
         <label for="cp-desc">Describe your product and what interns will work on *</label>
         <textarea id="cp-desc" rows="4" placeholder="We're a SaaS logistics platform for SMEs. We need interns to help build our customer dashboard in React, write product documentation, and handle support tickets…" oninput="obCheckNext(1)"></textarea>
+        <div id="cp-desc-hint" style="font-size:.75rem;margin-top:6px;color:var(--gray-400)">Minimum 20 characters — <span id="cp-desc-count">0</span> / 20</div>
       </div>
       <div class="ob-field">
         <label>Roles you're looking for <span style="font-weight:400;color:var(--gray-400)">(optional — helps filter)</span></label>
@@ -674,7 +675,14 @@ window.pickRole = async function(role) {
 window.obCheckNext = function(step) {
   const checks = {
     0: () => document.getElementById('cp-name').value.trim(),
-    1: () => document.getElementById('cp-desc').value.trim().length > 20
+    1: () => document.getElementById('cp-desc').value.trim().length >= 20
+  }
+  if (step === 1) {
+    const len = document.getElementById('cp-desc').value.trim().length
+    const hint = document.getElementById('cp-desc-hint')
+    const counter = document.getElementById('cp-desc-count')
+    if (counter) counter.textContent = Math.min(len, 20)
+    if (hint) hint.style.color = len >= 20 ? 'var(--coral)' : 'var(--gray-400)'
   }
   const btn = document.getElementById(`ob-next-${step}`)
   if (btn) btn.disabled = !(checks[step] && checks[step]())
