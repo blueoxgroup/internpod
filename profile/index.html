@@ -849,10 +849,11 @@ function startWizard() {
   const googleName = currentUser.user_metadata?.full_name || ''
   document.getElementById('w-name').value = googleName
   document.getElementById('w-email').value = currentUser.email
-  if (googleName) wzCheckNext(0)
+  initWzTagInput()
+  restoreWzDraft()
+  wzCheckNext(0); wzCheckNext(1); wzCheckNext(2); wzCheckNext(3)
   showScreen('wizard-screen')
   updateWzDots(0)
-  initWzTagInput()
 }
 
 window.wzCheckNext = function(step) {
@@ -871,6 +872,7 @@ window.wzCheckNext = function(step) {
   }
   const btn = document.getElementById(`wznext-${step}`)
   if (btn) btn.disabled = !(checks[step] && checks[step]())
+  saveWzDraft()
 }
 
 function updateWzDots(active) {
@@ -919,6 +921,7 @@ window.addWzTag = function(val) {
   sug.innerHTML = (SKILL_SUGGESTIONS[skill]||[]).filter(s=>!wzTags.includes(s)).slice(0,8).map(s =>
     `<span class="tag-suggestion" onclick="addWzTag('${s}')">${s}</span>`
   ).join('')
+  saveWzDraft()
 }
 
 function renderWzTags() {
@@ -932,7 +935,47 @@ function renderWzTags() {
     wrap.insertBefore(chip, input)
   })
 }
-window.removeWzTag = function(i) { wzTags.splice(i,1); renderWzTags() }
+window.removeWzTag = function(i) { wzTags.splice(i,1); renderWzTags(); saveWzDraft() }
+
+function saveWzDraft() {
+  if (!currentUser) return
+  const draft = {
+    name: document.getElementById('w-name').value,
+    location: document.getElementById('w-location').value,
+    whatsapp: document.getElementById('w-whatsapp').value,
+    skill: document.getElementById('w-skill').value,
+    tags: wzTags.slice(),
+    avail: document.getElementById('w-avail').value,
+    english: document.getElementById('w-english').value,
+    start: document.getElementById('w-start').value,
+    tz: document.getElementById('w-tz').value,
+    desc: document.getElementById('w-desc').value,
+    github: document.getElementById('w-github').value,
+    linkedin: document.getElementById('w-linkedin').value,
+  }
+  localStorage.setItem(`boj_wz_draft_${currentUser.id}`, JSON.stringify(draft))
+}
+
+function restoreWzDraft() {
+  if (!currentUser) return
+  const raw = localStorage.getItem(`boj_wz_draft_${currentUser.id}`)
+  if (!raw) return
+  try {
+    const d = JSON.parse(raw)
+    if (d.name) document.getElementById('w-name').value = d.name
+    if (d.location) document.getElementById('w-location').value = d.location
+    if (d.whatsapp) document.getElementById('w-whatsapp').value = d.whatsapp
+    if (d.skill) { document.getElementById('w-skill').value = d.skill; onSkillChange() }
+    if (d.tags && d.tags.length) { wzTags = d.tags.slice(); renderWzTags() }
+    if (d.avail) setWzAvail(d.avail)
+    if (d.english) document.getElementById('w-english').value = d.english
+    if (d.start) document.getElementById('w-start').value = d.start
+    if (d.tz) document.getElementById('w-tz').value = d.tz
+    if (d.desc) document.getElementById('w-desc').value = d.desc
+    if (d.github) document.getElementById('w-github').value = d.github
+    if (d.linkedin) document.getElementById('w-linkedin').value = d.linkedin
+  } catch (_) {}
+}
 
 function initWzTagInput() {
   const inp = document.getElementById('wz-tag-input')
@@ -993,6 +1036,7 @@ window.wzPublish = async function() {
     if (internId) await apiCall(`/api/interns/${internId}`, { method: 'PUT', body: JSON.stringify(payload) })
     existingProfile = { ...payload, id: internId }
     localStorage.setItem('boj_has_profile', '1')
+    localStorage.removeItem(`boj_wz_draft_${currentUser.id}`)
     document.getElementById('wz-final-preview').innerHTML = buildCardHtml(payload)
     updateWzDots(4)
     document.getElementById('wstep-3').classList.remove('active')

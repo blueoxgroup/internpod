@@ -384,15 +384,15 @@ a{text-decoration:none;color:inherit}
         </div>
         <div class="ob-field">
           <label for="cp-website">Website</label>
-          <input id="cp-website" type="url" placeholder="https://acme.com">
+          <input id="cp-website" type="url" placeholder="https://acme.com" oninput="saveObDraft()">
         </div>
         <div class="ob-field">
           <label for="cp-location">Country / City</label>
-          <input id="cp-location" type="text" placeholder="Berlin, Germany">
+          <input id="cp-location" type="text" placeholder="Berlin, Germany" oninput="saveObDraft()">
         </div>
         <div class="ob-field">
           <label for="cp-industry">Industry</label>
-          <select id="cp-industry">
+          <select id="cp-industry" onchange="saveObDraft()">
             <option value="">— Select —</option>
             <option>Software / SaaS</option>
             <option>FinTech</option>
@@ -408,7 +408,7 @@ a{text-decoration:none;color:inherit}
         </div>
         <div class="ob-field">
           <label for="cp-size">Team size</label>
-          <select id="cp-size">
+          <select id="cp-size" onchange="saveObDraft()">
             <option value="">— Select —</option>
             <option>Solo founder</option>
             <option>2–5</option>
@@ -669,6 +669,7 @@ window.pickRole = async function(role) {
     .catch(err => console.warn('sync:', err.message))
   if (role === 'intern') { location.href = '/profile'; return }
   showScreen('onboarding-screen')
+  restoreObDraft()
 }
 
 // ── Onboarding wizard helpers ─────────────────
@@ -686,6 +687,7 @@ window.obCheckNext = function(step) {
   }
   const btn = document.getElementById(`ob-next-${step}`)
   if (btn) btn.disabled = !(checks[step] && checks[step]())
+  saveObDraft()
 }
 window.obNext = function(from) {
   document.getElementById(`ob-step-${from}`).classList.remove('active')
@@ -705,10 +707,52 @@ function updateObDots(active) {
   }
 }
 let selectedObRoles = []
+
+function saveObDraft() {
+  if (!currentUser) return
+  const draft = {
+    name: document.getElementById('cp-name').value,
+    website: document.getElementById('cp-website').value,
+    location: document.getElementById('cp-location').value,
+    industry: document.getElementById('cp-industry').value,
+    size: document.getElementById('cp-size').value,
+    desc: document.getElementById('cp-desc').value,
+    roles: selectedObRoles.slice(),
+  }
+  localStorage.setItem(`boj_ob_draft_${currentUser.id}`, JSON.stringify(draft))
+}
+
+function restoreObDraft() {
+  if (!currentUser) return
+  const raw = localStorage.getItem(`boj_ob_draft_${currentUser.id}`)
+  if (!raw) return
+  try {
+    const d = JSON.parse(raw)
+    if (d.name) document.getElementById('cp-name').value = d.name
+    if (d.website) document.getElementById('cp-website').value = d.website
+    if (d.location) document.getElementById('cp-location').value = d.location
+    if (d.industry) document.getElementById('cp-industry').value = d.industry
+    if (d.size) document.getElementById('cp-size').value = d.size
+    if (d.desc) document.getElementById('cp-desc').value = d.desc
+    if (d.roles && d.roles.length) {
+      d.roles.forEach(role => {
+        document.querySelectorAll('.role-chip').forEach(el => {
+          if (el.getAttribute('onclick')?.includes(`'${role}'`)) {
+            el.classList.add('selected')
+            if (!selectedObRoles.includes(role)) selectedObRoles.push(role)
+          }
+        })
+      })
+    }
+    obCheckNext(0); obCheckNext(1)
+  } catch (_) {}
+}
+
 window.toggleObRole = function(el, role) {
   el.classList.toggle('selected')
   if (el.classList.contains('selected')) { if (!selectedObRoles.includes(role)) selectedObRoles.push(role) }
   else selectedObRoles = selectedObRoles.filter(r => r !== role)
+  saveObDraft()
 }
 
 window.saveCompanyProfile = async function() {
@@ -737,6 +781,7 @@ window.saveCompanyProfile = async function() {
   }
   localStorage.setItem('boj_has_company', '1')
   localStorage.setItem('boj_company_name', name)
+  localStorage.removeItem(`boj_ob_draft_${currentUser.id}`)
   setupTopbar(name)
   await loadData()
   showScreen('app')
@@ -776,6 +821,7 @@ async function routeByRole() {
         }
       } catch (_) {}
       showScreen('onboarding-screen')
+      restoreObDraft()
       return
     }
 
