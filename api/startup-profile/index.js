@@ -28,10 +28,19 @@ module.exports = async function handler(req, res) {
         `INSERT INTO public.startup_profiles
           (user_id, company_name, website, description, industry, team_size, location, email, roles_needed)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+         ON CONFLICT (user_id) DO UPDATE SET
+           company_name  = EXCLUDED.company_name,
+           website       = EXCLUDED.website,
+           description   = EXCLUDED.description,
+           industry      = EXCLUDED.industry,
+           team_size     = EXCLUDED.team_size,
+           location      = EXCLUDED.location,
+           email         = EXCLUDED.email,
+           roles_needed  = EXCLUDED.roles_needed
          RETURNING *`,
         [userId, company_name, website, description, industry, team_size, location, email, roles_needed]
       )
-      return res.status(201).json(rows[0])
+      return res.status(200).json(rows[0])
     }
 
     if (req.method === 'PUT') {
