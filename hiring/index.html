@@ -747,22 +747,36 @@ window.saveCompanyProfile = async function() {
 // boot() just provides a fallback in case INITIAL_SESSION is slow.
 let _routing = false
 
-function routeByRole() {
+async function routeByRole() {
   if (_routing) return
   _routing = true
   try {
     const uid = currentUser.id
-    const role    = localStorage.getItem('boj_role')
+    const role     = localStorage.getItem('boj_role')
     const cacheUid = localStorage.getItem('boj_uid')
     const hasCompany = localStorage.getItem('boj_has_company')
-    const coName  = localStorage.getItem('boj_company_name') || ''
+    const coName   = localStorage.getItem('boj_company_name') || ''
 
     if (cacheUid === uid && role) {
       if (role === 'intern') { showScreen('wrong-role-screen'); return }
       if (role === 'admin')  { location.href = '/admin'; return }
-      // startup with company → load app (data fetch is non-blocking)
+      // startup — check cache first, otherwise fetch from DB
       if (hasCompany) { setupTopbar(coName); showScreen('app'); loadData(); return }
-      showScreen('onboarding-screen'); return
+      // cache miss (e.g. after sign-out) — check DB for existing profile
+      showScreen('loading-screen')
+      try {
+        const profile = await apiCall('/api/startup-profile')
+        if (profile && profile.company_name) {
+          localStorage.setItem('boj_has_company', '1')
+          localStorage.setItem('boj_company_name', profile.company_name)
+          setupTopbar(profile.company_name)
+          showScreen('app')
+          loadData()
+          return
+        }
+      } catch (_) {}
+      showScreen('onboarding-screen')
+      return
     }
 
     // No localStorage match → ask user to pick role (no DB query needed)
