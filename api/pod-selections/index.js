@@ -60,6 +60,15 @@ module.exports = async function handler(req, res) {
       const { intern_id } = req.body
       if (!intern_id) return res.status(400).json({ error: 'intern_id is required' })
 
+      // Verify intern exists and is approved
+      const { rows: internRows } = await db.query(
+        `SELECT id FROM public.interns WHERE id = $1 AND status = 'approved'`,
+        [intern_id]
+      )
+      if (!internRows[0]) {
+        return res.status(403).json({ error: 'Intern is not available for selection' })
+      }
+
       // Get startup info
       const { rows: startup } = await db.query(
         'SELECT company_name, email FROM public.startup_profiles WHERE user_id = $1',
