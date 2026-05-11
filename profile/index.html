@@ -159,10 +159,16 @@ a{text-decoration:none;color:inherit}
 .btn-signout:hover{color:var(--coral);border-color:var(--coral)}
 .main-layout{display:grid;grid-template-columns:1fr 340px;gap:24px;padding:32px 24px;max-width:1200px;margin:0 auto;align-items:start}
 @media(max-width:900px){.main-layout{grid-template-columns:1fr}.preview-col{order:-1}}
-.live-banner{background:var(--green-pale);border:1.5px solid #bbf7d0;border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.live-banner{border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.live-banner.approved{background:var(--green-pale);border:1.5px solid #bbf7d0}
+.live-banner.pending{background:#fffbeb;border:1.5px solid #fde68a}
+.live-banner.rejected{background:#fff8f8;border:1.5px solid #fecaca}
 .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
-.live-banner-text{font-size:.85rem;color:#166534;line-height:1.4}
+.live-banner-text{font-size:.85rem;line-height:1.4}
+.live-banner.approved .live-banner-text,.live-banner.approved .live-banner-text strong{color:#166534}
+.live-banner.pending .live-banner-text,.live-banner.pending .live-banner-text strong{color:#92400e}
+.live-banner.rejected .live-banner-text,.live-banner.rejected .live-banner-text strong{color:#991b1b}
 .live-banner-text strong{font-weight:600}
 .form-card{background:#fff;border:1px solid var(--gray-200);border-radius:16px;overflow:hidden}
 .form-section{padding:24px 28px;border-bottom:1px solid var(--gray-100)}
@@ -593,8 +599,8 @@ a{text-decoration:none;color:inherit}
   <div class="main-layout">
     <div class="form-col">
       <div id="live-banner" class="live-banner" style="display:none">
-        <div class="live-dot"></div>
-        <div class="live-banner-text"><strong>Your profile is live.</strong> Startups can find and select you in the Pod builder. Update any time.</div>
+        <div class="live-dot" id="live-dot"></div>
+        <div class="live-banner-text" id="live-banner-text"><strong>Your profile is live.</strong> Startups can find and select you in the Pod builder. Update any time.</div>
       </div>
 
       <div class="form-card">
@@ -774,6 +780,27 @@ const SKILL_SUGGESTIONS = {
 }
 
 // ── Screen routing ────────────────────────────
+function showStatusBanner(status) {
+  const banner = document.getElementById('live-banner')
+  const dot    = document.getElementById('live-dot')
+  const text   = document.getElementById('live-banner-text')
+  if (!banner) return
+  banner.className = 'live-banner ' + (status || 'pending')
+  if (dot) {
+    dot.style.background = status === 'approved' ? '#22c55e' : status === 'rejected' ? '#ef4444' : '#f59e0b'
+  }
+  if (text) {
+    if (status === 'approved') {
+      text.innerHTML = '<strong>Your profile is live.</strong> Startups can find and select you in the Pod builder.'
+    } else if (status === 'rejected') {
+      text.innerHTML = '<strong>Profile needs updates.</strong> An admin reviewed your profile — please contact us for details.'
+    } else {
+      text.innerHTML = '<strong>Pending review.</strong> Your profile has been submitted and is being reviewed by our team.'
+    }
+  }
+  banner.style.display = 'flex'
+}
+
 function showScreen(id) {
   ['loading-screen','auth-screen','role-screen','wrong-role-screen','wizard-screen','app'].forEach(s => {
     const el = document.getElementById(s)
@@ -817,7 +844,7 @@ async function routeByRole() {
       existingProfile = data
       localStorage.setItem('boj_has_profile', '1')
       fillEditForm(data)
-      document.getElementById('live-banner').style.display = 'flex'
+      showStatusBanner(data.status || 'approved')
       document.getElementById('btn-save-label').textContent = 'Update Profile'
       document.getElementById('btn-delete').style.display = 'block'
       document.getElementById('btn-save').disabled = false
@@ -1034,7 +1061,7 @@ window.wzPublish = async function() {
       internId = sync.internId
     }
     if (internId) await apiCall(`/api/interns/${internId}`, { method: 'PUT', body: JSON.stringify(payload) })
-    existingProfile = { ...payload, id: internId }
+    existingProfile = { ...payload, id: internId, status: existingProfile?.status || 'pending' }
     localStorage.setItem('boj_has_profile', '1')
     localStorage.removeItem(`boj_wz_draft_${currentUser.id}`)
     document.getElementById('wz-final-preview').innerHTML = buildCardHtml(payload)
@@ -1051,7 +1078,7 @@ window.wzPublish = async function() {
 window.goToEditProfile = function() {
   if (existingProfile) {
     fillEditForm(existingProfile)
-    document.getElementById('live-banner').style.display = 'flex'
+    showStatusBanner(existingProfile.status || 'approved')
     document.getElementById('btn-save-label').textContent = 'Update Profile'
     document.getElementById('btn-delete').style.display = 'block'
     document.getElementById('btn-save').disabled = false
@@ -1192,11 +1219,11 @@ window.saveProfile = async function() {
       const sync = await apiCall('/api/auth/sync', { method: 'POST', body: JSON.stringify({ role: 'intern', email: currentUser.email }) })
       internId = sync.internId
       if (internId) await apiCall(`/api/interns/${internId}`, { method: 'PUT', body: JSON.stringify(payload) })
-      existingProfile = { ...payload, id: internId }
+      existingProfile = { ...existingProfile, ...payload, id: internId }
     }
     localStorage.setItem('boj_has_profile', '1')
     status.textContent = 'Saved ✓'; status.style.display = 'block'
-    document.getElementById('live-banner').style.display = 'flex'
+    showStatusBanner(existingProfile?.status || 'pending')
     document.getElementById('btn-save-label').textContent = 'Update Profile'
     document.getElementById('btn-delete').style.display = 'block'
     setTimeout(() => status.style.display = 'none', 3000)

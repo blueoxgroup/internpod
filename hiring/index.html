@@ -387,6 +387,10 @@ a{text-decoration:none;color:inherit}
           <input id="cp-website" type="url" placeholder="https://acme.com" oninput="saveObDraft()">
         </div>
         <div class="ob-field">
+          <label for="cp-phone">Phone / WhatsApp</label>
+          <input id="cp-phone" type="tel" placeholder="+256 700 000000" oninput="saveObDraft()">
+        </div>
+        <div class="ob-field">
           <label for="cp-location">Country / City</label>
           <input id="cp-location" type="text" placeholder="Berlin, Germany" oninput="saveObDraft()">
         </div>
@@ -713,6 +717,7 @@ function saveObDraft() {
   const draft = {
     name: document.getElementById('cp-name').value,
     website: document.getElementById('cp-website').value,
+    phone: document.getElementById('cp-phone').value,
     location: document.getElementById('cp-location').value,
     industry: document.getElementById('cp-industry').value,
     size: document.getElementById('cp-size').value,
@@ -730,6 +735,7 @@ function restoreObDraft() {
     const d = JSON.parse(raw)
     if (d.name) document.getElementById('cp-name').value = d.name
     if (d.website) document.getElementById('cp-website').value = d.website
+    if (d.phone) document.getElementById('cp-phone').value = d.phone
     if (d.location) document.getElementById('cp-location').value = d.location
     if (d.industry) document.getElementById('cp-industry').value = d.industry
     if (d.size) document.getElementById('cp-size').value = d.size
@@ -766,6 +772,7 @@ window.saveCompanyProfile = async function() {
     user_id: currentUser.id,
     company_name: name,
     website: document.getElementById('cp-website').value.trim(),
+    phone: document.getElementById('cp-phone').value.trim(),
     location: document.getElementById('cp-location').value.trim(),
     industry: document.getElementById('cp-industry').value,
     team_size: document.getElementById('cp-size').value,
