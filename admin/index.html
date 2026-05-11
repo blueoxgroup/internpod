@@ -618,12 +618,12 @@ window.renderStartups = function() {
 
     const spStatus = startup.status || 'pending'
     const statusLabel = spStatus === 'approved' ? '✓ Approved' : spStatus === 'rejected' ? '✕ Declined' : '⏳ Pending'
-    const modButtons = spStatus !== 'approved'
-      ? `<button class="btn-startup-approve" onclick="moderateStartup('${startup.user_id}','approved')">\u2713 Approve</button>`
-      : `<button class="btn-startup-reject" onclick="moderateStartup('${startup.user_id}','rejected')">\u2715 Decline</button>`
-    const resetBtn = spStatus === 'rejected'
-      ? `<button class="btn-startup-approve" onclick="moderateStartup('${startup.user_id}','pending')" style="background:#f3f4f6;color:var(--gray-600)">↩ Reset</button>`
-      : ''
+    const modButtons = spStatus === 'pending'
+      ? `<button class="btn-startup-approve" onclick="moderateStartup('${startup.user_id}','approved')">✓ Approve</button><button class="btn-startup-reject" onclick="moderateStartup('${startup.user_id}','rejected')">✕ Decline</button>`
+      : spStatus === 'rejected'
+        ? `<button class="btn-startup-approve" onclick="moderateStartup('${startup.user_id}','approved')">✓ Approve</button><button class="btn-startup-approve" onclick="moderateStartup('${startup.user_id}','pending')" style="background:#f3f4f6;color:var(--gray-600)">↩ Reset</button>`
+        : `<button class="btn-startup-reject" onclick="moderateStartup('${startup.user_id}','rejected')">✕ Decline</button>`
+    const resetBtn = ''
     return `
     <div class="startup-card" id="sc-${startup.id}">
       <div class="startup-head" onclick="toggleStartup('${startup.id}')">
