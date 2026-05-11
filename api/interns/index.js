@@ -11,7 +11,7 @@ module.exports = async function handler(req, res) {
     const db = getPool()
 
     const { rows } = await db.query(
-      `SELECT * FROM public.interns ORDER BY created_at DESC`
+      `SELECT * FROM public.interns WHERE status = 'approved' ORDER BY created_at DESC`
     )
 
     return res.status(200).json(rows)
