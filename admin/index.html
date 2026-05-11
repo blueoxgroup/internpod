@@ -20,7 +20,7 @@
   --transition:.3s cubic-bezier(.4,0,.2,1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;font-size:17px}
 body{font-family:var(--sans);color:var(--black);background:var(--gray-100);-webkit-font-smoothing:antialiased;line-height:1.6}
 a{text-decoration:none;color:inherit}
 ::selection{background:var(--coral);color:#fff}
@@ -221,6 +221,38 @@ a{text-decoration:none;color:inherit}
   /* Quick links: vertical */
   .main > div[style*="display:flex"]{flex-direction:column}
 }
+
+/* ── PREVIEW MODAL ───────────────────── */
+.preview-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
+.preview-overlay.open{display:flex}
+.preview-modal{background:var(--gray-100);border-radius:18px;width:100%;max-width:400px;max-height:92vh;overflow-y:auto;box-shadow:0 40px 100px rgba(0,0,0,.3)}
+.preview-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--gray-200);position:sticky;top:0;background:var(--gray-100);z-index:1;border-radius:18px 18px 0 0}
+.preview-label{display:flex;align-items:center;gap:8px}
+.preview-label-tag{font-family:var(--mono);font-size:.52rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--coral-pale);color:var(--coral);border:1px solid rgba(224,90,58,.2);padding:3px 9px;border-radius:100px}
+.preview-label-text{font-size:.8rem;color:var(--gray-500)}
+.preview-close{width:30px;height:30px;border:none;background:var(--gray-200);border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--gray-600);transition:all .2s}
+.preview-close:hover{background:var(--gray-300)}
+.preview-body{padding:16px}
+/* ── intern card as startup sees it ── */
+.pv-card{background:#fff;border:1.5px solid var(--gray-200);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px}
+.pv-header{display:flex;align-items:flex-start;gap:10px}
+.pv-avatar{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.1rem;font-weight:600;color:#fff;flex-shrink:0}
+.pv-meta{flex:1;min-width:0}
+.pv-name{font-family:var(--serif);font-size:1rem;font-weight:600;line-height:1.2;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pv-location{font-size:.75rem;color:var(--gray-500)}
+.pv-skill-badge{display:inline-flex;font-family:var(--mono);font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:100px}
+.pv-tags{display:flex;flex-wrap:wrap;gap:5px}
+.pv-tag{font-family:var(--mono);font-size:.55rem;padding:3px 8px;border-radius:100px;background:var(--gray-100);color:var(--gray-500)}
+.pv-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pv-stat{background:var(--gray-100);border-radius:8px;padding:8px 10px}
+.pv-stat-label{font-family:var(--mono);font-size:.5rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-400);margin-bottom:2px}
+.pv-stat-val{font-size:.78rem;font-weight:600;color:var(--black)}
+.pv-desc{font-size:.78rem;color:var(--gray-600);line-height:1.6}
+.pv-links{display:flex;gap:8px}
+.pv-link{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:.58rem;font-weight:600;letter-spacing:.06em;color:var(--coral);text-transform:uppercase;text-decoration:none;transition:opacity .2s}
+.pv-link:hover{opacity:.7}
+.pv-link svg{width:11px;height:11px}
+.pv-footer-btn{width:100%;padding:10px;border:none;border-radius:8px;background:var(--coral);color:#fff;font-family:var(--sans);font-size:.85rem;font-weight:600;cursor:not-allowed;opacity:.5;margin-top:2px}
 </style>
 </head>
 <body>
@@ -336,6 +368,20 @@ a{text-decoration:none;color:inherit}
 
   </div><!-- /main -->
 </div><!-- /app -->
+
+<!-- ══ PREVIEW MODAL (startup view) ══════════ -->
+<div class="preview-overlay" id="preview-modal">
+  <div class="preview-modal">
+    <div class="preview-header">
+      <div class="preview-label">
+        <span class="preview-label-tag">👁 Startup view</span>
+        <span class="preview-label-text">This is exactly what startups see</span>
+      </div>
+      <button class="preview-close" onclick="closePreview()">✕</button>
+    </div>
+    <div class="preview-body" id="preview-body"></div>
+  </div>
+</div>
 
 <!-- ══ EDIT MODAL ════════════════════════════ -->
 <div class="modal-overlay" id="edit-modal">
@@ -507,7 +553,7 @@ window.renderInterns = function() {
         </div>
       </div>
       <span class="card-skill-badge" style="background:${color}18;color:${color}">${skillShort}</span>
-      <span class="status-badge ${status}">${status === 'pending' ? '⏳ Pending review' : status === 'approved' ? '✓ Approved' : '✕ Rejected'}</span>
+      <span class="status-badge ${status}">${status === 'pending' ? '⏳ Pending review' : status === 'approved' ? '✓ Approved' : '✕ Declined'}</span>
       ${tags.length?`<div class="card-tags">${tags.map(t=>`<span class="card-tag">${t}</span>`).join('')}</div>`:''}
       <div class="card-detail-row">
         <div class="card-detail"><span>English</span>${intern.english_level||'—'}</div>
@@ -518,12 +564,13 @@ window.renderInterns = function() {
       ${status !== 'approved' ? `
       <div style="display:flex;gap:8px">
         <button class="btn-approve" onclick="moderateIntern('${intern.id}','approved')">✓ Approve</button>
-        ${status !== 'rejected' ? `<button class="btn-reject" onclick="moderateIntern('${intern.id}','rejected')">✕ Reject</button>` : `<button class="btn-approve" onclick="moderateIntern('${intern.id}','pending')" style="background:#f3f4f6;color:var(--gray-600)">↩ Reset</button>`}
+        ${status !== 'rejected' ? `<button class="btn-reject" onclick="moderateIntern('${intern.id}','rejected')">✕ Decline</button>` : `<button class="btn-approve" onclick="moderateIntern('${intern.id}','pending')" style="background:#f3f4f6;color:var(--gray-600)">↩ Reset</button>`}
       </div>` : `
       <div style="display:flex;gap:8px">
-        <button class="btn-reject" onclick="moderateIntern('${intern.id}','rejected')">✕ Reject</button>
+        <button class="btn-reject" onclick="moderateIntern('${intern.id}','rejected')">✕ Decline</button>
       </div>`}
       <div class="card-actions">
+        <button class="btn-edit" onclick="openPreview('${intern.id}')" style="color:var(--gray-600)">👁 Preview</button>
         <button class="btn-edit" onclick="openEdit('${intern.id}')">Edit</button>
         <button class="btn-del" onclick="deleteIntern('${intern.id}')">Delete</button>
       </div>
@@ -693,6 +740,48 @@ window.moderateIntern = async function(id, status) {
     updateStats(); renderInterns()
   } catch (err) { alert('Error: ' + err.message) }
 }
+
+window.openPreview = function(id) {
+  const intern = allInterns.find(i => i.id === id)
+  if (!intern) return
+  const color = avatarColor(intern.name)
+  const skillShort = SKILL_SHORT[intern.main_skill] || intern.main_skill || 'Other'
+  const tags = (intern.skills_detail||'').split(';').map(t=>t.trim()).filter(Boolean).slice(0,4)
+  const portLink = intern.github && intern.github !== 'https://github.com/'
+    ? `<a class="pv-link" href="${intern.github}" target="_blank" rel="noopener"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg> Portfolio</a>` : ''
+  const liLink = intern.linkedin
+    ? `<a class="pv-link" href="${intern.linkedin}" target="_blank" rel="noopener"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg> LinkedIn</a>` : ''
+  document.getElementById('preview-body').innerHTML = `
+    <div class="pv-card">
+      <div class="pv-header">
+        <div class="pv-avatar" style="background:${color}">${initials(intern.name)}</div>
+        <div class="pv-meta">
+          <div class="pv-name" title="${intern.name}">${intern.name}</div>
+          <div class="pv-location">📍 ${intern.location||'—'}</div>
+        </div>
+      </div>
+      <span class="pv-skill-badge" style="background:${color}18;color:${color}">${skillShort}</span>
+      ${tags.length ? `<div class="pv-tags">${tags.map(t=>`<span class="pv-tag">${t}</span>`).join('')}</div>` : ''}
+      <div class="pv-stats">
+        <div class="pv-stat"><div class="pv-stat-label">English</div><div class="pv-stat-val">${intern.english_level||'—'}</div></div>
+        <div class="pv-stat"><div class="pv-stat-label">Availability</div><div class="pv-stat-val">${intern.availability||'—'}</div></div>
+        <div class="pv-stat"><div class="pv-stat-label">Timezone</div><div class="pv-stat-val" style="font-size:.7rem">${intern.timezones||'—'}</div></div>
+        <div class="pv-stat"><div class="pv-stat-label">Start</div><div class="pv-stat-val">${intern.preferred_start_date||'—'}</div></div>
+      </div>
+      ${intern.project_description && intern.project_description !== 'N/A' ? `<div class="pv-desc">${intern.project_description}</div>` : ''}
+      ${portLink||liLink ? `<div class="pv-links">${portLink}${liLink}</div>` : ''}
+      <button class="pv-footer-btn" title="This button is disabled — preview only">＋ Add to Pod</button>
+    </div>`
+  document.getElementById('preview-modal').classList.add('open')
+}
+
+window.closePreview = function() {
+  document.getElementById('preview-modal').classList.remove('open')
+}
+
+document.getElementById('preview-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('preview-modal')) closePreview()
+})
 
 window.deleteIntern = async function(id) {
   const intern = allInterns.find(i => i.id === id)
